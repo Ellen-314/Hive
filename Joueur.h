@@ -1,22 +1,22 @@
 #ifndef JOUEUR_H_INCLUDED
 #define JOUEUR_H_INCLUDED
 
-class Joueur {
+class Player {
 private:
-    bool couleur; // true = blanc, false = noir
+    bool color; // true = blanc, false = noir
 
 public:
     // Constructeur par défaut
-    Joueur();
+    Player();
 
     // Constructeur avec paramètre
-    Joueur(bool couleur);
+    Player(bool color);
 
     // Getter pour la couleur
-    bool getCouleur() const;
+    bool getColor() const;
 
     // Setter pour la couleur
-    void setCouleur(bool couleur);
+    void setColor(bool color);
 };
 
 #endif // JOUEUR_H_INCLUDED

@@ -1,17 +1,17 @@
 #include "Joueur.h"
 
 // Constructeur par défaut, initialise la couleur à false (noir)
-Joueur::Joueur() : couleur(false) {}
+Player::Player() : color(false) {}
 
 // Constructeur avec paramètre
-Joueur::Joueur(bool couleur) : couleur(couleur) {}
+Player::Player(bool color) : color(color) {}
 
 // Getter pour la couleur
-bool Joueur::getCouleur() const {
-    return couleur;
+bool Player::getColor() const {
+    return color;
 }
 
 // Setter pour la couleur
-void Joueur::setCouleur(bool couleur) {
-    this->couleur = couleur;
+void Player::setColor(bool color) {
+    this->color = color;
 }
