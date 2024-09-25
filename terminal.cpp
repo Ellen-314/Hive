@@ -3,9 +3,9 @@ using namespace std;
 
 // BY EVAN
 
-// Codes d’échappement ANSI.
-// Définition de plusieurs caractères de couleur comme des macros
-// qui seviront de caractères d'échappement pour changer de couleur.
+// Codes dâ€™Ã©chappement ANSI.
+// DÃ©finition de plusieurs caractÃ¨res de couleur comme des macros
+// qui seviront de caractÃ¨res d'Ã©chappement pour changer de couleur.
 //
 // Exemple : pour avoir des lettres noires sur un fond blanc on utilisera \e[30;47m
 //
@@ -15,7 +15,7 @@ using namespace std;
 #define GRN "\e[0;32m"      // vert
 #define CYAN "\e[0;36m"     // bleu clair
 #define TITRE "\e[30;47m"   // noir fond blanc
-// le \e est un caractère d’échappement ASCII. un caractère de parenthèse suivis de paramètres
+// le \e est un caractÃ¨re dâ€™Ã©chappement ASCII. un caractÃ¨re de parenthÃ¨se suivis de paramÃ¨tres
 
 
 
