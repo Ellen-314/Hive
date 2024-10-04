@@ -1,7 +1,6 @@
 #include "QueenBee.h"
 
-bool QueenBee::isCompletelySurrounded() const {
-    return neighborTop && neighborBottom &&
-           neighborTopRight && neighborBottomRight &&
-           neighborTopLeft && neighborBottomLeft;
-}
+
+const usigned int QueenBee::Max =1;
+
+bool QueenBee::isCompletelySurrounded() const {}
