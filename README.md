@@ -1,2 +1,3 @@
 # Hive
 Projet Hive
+UML classes insectes: //www.plantuml.com/plantuml/png/xT11hi8W4CRnFQUOvNjvUHTmLRjnOuqU0SkaOYWW34PZlBkOTjB4u0tOiFb_6P9V4qa6IgCHlP4nmjhIG_n39s-hN4Zta6pKWqK5sb8ktaLiZRHzgSCys3aTobtymO2Kp__ybWPJtlCVvH7mQlhe-qYUNI8C7wUkJgibBXUuWNZE68U4Q5l4Ai8YMwdknpHK40RfNBmaJQwAi4YBI0Qh1tjiGdvFpdiC5OLHejVgxL4z6hGgZUO5
