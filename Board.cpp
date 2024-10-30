@@ -18,34 +18,34 @@ void Board::addSpot(int x, int y) {
     board_spots[nb++] = new BoardSpot(x, y);
 }
 
-// Associe l'insecte à la case trouvée
+// Associe l'insecte ï¿½ la case trouvï¿½e
 void Board::addInsectToSpot(int x, int y, Insect* insect) {
-    for (size_t i = 0; i < nb; ++i) { // Parcourt les spots jusqu'à nb
+    for (size_t i = 0; i < nb; ++i) { // Parcourt les spots jusqu'ï¿½ nb
         if (board_spots[i]->getCoordinates() == std::make_pair(x, y)) {
-            board_spots[i]->setInsect(insect); // Associe l'insecte à cette case
+            board_spots[i]->setInsect(insect); // Associe l'insecte ï¿½ cette case
             return;
         }
     }
-    throw std::runtime_error("Coordonnées introuvables sur le plateau.");
+    throw std::runtime_error("Coordonnï¿½es introuvables sur le plateau.");
 }
 
 void Board::deleteInsectFromSpot(int x, int y) {
-    for (size_t i = 0; i < nb; ++i) { // Parcourt les cases jusqu'à nb
+    for (size_t i = 0; i < nb; ++i) { // Parcourt les cases jusqu'ï¿½ nb
         if (board_spots[i]->getCoordinates() == std::make_pair(x, y)) {
             if (board_spots[i]->hasInsect()) {
-                delete board_spots[i]->getInsect(); // Supprime l'insecte de la mémoire
-                board_spots[i]->setInsect(nullptr); // Met le pointeur à nullptr
+                delete board_spots[i]->getInsect(); // Supprime l'insecte de la mï¿½moire
+                board_spots[i]->setInsect(nullptr); // Met le pointeur ï¿½ nullptr
                 return;
             }
             else {
-                throw std::runtime_error("Aucun insecte à supprimer sur la case.");
+                throw std::runtime_error("Aucun insecte ï¿½ supprimer sur la case.");
             }
         }
     }
-    throw std::runtime_error("Coordonnées introuvables sur le plateau.");
+    throw std::runtime_error("Coordonnï¿½es introuvables sur le plateau.");
 }
 
-//  modifier une case spécifique par coordonnées
+//  modifier une case spï¿½cifique par coordonnï¿½es
 void Board::modifySpot(int oldX, int oldY, int newX, int newY) {
     for (size_t i = 0; i < nb; i++) {
         if (board_spots[i]->getCoordinates() == std::make_pair(oldX, oldY)) {
@@ -53,10 +53,10 @@ void Board::modifySpot(int oldX, int oldY, int newX, int newY) {
             return;
         }
     }
-    throw std::runtime_error("Case non trouvée pour modification");
+    throw std::runtime_error("Case non trouvï¿½e pour modification");
 }
 
-//  accéder à une case spécifique par coordonnées
+//  accï¿½der ï¿½ une case spï¿½cifique par coordonnï¿½es
 const BoardSpot* Board::getSpot(int x, int y) const {
     for (size_t i = 0; i < nb; i++) {
         if (board_spots[i]->getCoordinates() == std::make_pair(x, y)) {
@@ -83,7 +83,7 @@ void Board::deleteSpot(int x, int y) {
         i++;
     }
     if (i == nb) {
-        throw SetException("Le spot avec les coordonnées fournies n'existe pas.");
+        throw SetException("Le spot avec les coordonnï¿½es fournies n'existe pas.");
     }
     delete board_spots[i];
     board_spots[i] = board_spots[--nb];
@@ -99,7 +99,7 @@ Board::Board(const Board& other) {
     }
 }
 
-// Opérateur d'affectation pour Board
+// Opï¿½rateur d'affectation pour Board
 Board& Board::operator=(const Board& other) {
     if (this == &other) return *this;
 
@@ -114,7 +114,7 @@ Board& Board::operator=(const Board& other) {
 
     return *this;
 }
- 
+
 
 
 // Destructeur pour Board
@@ -123,4 +123,48 @@ Board::~Board() {
         delete board_spots[i];
     }
     delete[] board_spots;
+}
+
+
+
+//fonction trouver voisins qui renvoie le vecteur composï¿½ de toutes les coordonnï¿½es d'une liste
+std::vector<const BoardSpot*> Board::trouverVoisins(int x, int y) const {
+        std::vector<const BoardSpot*> voisins;
+        //crï¿½ation de la liste de pair des coordonï¿½es de tout les voisins
+        std::pair<int, int> directions[] = {
+            {1, 0},   // (x + 1, y)
+            {1, 1},   // (x + 1, y + 1)
+            {0, 1},   // (x, y + 1)
+            {-1, 0},  // (x - 1, y)
+            {-1, -1}, // (x - 1, y - 1)
+            {0, -1}   // (x, y - 1)
+        };
+
+        for (const auto& dir : directions) {
+            int newX = x + dir.first;
+            int newY = y + dir.second;
+
+
+            const BoardSpot* spot = getSpot(newX, newY);
+            if (spot) {
+                voisins.push_back(spot); //on ajoute les voisins existants au vecteur
+            }
+        }
+
+        return voisins;} //on retourne le vecteur
+
+
+    //fonction trouver voisins nulls qui renvoie le vecteur composï¿½ de toutes les coordonnï¿½es des cases qui n'ont pas d'insects affectï¿½s
+    std::vector<const BoardSpot*> Board::voisinsNull(int x, int y) const {
+    std::vector<const BoardSpot*> voisins = trouverVoisins(x, y); //on rï¿½cupï¿½re les voisins ï¿½ l'aide de la methode trouver voisins.
+    std::vector<const BoardSpot*> voisinsNuls;
+
+    for (size_t i = 0; i < voisins.size(); i++) {
+
+        if (!voisins[i]->hasInsect()) { //on appele la methode crï¿½e pour savoir si il y a un insect attribuï¿½
+            voisinsNuls.push_back(voisins[i]); // on ajoute ï¿½ VoisinsNuls
+        }
+    }
+
+    return voisinsNuls; //on retourne le vecteur
 }

@@ -4,7 +4,9 @@
 #include "Insect.h"
 #include <iostream>
 #include <stdexcept>
-#include <utility> 
+#include <utility>
+#include <vector>
+
 
 
 // Exception pour gestion des erreurs dans la classe Board
@@ -17,10 +19,10 @@ public:
 };
 
 
-// Classe pour représenter une case sur le plateau
+// Classe pour reprï¿½senter une case sur le plateau
 class BoardSpot {
 private:
-    std::pair<int, int> coordinates; // Paire d'entiers pour les coordonnées (x, y)
+    std::pair<int, int> coordinates; // Paire d'entiers pour les coordonnï¿½es (x, y)
     Insect* insect_pose;
 
 public:
@@ -33,11 +35,11 @@ public:
     void setCoordinates(int x, int y) { coordinates = std::make_pair(x, y); }
     void setInsect(Insect* insect) { insect_pose = insect; }
 
-    // Vérifier si un insecte est présent sur la case
-    bool hasInsect() const { return insect_pose != nullptr; }    
+    // Vï¿½rifier si un insecte est prï¿½sent sur la case
+    bool hasInsect() const { return insect_pose != nullptr; }
 
     void print(std::ostream& f) const {
-        f << "Coordonnées: (" << coordinates.first << ", " << coordinates.second << ")";
+        f << "Coordonnï¿½es: (" << coordinates.first << ", " << coordinates.second << ")";
         if (insect_pose) {
             f << " avec un insecte.";
         }
@@ -48,7 +50,7 @@ public:
 
 };
 
-// Classe pour gérer le plateau de jeu
+// Classe pour gï¿½rer le plateau de jeu
 class Board {
 private:
     BoardSpot** board_spots = nullptr;
@@ -61,10 +63,10 @@ public:
     //  ajouter une case au plateau
     void addSpot(int x, int y);
 
-    // accéder à une case spécifique par coordonnées
+    // accï¿½der ï¿½ une case spï¿½cifique par coordonnï¿½es
     const BoardSpot* getSpot(int x, int y) const;
 
-    //  modifier une case spécifique par coordonnées
+    //  modifier une case spï¿½cifique par coordonnï¿½es
     void modifySpot(int oldX, int oldY, int newX, int newY);
 
     void addInsectToSpot(int x, int y, Insect* insect);
@@ -77,9 +79,14 @@ public:
     // Suppression d'un spot du plateau
     void deleteSpot(int x, int y);
 
+    //trouve les voisins de la piï¿½ce demandï¿½e et les renvoies dans un vecteur;
+    std::vector<const BoardSpot*> trouverVoisins(int x, int y) const;
+    //trouve les voisins sans insects de la piï¿½ce demandï¿½e et les renvoies dans un vecteur;
+    std::vector<const BoardSpot*> voisinsNull(int x, int y) const;
+
     ~Board();
     Board(const Board& other);
     Board& operator=(const Board& other);
 };
 
-#endif 
+#endif

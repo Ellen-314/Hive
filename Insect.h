@@ -1,6 +1,6 @@
 ﻿#ifndef INSECT_H_INCLUDED
 #define INSECT_H_INCLUDED
-
+class Board;
 class Insect {
 private:
     // Pointeurs vers les insectes voisins
@@ -18,6 +18,8 @@ private:
 public:
     // Constructeur
     Insect();
+    //destructeur
+    virtual ~Insect();
 
     // Getter and Setter pour les voisins
     void setNeighborTop(Insect* insect);
@@ -45,8 +47,8 @@ public:
     bool getColor() const;
     void setColor(bool color);
 
-    // M�thode moov()
-    void moov();
+    // Methode moov() virtuelle car surchargée pour chaque insect. Elle renvoie les possibilités de mouvements
+    virtual void moov(int x, int y, const Board& board) = 0;
 };
 
 #endif // INSECT_H_INCLUDED

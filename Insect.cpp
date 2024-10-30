@@ -81,7 +81,4 @@ void Insect::setColor(bool col) {
     color = col;
 }
 
-// M�thode moov()
-void Insect::moov() {
-    cout << "L'insecte se deplace.\n";
-}
+Insect::~Insect() {}
