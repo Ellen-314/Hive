@@ -1,7 +1,5 @@
 #include "QueenBee.h"
-#include "C:\Users\combl\Documents\GI01\L021\Hive\Board.h"
-
-
+#include "Board.h"
 
 const unsigned int QueenBee::Max =1;
 unsigned int QueenBee::poseBlanc = 0;

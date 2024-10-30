@@ -3,8 +3,8 @@
 #define QUEENBEE_H
 #include <stdio.h>
 #include <iostream>
-#include "C:\Users\combl\Documents\GI01\L021\Hive\Insect.h"
-#include "C:\Users\combl\Documents\GI01\L021\Hive\Board.h"
+#include "Insect.h"
+#include "Board.h"
 class QueenBee : public Insect {
 
 static const unsigned int Max;
@@ -18,10 +18,10 @@ public:
    static void ajouterBlanc(){poseBlanc++;}
    static void ajouterNoir(){poseNoir++;}
 
-    //méthode qui renvoit true si la reine est entourée
+    //mï¿½thode qui renvoit true si la reine est entourï¿½e
     //TODO
     bool isSurrounded() const;
-    void moov(int x, int y, const Board& board)override;//override est utillisé pour indiquer que la fonction prends le pas sur celle de insect.
+    void moov(int x, int y, const Board& board)override;//override est utillisï¿½ pour indiquer que la fonction prends le pas sur celle de insect.
     ~QueenBee() override {};
 };
 
