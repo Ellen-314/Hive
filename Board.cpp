@@ -168,3 +168,17 @@ std::vector<const BoardSpot*> Board::trouverVoisins(int x, int y) const {
 
     return voisinsNuls; //on retourne le vecteur
 }
+
+std::vector<const BoardSpot*> Board::trouverVoisinsInsects(int x, int y) const {
+    std::vector<const BoardSpot*> voisins = trouverVoisins(x, y); //on r�cup�re les voisins � l'aide de la methode trouver voisins.
+    std::vector<const BoardSpot*> voisinsNuls;
+
+    for (size_t i = 0; i < voisins.size(); i++) {
+
+        if (voisins[i]->hasInsect()) { //on appele la methode cr�e pour savoir si il y a un insect attribu�
+            voisinsNuls.push_back(voisins[i]); // on ajoute � VoisinsNuls
+        }
+    }
+
+    return voisinsNuls; //on retourne le vecteur
+}

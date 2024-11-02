@@ -83,6 +83,8 @@ public:
     std::vector<const BoardSpot*> trouverVoisins(int x, int y) const;
     //trouve les voisins sans insects de la pi�ce demand�e et les renvoies dans un vecteur;
     std::vector<const BoardSpot*> voisinsNull(int x, int y) const;
+    //trouve les voisins avec insects de la pi�ce demand�e et les renvoies dans un vecteur;
+    std::vector<const BoardSpot*> trouverVoisinsInsects(int x, int y) const;
 
     ~Board();
     Board(const Board& other);
