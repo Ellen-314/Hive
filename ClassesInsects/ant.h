@@ -8,6 +8,8 @@
 #include "Insect.h"
 #include "Board.h"
 #include <queue>
+#include <set>
+#include <vector>
 
 
 class Ant : public Insect {
