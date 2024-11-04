@@ -21,7 +21,7 @@ public:
     //m�thode qui renvoit true si la reine est entour�e
     //TODO
     bool isSurrounded() const;
-    void moov(int x, int y, const Board& board)override;//override est utillis� pour indiquer que la fonction prends le pas sur celle de insect.
+    std::vector<const BoardSpot*> moov(int x, int y, const Board& board)override;//override est utillis� pour indiquer que la fonction prends le pas sur celle de insect.
     ~QueenBee() override {};
 };
 
