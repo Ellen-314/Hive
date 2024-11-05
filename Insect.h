@@ -3,6 +3,7 @@
 
 #include <vector>
 class Board;
+class BoardSpot;
 class Insect {
 private:
     // Pointeurs vers les insectes voisins
