@@ -1,4 +1,5 @@
 #include "Board.h"
+#include "Insect.h"
 #include <iostream>
 
 using namespace std;
@@ -151,11 +152,12 @@ std::vector<const BoardSpot*> Board::trouverVoisins(int x, int y) const {
             }
         }
 
-        return voisins;} //on retourne le vecteur
+        return voisins;
+} //on retourne le vecteur
 
 
     //fonction trouver voisins nulls qui renvoie le vecteur compos� de toutes les coordonn�es des cases qui n'ont pas d'insects affect�s
-    std::vector<const BoardSpot*> Board::voisinsNull(int x, int y) const {
+std::vector<const BoardSpot*> Board::voisinsNull(int x, int y) const {
     std::vector<const BoardSpot*> voisins = trouverVoisins(x, y); //on r�cup�re les voisins � l'aide de la methode trouver voisins.
     std::vector<const BoardSpot*> voisinsNuls;
 

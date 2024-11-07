@@ -1,30 +1,31 @@
 #include "ant.h"
 #include "Board.h"
-const usigned int Ant::Max =3;
+
+const unsigned int Ant::Max =3;
 unsigned int Ant::poseBlanc = 0;
 unsigned int Ant::poseNoir = 0;
 
 std::vector<const BoardSpot*> Ant::moov(int x, int y, const Board& board){
 std::vector <const BoardSpot*> possibilite;
 std::queue <const BoardSpot*> Averifier;//queue permet de creer FIFO
-std::set <const BoardSpot*> verifie; //set peremet le tri et l'unicit√© des √©l√©ments
+std::set <const BoardSpot*> verifie; //set peremet le tri et l'unicitÈ des ÈlÈments
 const BoardSpot* Spotfourmi = board.getSpot(x, y);
 
-Averifier.push(Spotfourmi); //push l'ajoute √† la fin
-verifie.insert(Spotfourmi);// ajoute uniquement si il n'est pas d√©j√† dans la liste
+Averifier.push(Spotfourmi); //push l'ajoute ‡ la fin
+verifie.insert(Spotfourmi);// ajoute uniquement si il n'est pas dÈj‡ dans la liste
 
  while (!Averifier.empty()) {
-        const BoardSpot* currentSpot = Averifier.front(); //front permet d'acceder au premier element ajout√© √† la FIFO
-        Averifier.pop();//on retire l'√©lement qu'on est en train de verifier de la liste √† verifier
+        const BoardSpot* currentSpot = Averifier.front(); //front permet d'acceder au premier element ajoutÈ ‡ la FIFO
+        Averifier.pop();//on retire l'Èlement qu'on est en train de verifier de la liste ‡ verifier
 
-        //on cree le vecteur voisins qui repertorie les voisins sans insects autour de la position √† verifier
+        //on cree le vecteur voisins qui repertorie les voisins sans insects autour de la position ‡ verifier
         std::vector<const BoardSpot*> voisins = board.voisinsNull(
             currentSpot->getCoordinates().first,
             currentSpot->getCoordinates().second
         );
 
         for (size_t i = 0; i < voisins.size(); i++) {
-            // visite.find(voisins[i]) renvoie visite.end() uniquement si le voisin n'a pas d√©j√† √©t√© visit√©
+            // visite.find(voisins[i]) renvoie visite.end() uniquement si le voisin n'a pas dÈj‡ ÈtÈ visitÈ
             if (verifie.find(voisins[i]) == verifie.end()) {
                 int surroundingInsects = board.trouverVoisinsInsects(
                     voisins[i]->getCoordinates().first,

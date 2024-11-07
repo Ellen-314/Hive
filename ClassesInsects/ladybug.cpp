@@ -1,3 +1,4 @@
 #include "ladybug.h"
+#include "Board.h"
 
-const usigned int Ladybug::Max =1;
+const unsigned int Ladybug::Max =1;
