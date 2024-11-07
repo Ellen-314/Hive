@@ -51,7 +51,7 @@ public:
     void setColor(bool color);
 
     // Methode moov() virtuelle car surchargée pour chaque insect. Elle renvoie les possibilités de mouvements
-    virtual std::vector<const BoardSpot*> moov(int x, int y, const Board& board) = 0;
+    //virtual std::vector<const BoardSpot*> moov(int x, int y, const Board& board) = 0;
 };
 
 #endif // INSECT_H_INCLUDED

@@ -1,5 +1,6 @@
 ﻿#include "Board.h"
 #include "Insect.h"
+#include "Controleur.h"
 #include <iostream>
 
 int main() {
@@ -23,6 +24,9 @@ int main() {
     std::cout << "\nSuppression de l'insecte de la case (1, 2)" << std::endl;
     board.deleteInsectFromSpot(1, 2);
     board.print(std::cout);
+
+    Controleur controleur;
+    controleur.demarrer();
 
     return 0;
 }

@@ -9,6 +9,7 @@
 
 
 
+
 // Exception pour gestion des erreurs dans la classe Board
 class SetException : public std::exception {
 private:
@@ -16,6 +17,7 @@ private:
 
 public:
     SetException(const std::string& msg) : message(msg) {}
+    std::string getMessage() const { return message; }
 };
 
 

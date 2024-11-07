@@ -26,23 +26,24 @@ void Board::addInsectToSpot(int x, int y, Insect* insect) {
             return;
         }
     }
-    throw std::runtime_error("Coordonn�es introuvables sur le plateau.");
+    throw SetException("Coordonn�es introuvables sur le plateau.");
 }
 
 void Board::deleteInsectFromSpot(int x, int y) {
     for (size_t i = 0; i < nb; ++i) { // Parcourt les cases jusqu'� nb
         if (board_spots[i]->getCoordinates() == std::make_pair(x, y)) {
             if (board_spots[i]->hasInsect()) {
-                delete board_spots[i]->getInsect(); // Supprime l'insecte de la m�moire
+                // Cette ligne n'a pas lieu d'être ????
+                //delete board_spots[i]->getInsect(); // Supprime l'insecte de la m�moire
                 board_spots[i]->setInsect(nullptr); // Met le pointeur � nullptr
                 return;
             }
             else {
-                throw std::runtime_error("Aucun insecte � supprimer sur la case.");
+                throw SetException("Aucun insecte � supprimer sur la case.");
             }
         }
     }
-    throw std::runtime_error("Coordonn�es introuvables sur le plateau.");
+    throw SetException("Coordonn�es introuvables sur le plateau.");
 }
 
 //  modifier une case sp�cifique par coordonn�es
@@ -53,7 +54,7 @@ void Board::modifySpot(int oldX, int oldY, int newX, int newY) {
             return;
         }
     }
-    throw std::runtime_error("Case non trouv�e pour modification");
+    throw SetException("Case non trouv�e pour modification");
 }
 
 //  acc�der � une case sp�cifique par coordonn�es
@@ -71,8 +72,9 @@ const BoardSpot* Board::getSpot(int x, int y) const {
 void Board::print(ostream& f) const {
     f << "Le plateau contient " << nb << " spots." << endl;
     for (size_t i = 0; i < nb; i++) {
+        f << "\t";
         board_spots[i]->print(f);
-        f << " ";
+        f << "\n";
     }
     f << endl;
 }
