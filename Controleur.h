@@ -3,6 +3,8 @@
 
 #include "Board.h"
 #include "Insect.h"
+
+
 #include <iostream>
 
 // Exception pour gestion des erreurs dans la classe Controleur
@@ -43,6 +45,8 @@ public:
 
     // Méthode pour annuler un coup
     void annulerCoup();
+
+
 
     // Constructeur
     Controleur()=default;

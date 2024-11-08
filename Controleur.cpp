@@ -3,8 +3,8 @@
 // Méthode pour afficher le menu principal avec les différentes actions disponibles
 void Controleur::afficherMenu() const {
     std::cout << "\n=== Menu de Jeu ===\n";
-    std::cout << "1. Poser un insecte\n";
-    std::cout << "2. Déplacer un insecte\n";
+    std::cout << "1. Poser un nouvel insecte sur le plateau\n";
+    std::cout << "2. Déplacer un insecte déjà posé\n";
     std::cout << "3. Afficher le plateau\n";
     std::cout << "4. Annuler le coup\n";
     std::cout << "0. Quitter\n";
@@ -69,20 +69,68 @@ void Controleur::ajouterCase() {
 
 // Méthode pour ajouter un insecte à une case
 void Controleur::ajouterInsecte() {
-    try {
-        auto [x, y] = demanderCoordonnees();
+    //TO DO gerer le premier placement sur une case fixe
 
-        // Demander la couleur de l'insecte
+    try {
+        std::cout << "Placement d'un nouvel insect sur le plateau ";
+
         // Se fera automatiquement en fonction du tour du joueur
         unsigned int color;
         std::cout << "Choisissez la couleur de l'insecte (1 pour blanc, 0 pour noir) : ";
         std::cin >> color;
         if(color!=1 && color!=0){ throw ControleurException("Couleur choisie incorrecte."); }
 
-        Insect* insect = new Insect();
+
+
+        int choix_insect;
+        Insect* insect = nullptr;
+
+        do {
+        std::cout << "Quel insecte souhaitez vous ajouter? :\n 1: reine, 2: fourmie, 3: arreignée , 4: sauterelle, 5: scarabé, 6:revenir au menu  \n";
+        //TODO: voir pour gérér quand on ajoute l'extension
+        std::cin >> choix_insect;
+
+        switch (choix_insect)
+
+            {
+            case 1:
+                if (QueenBee::estPasAuMax(color))
+                {
+                    insect = new QueenBee();
+                    choix_insect=10;
+                    break;
+                }
+            case 2:
+                 if (Ant::estPasAuMax(color))
+                 {
+                     insect = new Ant();
+                     choix_insect=10;
+                     break;
+                 }
+            //TODO ecrire les case pour les autres insects et leur ajouter leurs methodes estPasAuMax;
+
+            case 6 :
+                std::cout << "retour au menu\n";
+                return;
+
+
+            default:
+                std::cout<<"le choix n'est pas valide /n";
+                break;
+            }
+
+        }while(choix_insect!= 10);
+
+
         insect->setColor(color);
 
+        std::vector<const BoardSpot* > possibilite = board.possibleplacer(color);
+        board.afficherpossibilite(possibilite);
+        auto [x, y] = demanderCoordonnees();
+
+
         board.addInsectToSpot(x, y, insect);
+        //TO DO: fonction creer cases vides autour de l'insect ajouté
         std::cout << "Insecte ajouté à la case (" << x << ", " << y << ").\n";
     }
     catch (const SetException& e){
@@ -95,18 +143,38 @@ void Controleur::ajouterInsecte() {
 
 // Méthode pour déplacer un insecte, différent de moov dans Insect qui testera les différentes possibilités de déplacement
 void Controleur::deplacerInsecte() {
-    try{
-        std::cout << "Entrez les coordonnées de la case de départ.\n";
-        auto [oldX, oldY] = demanderCoordonnees();
-        //appel de moov pour retourner les cases possibles (et potentiellement vérifier s'il y a bien un insecte sur cette case)
+    try{     int choix;
+        do {
+                std::cout << "Entrez les coordonnées de la case dont vous voulez connaitre les possibilités d'actions.\n";
+                auto [oldX, oldY] = demanderCoordonnees();
+                const BoardSpot* spot = board.getSpot(oldX, oldY);
+                if (!spot){std::cout <<"les coordonnées ne sont pas bonnes \n";}
+                //appel de moov pour retourner les cases possibles (et potentiellement vérifier s'il y a bien un insecte sur cette case)
+                else{
+                     std::vector <const BoardSpot*> possibilite = spot->getInsect()->moov(oldX, oldY, board);
+                     board.afficherpossibilite(possibilite);
 
-        std::cout << "Entrez les coordonnées de la case de destination.\n";
-        auto [newX, newY] = demanderCoordonnees();
-        //vérification de moov pour savoir si le déplacement n'est pas illégal
+                std::cout <<"entrez 1 pour placer la pièce à l'un des emplacements donnés.\n ";
+                std::cout <<"entrez 2 pour voir les mouvements possibles d'une autre pièce.\n ";
+                std::cout <<"entrez 2 pour retourner au menu.\n ";
+                std::cout <<"entrez 3 pour voir les mouvements possibles d'une autre pièce.\n ";//ou autre
+                std::cin >> choix;
 
-        board.modifySpot(oldX, oldY, newX, newY);
-        std::cout << "Insecte déplacé de (" << oldX << ", " << oldY << ") à (" << newX << ", " << newY << ").\n";
-    }
+                if(choix == 1){
+                    std::cout << "Entrez les coordonnées de la case de destination.\n";
+                    auto [newX, newY] = demanderCoordonnees();
+                    const BoardSpot* spot = board.getSpot(newX, newY);
+                    if ( board.est_dans_possibilite(spot, possibilite)== true)
+                    {
+                        board.modifySpot(oldX, oldY, newX, newY);
+                        std::cout << "Insecte déplacé de (" << oldX << ", " << oldY << ") à (" << newX << ", " << newY << ").\n";
+                        choix = 2;//TO DO: ameliorer pour que ça passe au tour de l'autre direct
+                    }
+                    else{std::cout << "les coordonnées ne sont pas bonnes\n";}
+
+                }}} while(choix!=2);
+                }
+
     catch (const SetException& e){
         std::cout << e.getMessage() <<"\n";
     }
@@ -127,3 +195,6 @@ void Controleur::supprimerCase() {
 void Controleur::annulerCoup(){
     std::cout << "cette fonction n'est pas encore implémentée.\n";
 }
+
+
+
