@@ -2,9 +2,10 @@
 #define LADYBUG_H
 
 #include "Insect.h"
+#include "Board.h"
 
 class Ladybug : public Insect {
-static unsigned int Max;
+static const unsigned int Max;
 static unsigned int poseBlanc;
 static unsigned int poseNoir;
 
