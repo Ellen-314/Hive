@@ -121,9 +121,6 @@ Board& Board::operator=(const Board& other) {
 
 // Destructeur pour Board
 Board::~Board() {
-    for (size_t i = 0; i < nb; i++) {
-        delete board_spots[i];
-    }
     delete[] board_spots;
 }
 
