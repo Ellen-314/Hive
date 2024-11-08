@@ -15,7 +15,7 @@ private:
     Insect* neighborBottomLeft;
 
     // Autres attributs
-    bool covered; // couvert ou non par un scarab�e
+    Insect* Insectcovering; // couvert ou non par un scarab�e
     bool color; // True pour blanc et False pour noir
 
 public:
