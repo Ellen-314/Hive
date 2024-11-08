@@ -9,18 +9,18 @@ public:
     // constructeur
     Hex(QGraphicsItem* parent=NULL);
     // getters
-    int getAttackOf(int side);
     bool getIsPlaced();
     QString getOwner();
+    QColor getColor() const;
 
     // event
     void mousePressEvent(QGraphicsSceneMouseEvent* event);
 
     // setters
-    void setAttackOf(int side, int attack);
     void setOwner(QString player);
     void setIsPlaced(bool b);
     void setInsectType(const QString& type);
+    void setColor(const QColor& color);
     QString getInsectType() const { return insectType; }
 
 private:
@@ -29,6 +29,7 @@ private:
     QString insectType;
     QPixmap insectImage;
     QString owner;
+    QColor color;
 };
 
 #endif // HEX_H

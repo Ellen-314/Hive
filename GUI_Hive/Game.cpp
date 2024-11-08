@@ -2,6 +2,7 @@
 #include "HexBoard.h"
 #include "Button.h"
 #include <QGraphicsTextItem>
+#include <QBrush>
 
 #include <QDebug>
 Game::Game(QWidget *parent){
@@ -40,30 +41,44 @@ void Game::drawPanel(int x, int y, int width, int height, QColor color, double o
     scene->addItem(panel);
 }
 
-void Game::drawGUI(){
-    // affichage panneau latéral gauche
-    drawPanel(0,0,150,768,Qt::darkCyan,1);
+void Game::drawGUI() {
+    // Affichage panneau latéral gauche
+    drawPanel(0, 0, 150, scene->height(), Qt::darkCyan, 1);
 
-    // affichage panneau latéral droit
-    drawPanel(874,0,150,768,Qt::darkCyan,1);
+    // Affichage panneau latéral droit
+    drawPanel(scene->width() - 150, 0, 150, scene->height(), Qt::darkCyan, 1);
 
-    // texte joueur1
-    QGraphicsTextItem* p1 = new QGraphicsTextItem("Pièces du Joueur 1: ");
-    p1->setPos(25,0);
+    // Texte joueur 1 : Nom et type
+    QString player1Label = QString("Joueur 1: %1 (%2)")
+                               .arg(player1Name.isEmpty() ? "Anonyme" : player1Name)
+                               .arg(player1Type == "IA" ? "IA" : "Humain");
+
+    QGraphicsTextItem* p1 = new QGraphicsTextItem(player1Label);
+    p1->setDefaultTextColor(Qt::black);
+    p1->setFont(QFont("Arial", 8));
+    p1->setPos(10, 6);  // Position sur le panneau gauche
     scene->addItem(p1);
 
-    // Texte joureur 2
-    QGraphicsTextItem* p2 = new QGraphicsTextItem("Pièces du Joueur 2: ");
-    p2->setPos(874+25,0);
+    // Texte joueur 2 : Nom et type
+    QString player2Label = QString("Joueur 2: %1 (%2)")
+                               .arg(player2Name.isEmpty() ? "Anonyme" : player2Name)
+                               .arg(player2Type == "IA" ? "IA" : "Humain");
+
+    QGraphicsTextItem* p2 = new QGraphicsTextItem(player2Label);
+    p2->setDefaultTextColor(Qt::black);
+    p2->setFont(QFont("Arial", 8));
+    p2->setPos(scene->width() - 140, 6);  // Position sur le panneau droit
     scene->addItem(p2);
 
-    // Affichage de à qui est le tour
+    // Texte pour indiquer le joueur dont c'est le tour
     whosTurnText = new QGraphicsTextItem();
-    setWhosTurn(QString("Joueur1"));
-    whosTurnText->setPos(490,0);
+    setWhosTurn(player1Name);  // Initialisation à Joueur 1
+    whosTurnText->setDefaultTextColor(Qt::black);
+    whosTurnText->setFont(QFont("Arial", 8, QFont::Bold));
+    whosTurnText->setPos(scene->width() / 2 - 50, 6);  // Centré en haut
     scene->addItem(whosTurnText);
-
 }
+
 
 
 
@@ -87,9 +102,13 @@ void Game::createInitialpawns() {
         int count = it.value();
         for (int i = 0; i < count; ++i) {
             Hex* pawn1 = new Hex();
-            pawn1->setOwner("Joueur1");
+            pawn1->setOwner(player1Name); //utilise les noms dynamiques
             pawn1->setIsPlaced(false);
             pawn1->setInsectType(type); // Assignez le type d'insecte
+            QBrush brush;
+            brush.setStyle(Qt::SolidPattern);
+            brush.setColor(Qt::blue);
+            pawn1->setBrush(brush);
             player1pawns.append(pawn1);
         }
     }
@@ -100,9 +119,13 @@ void Game::createInitialpawns() {
         int count = it.value();
         for (int i = 0; i < count; ++i) {
             Hex* pawn2 = new Hex();
-            pawn2->setOwner("Joueur2");
+            pawn2->setOwner(player2Name); //utilise les noms dynamiques
             pawn2->setIsPlaced(false);
             pawn2->setInsectType(type); // Assignez le type d'insecte
+            QBrush brush;
+            brush.setStyle(Qt::SolidPattern);
+            brush.setColor(Qt::red);
+            pawn2->setBrush(brush);
             player2pawns.append(pawn2);
         }
     }
@@ -110,10 +133,6 @@ void Game::createInitialpawns() {
     // Dessiner tous les pions pour les deux joueurs
     drawpawns();
 }
-
-
-
-
 
 
 void Game::addPawnToPlayer(QString player, QString insectType, int quantity, QList<Hex*>& pawnList) {
@@ -141,7 +160,7 @@ void Game::drawpawns() {
     int yPos = 25; // Position de départ verticale
     for (Hex* pawn : player1pawns) {
         pawn->setPos(13, yPos); // Positionner chaque pion verticalement
-        yPos += 60; // Espace entre les pions
+        yPos += 45; // Espace entre les pions
         scene->addItem(pawn);
     }
 
@@ -149,7 +168,7 @@ void Game::drawpawns() {
     yPos = 25; // Réinitialiser la position verticale
     for (Hex* pawn : player2pawns) {
         pawn->setPos(874 + 13, yPos); // Positionner chaque pion verticalement pour le joueur 2
-        yPos += 60; // Espace entre les pions
+        yPos += 45; // Espace entre les pions
         scene->addItem(pawn);
     }
 }
@@ -159,27 +178,45 @@ void Game::drawpawns() {
 
 
 void Game::displayMainMenu(){
+    // efface tout pour un bon affichage lors des retours en arrières
+    scene->clear();
     // Titre
     QGraphicsTextItem* titleText = new QGraphicsTextItem(QString("Hive"));
     QFont titleFont("comic sans",50);
     titleText->setFont(titleFont);
     int txPos = this->width()/2 - titleText->boundingRect().width()/2;
-    int tyPos = 150;
+    int tyPos = 100;
     titleText->setPos(txPos,tyPos);
     scene->addItem(titleText);
 
-    // création du bouton de jeu
-    Button* playButton = new Button(QString("Jouer"));
-    int bxPos = this->width()/2 - playButton->boundingRect().width()/2;
-    int byPos = 275;
-    playButton->setPos(bxPos,byPos);
-    connect(playButton,SIGNAL(clicked()),this,SLOT(start()));
-    scene->addItem(playButton);
+    // création du bouton de paramétrage d'une nouvelle partie
+    Button* newPlayButton = new Button(QString("Parametrer une nouvelle partie"));
+    int nbxPos = this->width()/2 - newPlayButton->boundingRect().width()/2;
+    int nbyPos = 200;
+    newPlayButton->setPos(nbxPos,nbyPos);
+    connect(newPlayButton,SIGNAL(clicked()),this, SLOT(displayGameSetupMenu()));
+    scene->addItem(newPlayButton);
+
+    // création du bouton de reprise de la partie
+    Button* resumeButton = new Button(QString("Reprendre la partie"));
+    int rbxPos = this->width()/2 - resumeButton->boundingRect().width()/2;
+    int rbyPos = 300;
+    resumeButton->setPos(rbxPos,rbyPos);
+    connect(resumeButton,SIGNAL(clicked()),this,SLOT(start()));
+    scene->addItem(resumeButton);
+
+    // création du bouton pour abandonner la partie en cours
+    Button* quitPlayButton = new Button(QString("Abandonner la partie"));
+    int qpxPos = this->width()/2 - quitPlayButton->boundingRect().width()/2;
+    int qpyPos = 400;
+    quitPlayButton->setPos(qpxPos,qpyPos);
+    connect(quitPlayButton,SIGNAL(clicked()),this,SLOT(close()));
+    scene->addItem(quitPlayButton);
 
     // création du bouton pour quitter
     Button* quitButton = new Button(QString("Quitter"));
     int qxPos = this->width()/2 - quitButton->boundingRect().width()/2;
-    int qyPos = 350;
+    int qyPos = 500;
     quitButton->setPos(qxPos,qyPos);
     connect(quitButton,SIGNAL(clicked()),this,SLOT(close()));
     scene->addItem(quitButton);
@@ -194,8 +231,10 @@ void Game::setWhosTurn(QString player){
     whosTurn_ = player;
 
     // mise à jour QGraphicsTextItem
-    whosTurnText->setPlainText(QString("Tour du: ") + player);
+   // whosTurnText->setPlainText(QString("Tour de: %1").arg(player));
+    whosTurnText->setPlainText(QString("Tour de : ") + player);
 }
+
 
 void Game::pickUppawn(Hex *pawn){
     // prends le pion séléctionné
@@ -205,6 +244,7 @@ void Game::pickUppawn(Hex *pawn){
         return;
     }
 }
+
 
 void Game::placepawn(Hex *hexToReplace) {
     if (!pawnToPlace) return;
@@ -228,10 +268,10 @@ void Game::placepawn(Hex *hexToReplace) {
 }
 
 
-bool Game::createReplacementPawn(QString insectType, QString player) {
+bool Game::createReplacementPawn(QString insectType, QString player) { // Plus besoin de cette méthode
     Hex* newPawn = nullptr;
 
-    if (player == "Joueur1") {
+    if (player == player1Name) {
         // Chercher un pion du même type dans la réserve
         for (int i = 0; i < player1RemainingPawns.size(); ++i) {
             if (player1RemainingPawns[i]->getInsectType() == insectType) {
@@ -240,10 +280,10 @@ bool Game::createReplacementPawn(QString insectType, QString player) {
             }
         }
         if (newPawn) {
-            newPawn->setOwner("Joueur1");
+            newPawn->setOwner(player1Name);
             player1pawns.append(newPawn); // Ajouter au plateau
         }
-    } else if (player == "Joueur2") {
+    } else if (player == player2Name) {
         for (int i = 0; i < player2RemainingPawns.size(); ++i) {
             if (player2RemainingPawns[i]->getInsectType() == insectType) {
                 newPawn = player2RemainingPawns.takeAt(i);
@@ -251,7 +291,7 @@ bool Game::createReplacementPawn(QString insectType, QString player) {
             }
         }
         if (newPawn) {
-            newPawn->setOwner("Joueur2");
+            newPawn->setOwner(player2Name);
             player2pawns.append(newPawn);
         }
     }
@@ -262,21 +302,21 @@ bool Game::createReplacementPawn(QString insectType, QString player) {
 
 
 void Game::nextPlayersTurn(){
-    if (getWhosTurn() == QString("Joueur1")){
-        setWhosTurn(QString("Joueur2"));
+    if (getWhosTurn() == QString(player1Name)){
+        setWhosTurn(QString(player2Name));
     }
     else {
-        setWhosTurn(QString("Joueur1"));
+        setWhosTurn(QString(player1Name));
     }
 }
 
 void Game::removeFromDeck(Hex *pawn, QString player){
-    if (player == QString("Joueur1")){
+    if (player == QString(player1Name)){
         // supprimer du joueur 1
         player1pawns.removeAll(pawn);
     }
 
-    if (player == QString("Joueur2")){
+    if (player == QString(player2Name)){
         // supprimer pour le joueur 2
         player2pawns.removeAll(pawn);
     }
@@ -304,3 +344,113 @@ void Game::mousePressEvent(QMouseEvent *event){
 
     QGraphicsView::mousePressEvent(event);
 }
+
+void Game::displayGameSetupMenu() {
+    // Effacer l'écran actuel
+    scene->clear();
+
+    // Titre du menu
+    QGraphicsTextItem* titleText = new QGraphicsTextItem(QString("Paramétrage de la partie"));
+    QFont titleFont("comic sans", 30);
+    titleText->setFont(titleFont);
+    int txPos = this->width()/2 - titleText->boundingRect().width()/2;
+    int tyPos = 50;
+    titleText->setPos(txPos, tyPos);
+    scene->addItem(titleText);
+
+    // Paramètres des joueurs
+    QGraphicsTextItem* player1Label = new QGraphicsTextItem("Nom Joueur 1 :");
+    player1Label->setPos(200, 150);
+    scene->addItem(player1Label);
+
+    player1NameInput = new QLineEdit();
+    player1NameInput->setText("Joueur1");
+    player1NameInput->setGeometry(400, 150, 200, 30);
+    scene->addWidget(player1NameInput);
+
+    QGraphicsTextItem* player2Label = new QGraphicsTextItem("Nom Joueur 2 :");
+    player2Label->setPos(200, 200);
+    scene->addItem(player2Label);
+
+    player2NameInput = new QLineEdit();
+    player2NameInput->setText("Joueur2");
+    player2NameInput->setGeometry(400, 200, 200, 30);
+    scene->addWidget(player2NameInput);
+
+    // Type des joueurs (Humain/IA)
+    player1TypeComboBox = new QComboBox();
+    player1TypeComboBox->addItem("Humain");
+    player1TypeComboBox->addItem("IA");
+    player1TypeComboBox->setGeometry(620, 150, 100, 30);
+    scene->addWidget(player1TypeComboBox);
+
+    player2TypeComboBox = new QComboBox();
+    player2TypeComboBox->addItem("Humain");
+    player2TypeComboBox->addItem("IA");
+    player2TypeComboBox->setGeometry(620, 200, 100, 30);
+    scene->addWidget(player2TypeComboBox);
+
+    // Nombre de retours arrière
+    QGraphicsTextItem* undoLabel = new QGraphicsTextItem("Nombre de retours arrière :");
+    undoLabel->setPos(200, 300);
+    scene->addItem(undoLabel);
+
+    undoSpinBox = new QSpinBox();
+    undoSpinBox->setRange(0, 10);
+    undoSpinBox->setValue(0);  // Par défaut 0
+    undoSpinBox->setGeometry(500, 300, 100, 30);
+    scene->addWidget(undoSpinBox);
+
+    // Extensions
+    QGraphicsTextItem* extensionLabel = new QGraphicsTextItem("Extensions disponibles :");
+    extensionLabel->setPos(200, 400);
+    scene->addItem(extensionLabel);
+
+    extension1CheckBox = new QCheckBox("Ladybug");
+    extension1CheckBox->setGeometry(400, 400, 150, 30);
+    scene->addWidget(extension1CheckBox);
+
+    extension2CheckBox = new QCheckBox("Mosquito");
+    extension2CheckBox->setGeometry(400, 450, 150, 30);
+    scene->addWidget(extension2CheckBox);
+
+    // Bouton pour lancer la partie
+    Button* startButton = new Button(QString("Lancer la partie"));
+    int bxPos = this->width()/2 - startButton->boundingRect().width()/2;
+    int byPos = 500;
+    startButton->setPos(bxPos, byPos);
+    connect(startButton, &Button::clicked, this, &Game::startGameWithSettings);
+    scene->addItem(startButton);
+
+    // Bouton pour retourner au menu principal
+    Button* backButton = new Button(QString("Retour"));
+    backButton->setPos(bxPos, byPos + 100);
+    connect(backButton, &Button::clicked, this, &Game::displayMainMenu);
+    scene->addItem(backButton);
+
+
+}
+void Game::startGameWithSettings() {
+
+    // Récupérer les paramètres de l'interface utilisateur
+    player1Name = player1NameInput->text();
+    player2Name = player2NameInput->text();
+    player1Type = player1TypeComboBox->currentText();
+    player2Type = player2TypeComboBox->currentText();
+
+    // Autres paramètres
+    int undoCount = undoSpinBox->value();
+    bool extension1Enabled = extension1CheckBox->isChecked();
+    bool extension2Enabled = extension2CheckBox->isChecked();
+
+    // Afficher les paramètres dans le debug
+    qDebug() << "Player 1: " << player1Name << "Type:" << player1Type;
+    qDebug() << "Player 2: " << player2Name << "Type:" << player2Type;
+    qDebug() << "Undo count:" << undoCount;
+    qDebug() << "Extension 1:" << extension1Enabled;
+    qDebug() << "Extension 2:" << extension2Enabled;
+
+    start();
+}
+
+

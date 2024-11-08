@@ -51,6 +51,11 @@ QString Hex::getOwner(){
     return owner;
 }
 
+QColor Hex::getColor() const {
+    return color;
+}
+
+
 void Hex::mousePressEvent(QGraphicsSceneMouseEvent *event){
     // si hex est pas placé (=pion) alors le prendre
     if (getIsPlaced() == false){
@@ -67,8 +72,8 @@ void Hex::setOwner(QString player){
     // MAJ owner
     owner = player;
 
-    // changer la couleur
-    if (player == QString("Personne")){
+    /*// changer la couleur
+    if (player == QString("Anonyme")){
         QBrush brush;
         brush.setStyle(Qt::SolidPattern);
         brush.setColor(Qt::lightGray);
@@ -87,7 +92,7 @@ void Hex::setOwner(QString player){
         brush.setStyle(Qt::SolidPattern);
         brush.setColor(Qt::red);
         setBrush(brush);
-    }
+    } */
 }
 
 void Hex::setIsPlaced(bool b){
