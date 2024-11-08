@@ -26,7 +26,7 @@ int main() {
     board.print(std::cout);
 
     Controleur controleur;
-    controleur.demarrer();
+    controleur.demarrerPartie();
 
     return 0;
 }

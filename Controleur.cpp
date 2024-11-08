@@ -2,13 +2,15 @@
 
 // Méthode pour afficher le menu principal avec les différentes actions disponibles
 void Controleur::afficherMenu() const {
-    std::cout << "\n=== Menu ===\n";
-    std::cout << "1. Ajouter une case\n";
-    std::cout << "2. Ajouter un insecte\n";
-    std::cout << "3. Déplacer un insecte\n";
-    std::cout << "4. Supprimer une case\n";
-    std::cout << "5. Afficher le plateau\n";
-    std::cout << "6. Quitter\n";
+    std::cout << "\n=== Menu de Jeu ===\n";
+    std::cout << "1. Poser un insecte\n";
+    std::cout << "2. Déplacer un insecte\n";
+    std::cout << "3. Afficher le plateau\n";
+    std::cout << "4. Annuler le coup\n";
+    std::cout << "0. Quitter\n";
+    std::cout << "=== Menu de Debug ===\n"; // n'existera pas pendant une partie
+    std::cout << "99. Ajouter une case\n";
+    std::cout << "98. Supprimer une case\n";
     std::cout << "Entrez votre choix : ";
 }
 
@@ -21,7 +23,7 @@ std::pair<int, int> Controleur::demanderCoordonnees() const {
 }
 
 // Méthode principale pour gérer les interactions utilisateur
-void Controleur::demarrer() {
+void Controleur::demarrerPartie() {
     //ici qu'on crée tous nos insectes dès le départ ?
     int choix;
     bool quitter = false;
@@ -31,23 +33,26 @@ void Controleur::demarrer() {
         std::cin >> choix;
 
         switch (choix) {
-            case 1:
-                ajouterCase();
+            case 0:
+                quitter = true;
                 break;
-            case 2:
+            case 1:
                 ajouterInsecte();
                 break;
-            case 3:
+            case 2:
                 deplacerInsecte();
                 break;
-            case 4:
-                supprimerCase();
-                break;
-            case 5:
+            case 3:
                 board.print(std::cout);
                 break;
-            case 6:
-                quitter = true;
+            case 4:
+                annulerCoup();
+                break;
+            case 99:
+                ajouterCase();
+                break;
+            case 98:
+                supprimerCase();
                 break;
             default:
                 std::cout << "Choix invalide, veuillez réessayer.\n";
@@ -117,4 +122,8 @@ void Controleur::supprimerCase() {
     catch (const SetException& e){
         std::cout << e.getMessage() <<"\n";
     }
+}
+
+void Controleur::annulerCoup(){
+    std::cout << "cette fonction n'est pas encore implémentée.\n";
 }

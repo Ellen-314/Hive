@@ -26,8 +26,8 @@ private:
     std::pair<int, int> demanderCoordonnees() const;
 
 public:
-    // Méthode principale pour gérer les interactions utilisateur et lancer le jeu
-    void demarrer();
+    // Méthode principale pour lancer le jeu et gérer les interactions utilisateur durant la partie
+    void demarrerPartie();
 
     // Méthode pour ajouter une case au plateau
     void ajouterCase();
@@ -40,6 +40,9 @@ public:
 
     // Méthode pour supprimer une case du plateau
     void supprimerCase();
+
+    // Méthode pour annuler un coup
+    void annulerCoup();
 
     // Constructeur
     Controleur()=default;
