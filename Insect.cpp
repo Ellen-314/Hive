@@ -11,7 +11,7 @@ using namespace std;
 Insect::Insect()
     : neighborTop(nullptr), neighborBottom(nullptr), neighborTopRight(nullptr),
     neighborBottomRight(nullptr), neighborTopLeft(nullptr), neighborBottomLeft(nullptr),
-    Insectcovering(nullptr), color(false) {}
+    InsectCovering(nullptr), color(false) {}
 
 // Setter and Getter pour neighborTop
 void Insect::setNeighborTop(Insect* insect) {
@@ -72,8 +72,8 @@ bool Insect::isCovered() const {
     return covered;
 }
 
-void Insect::setCovered(bool cov) {
-    covered = cov;
+void Insect::setCovered(Insect* i) {
+    InsectCovering = i;
 }
 
 // Setter and Getter pour color
