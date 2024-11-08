@@ -2,14 +2,15 @@
 #define BOARD_H
 
 #include "Insect.h"
-
+#include "ant.h"
+#include "queenbee.h"
 #include <iostream>
 #include <stdexcept>
 #include <utility>
 #include <vector>
 
 
-class Insect;
+
 
 // Exception pour gestion des erreurs dans la classe Board
 class SetException : public std::exception {
@@ -18,6 +19,7 @@ private:
 
 public:
     SetException(const std::string& msg) : message(msg) {}
+    std::string getMessage() const { return message; }
 };
 
 
@@ -61,7 +63,8 @@ private:
 
 public:
     Board() = default;
-
+    //acceder à la taille max
+    size_t getNb()const{return nb;}
     //  ajouter une case au plateau
     void addSpot(int x, int y);
 
@@ -81,12 +84,20 @@ public:
     // Suppression d'un spot du plateau
     void deleteSpot(int x, int y);
 
+    //permet d'acceder au boardspot par son index
+    const BoardSpot& getSpotIndex(size_t index) const ;
     //trouve les voisins de la pi�ce demand�e et les renvoies dans un vecteur;
     std::vector<const BoardSpot*> trouverVoisins(int x, int y) const;
     //trouve les voisins sans insects de la pi�ce demand�e et les renvoies dans un vecteur;
     std::vector<const BoardSpot*> voisinsNull(int x, int y) const;
     //trouve les voisins avec insects de la pi�ce demand�e et les renvoies dans un vecteur;
     std::vector<const BoardSpot*> trouverVoisinsInsects(int x, int y) const;
+    std::vector<const BoardSpot*>possibleplacer( bool couleur);
+
+         //affiche chaque element d'une liste de possibilités
+    void afficherpossibilite (std::vector <const BoardSpot*> possibilite);
+    //revoie true si le spot est dans les possibilités et false sinon
+    bool est_dans_possibilite (const BoardSpot* spot, std::vector <const BoardSpot* > possibilite);
 
     ~Board();
     Board(const Board& other);

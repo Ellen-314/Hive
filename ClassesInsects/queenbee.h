@@ -5,6 +5,7 @@
 #include <iostream>
 #include "Insect.h"
 #include "Board.h"
+#include <vector>
 class QueenBee : public Insect {
 
 static const unsigned int Max;
@@ -22,6 +23,10 @@ public:
     //TODO
     bool isSurrounded() const;
     std::vector<const BoardSpot*> moov(int x, int y, const Board& board)override;//override est utillis� pour indiquer que la fonction prends le pas sur celle de insect.
+
+    //dit si le joueur pet encore poser un pion de ce type; si il peut: true sinon: false
+    //blanc: True black=False
+    static bool estPasAuMax(bool couleur);
     ~QueenBee() override {};
 };
 
