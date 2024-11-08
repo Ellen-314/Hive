@@ -3,23 +3,34 @@
 Code plantuml :
 ```
 @startuml
+class SetException{
+-message : std::string
+
++SetException(const std::string& msg)
+
+}
+
 class Player{
+
 -color : bool
+
 +Player()
 +Player(bool color)
 +getColor() const : bool
 +setColor(bool color)
 }
 
-class Insect{
+abstract class Insect{
+
 -neighborTop : Insect*
 -neighborBottom : Insect*
 -neighborTopRight : Insect*
 -neighborBottomRight : Insect*
 -neighborTopLeft : Insect*
 -neighborBottomLeft : Insect*
--covered : bool
+-Insectcovering : Insect*
 -color : bool
+
 +Insect()
 +setNeighborTop(Insect* insect)
 +getNeighborTop() const : Insect* 
@@ -34,45 +45,116 @@ class Insect{
 +setNeighborBottomLeft(Insect* insect)
 +getNeighborBottomLeft() const : Insect*
 +isCovered() const : bool
-+setCovered(bool covered)
++setCovered(Insect* i)
 +getColor() const : bool
 +setColor(bool color)
-+move()
-+getPosition() const : tuple
-+changePosition(tuple new_pos)
++moov() : virtual std::vector<const BoardSpot*>
 }
 
 class QueenBee {
+
 - max : static unsigned int
+- poseBlanc : static unsigned int
+- poseNoir : static unsigned int
+
 + getMax() const : static unsigned int
++ getPoseBlanc() : static unsigned int
++ getPoseNoir() : static unsigned int
++ ajouterBlanc() : static void
++ ajouterNoir() : static void 
++ moov(int x, int y, const Board& board)override : vector<const BoardSpot*>
++ ~QueenBee() override
 }
 
 class Ant{
 - max : static unsigned int
+- poseBlanc : static unsigned int
+- poseNoir : static unsigned int
+
 + getMax() const : static unsigned int
++ getPoseBlanc() : static unsigned int
++ getPoseNoir() : static unsigned int
++ ajouterBlanc() : static void
++ ajouterNoir() : static void 
++ moov(int x, int y, const Board& board)override : vector<const BoardSpot*>
++ ~Ant() override
+ 
 }
 
 class Ladybug{
+
 - max : static unsigned int
+- poseBlanc : static unsigned int
+- poseNoir : static unsigned int
+
 + getMax() const : static unsigned int
-}
-class Mosquito{
-- max : static unsigned int
-+ getMax() const : static unsigned int
-}
-class Beetle{
-- max : static unsigned int
-+ getMax() const : static unsigned int
-}
-class Grasshopper{
-- max : static unsigned int
-+ getMax() const : static unsigned int
-}
-class Spider{
-- max : static unsigned int
-+ getMax() const : static unsigned int
++ getPoseBlanc() : static unsigned int
++ getPoseNoir() : static unsigned int
++ ajouterBlanc() : static void
++ ajouterNoir() : static void 
++ moov(int x, int y, const Board& board)override : vector<const BoardSpot*>
 }
 
+class Mosquito{
+
+- max : static unsigned int
+- poseBlanc : static unsigned int
+- poseNoir : static unsigned int
+
++ getMax() const : static unsigned int
++ getPoseBlanc() : static unsigned int
++ getPoseNoir() : static unsigned int
++ ajouterBlanc() : static void
++ ajouterNoir() : static void 
++ moov(int x, int y, const Board& board)override : vector<const BoardSpot*>
+}
+
+class Beetle{
+
+- max : static unsigned int
+- poseBlanc : static unsigned int
+- poseNoir : static unsigned int
+
++ getMax() const : static unsigned int
++ getPoseBlanc() : static unsigned int
++ getPoseNoir() : static unsigned int
++ ajouterBlanc() : static void
++ ajouterNoir() : static void 
++ moov(int x, int y, const Board& board)override : vector<const BoardSpot*>
++ ~Beetle() override
+}
+
+class Grasshopper{
+
+- max : static unsigned int
+- poseBlanc : static unsigned int
+- poseNoir : static unsigned int
+
++ getMax() const : static unsigned int
++ getPoseBlanc() : static unsigned int
++ getPoseNoir() : static unsigned int
++ ajouterBlanc() : static void
++ ajouterNoir() : static void 
++ moov(int x, int y, const Board& board)override : vector<const BoardSpot*>
++ ~Grasshopper() override
+
+}
+class Spider{
+
+- max : static unsigned int
+- poseBlanc : static unsigned int
+- poseNoir : static unsigned int
+
++ getMax() const : static unsigned int
++ getPoseBlanc() : static unsigned int
++ getPoseNoir() : static unsigned int
++ ajouterBlanc() : static void
++ ajouterNoir() : static void 
++ moov(int x, int y, const Board& board)override : vector<const BoardSpot*>
++ ~Spider() override
+}
+
+skinparam groupInheritance 2
 Insect <|-- QueenBee
 Insect <|-- Ant
 Insect <|-- Ladybug
@@ -81,28 +163,71 @@ Insect <|-- Beetle
 Insect <|-- Grasshopper
 Insect <|-- Spider
 
-class PlayerHand {
--color : bool
--tab : const Insect**
--nbIsct : size_t
-+PlayerHand()
-+getNbIsct() const : size_t
-+prendrePiece() : const Insect&
+class BoardSpot{
+
+-coordinates : std::pair<int,int>
+-insect_pose : Insect*
+
++BoardSport(int x, int y)
++getCoordinates() : std::pair<int,int>
++getInsect() : Insect*
++setCoordinates()
++setInsect()
++hasInsect() : bool
++print(std::ostream& f)
 }
 
-PlayerHand o-- "0..n" Insect
-Player "1" -- "1" PlayerHand
+Controleur *-- "1" Board
+Board *-- "*" BoardSpot
+Insect "0..1" -- "0..1" BoardSpot : se trouve sur la case
+Insect "0..6" -- Insect : voisin
+Insect "0..1" -- Insect : couvert par
 
 class Board {
-- hash_table: <Insect*,tuple>
-+ class Iterator
-}
 
-Board o-- "0..n" Insect
+-board_spots : BoardSpot**
+-nb : size_t
+-nbMax : size_t
+
++Board()
++addSpot(int x, int y)
++getSpot(int x, int y) : const BoardSpot*
++modifySpot(int x, int y)
++addInsectToSpot(int x, int y, Insect* insect)
++deleteInsectFromSpot(int x, int y)
++print(std::ostream& f) const
++deleteSpot(int x, int y)
++trouverVoisins(int x, int y) const : std::vector<const BoardSpot*>
++voisinsNull(int x, int y) const : std::vector<const BoardSpot*>
++trouverVoisinsInsects(int x, int y) const : std::vector<const BoardSpot*>
++~Board()
++Board(const Board& other)
++Board& operator=(const Board& other)
+}
 
 class Rules {
+
 - beeOnBoard : bool
+
 + isBeeOnBoard():bool
 }
-@enduml
-```
+
+class Controleur{
+- board : Board
+- afficherMenu() const
+- demanderCoordonnees() const : std::pair<int, int>
+
++ demarrerPartie()
++ ajouterCase()
++ ajouterInsecte()
++ deplacerInsecte()
++ supprimerCase()
++ annulerCoup()
++ Controleur()
++ getPlateau() const : const Board&
++ getPlateau() : Board&
++ Controleur(const Controleur& c)
++ operator=(const Controleur& c) : Controleur&
++ ~Controleur()
+}
+@enduml```
