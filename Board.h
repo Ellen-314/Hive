@@ -91,6 +91,31 @@ public:
     ~Board();
     Board(const Board& other);
     Board& operator=(const Board& other);
+
+    class BoardIterator {
+    public:
+        BoardIterator & operator++() { current++;  return *this; }
+        BoardSpot& operator*() const { return **current; }
+        bool operator!=(BoardIterator it) const { return current != it.current; }
+    private:
+        BoardIterator(BoardSpot** s) :current(s) {}
+        friend class Board;
+        BoardSpot** current = nullptr;
+    };
+    BoardIterator begin() const { return BoardIterator(board_spots); }
+    BoardIterator end() const { return BoardIterator(board_spots+nb); }
+
+    /*
+    Exemple d'utilisation de l'itérateur
+
+    for(auto it=board.begin();
+         it!=board.end();
+         ++it){
+        (*it).print(std::cout);
+        std::cout << "\n";
+    }
+    */
+
 };
 
 #endif
