@@ -1,0 +1,32 @@
+
+
+#ifndef ANT_H
+#define ANT_H
+
+#include <stdio.h>
+#include <iostream>
+#include "Insect.h"
+#include "Board.h"
+#include <queue>
+#include <set>
+#include <vector>
+
+
+class Ant : public Insect {
+static const unsigned int Max;
+static unsigned int poseBlanc;
+static unsigned int poseNoir;
+
+public:
+   static unsigned int getMax(){return Max;}
+   static unsigned int getPoseBlanc(){return poseBlanc;}
+   static unsigned int getPoseNoir(){return poseNoir;}
+   static void ajouterBlanc(){poseBlanc++;}
+   static void ajouterNoir(){poseNoir++;}
+   //la fonction moov retourne un vecteur des possibilités des mouvements de la fourmie aux positions données.
+   std::vector<const BoardSpot*> moov(int x, int y, const Board& board)override;//override est utillis� pour indiquer que la fonction prends le pas sur celle de insect.
+    ~Ant() override {};
+
+};
+
+#endif // ANT_H
