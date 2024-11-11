@@ -3,17 +3,23 @@
 #include "Button.h"
 #include <QGraphicsTextItem>
 #include <QBrush>
+#include <QMessageBox>
+#include <QFile>
 
 #include <QDebug>
-Game::Game(QWidget *parent){
+Game::Game(QWidget *parent): QGraphicsView(parent), numRetours(0), pawnToPlace(nullptr) {
+    //adapter la taille dynamiquement en fonction de l'écran
+    QSize screenSize = QGuiApplication::primaryScreen()->availableGeometry().size();
+    int newWidth = screenSize.width() * 0.8;
+    int newHeight = screenSize.height();
     // mettre l'écran
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    setFixedSize(1024,768);
+    setFixedSize(newWidth,newHeight);
 
     // mettre la scène
     scene = new QGraphicsScene();
-    scene->setSceneRect(0,0,1024,768);
+    scene->setSceneRect(0,0,newWidth,newHeight);
     setScene(scene);
 
     // initialisation de la place du pion
@@ -77,7 +83,32 @@ void Game::drawGUI() {
     whosTurnText->setFont(QFont("Arial", 8, QFont::Bold));
     whosTurnText->setPos(scene->width() / 2 - 50, 6);  // Centré en haut
     scene->addItem(whosTurnText);
+
+    // Label pour les retours en arrière
+    QString retoursLabel = QString("Retours en arrière: %1").arg(numRetours); // Use dynamic numRetours
+    QGraphicsTextItem* retoursText = new QGraphicsTextItem(retoursLabel);
+    retoursText->setDefaultTextColor(Qt::black);
+    retoursText->setFont(QFont("Arial", 8));
+    retoursText->setPos(scene->width() / 2 - 180, 6); // Adjusted left of whosTurnText
+    scene->addItem(retoursText);
+
+    // Bouton pour les retours en arrière
+    Button* backButton = new Button(QString("Retour"));
+    backButton->setScale(0.5);
+    backButton->setFontSize(18);
+    backButton->setPos(scene->width() / 2 - 300, 0);  // Left aligned further for button
+    connect(backButton, SIGNAL(clicked()), this, SLOT(undoLastAction()));
+    scene->addItem(backButton);
+
+    // Bouton enregistrer
+    Button* saveButton = new Button(QString("Enregistrer"));
+    saveButton->setScale(0.5);
+    saveButton->setFontSize(18);  // Taille de la police
+    saveButton->setPos(scene->width() / 2 + 80, 0);  // Right of whosTurnText for save button
+    connect(saveButton, SIGNAL(clicked()), this, SLOT(saveGame()));
+    scene->addItem(saveButton);
 }
+
 
 
 
@@ -184,14 +215,14 @@ void Game::displayMainMenu(){
     QGraphicsTextItem* titleText = new QGraphicsTextItem(QString("Hive"));
     QFont titleFont("comic sans",50);
     titleText->setFont(titleFont);
-    int txPos = this->width()/2 - titleText->boundingRect().width()/2;
+    int txPos = scene->width()/2 - titleText->boundingRect().width()/2;
     int tyPos = 100;
     titleText->setPos(txPos,tyPos);
     scene->addItem(titleText);
 
     // création du bouton de paramétrage d'une nouvelle partie
     Button* newPlayButton = new Button(QString("Parametrer une nouvelle partie"));
-    int nbxPos = this->width()/2 - newPlayButton->boundingRect().width()/2;
+    int nbxPos = scene->width()/2 - newPlayButton->boundingRect().width()/2;
     int nbyPos = 200;
     newPlayButton->setPos(nbxPos,nbyPos);
     connect(newPlayButton,SIGNAL(clicked()),this, SLOT(displayGameSetupMenu()));
@@ -199,7 +230,7 @@ void Game::displayMainMenu(){
 
     // création du bouton de reprise de la partie
     Button* resumeButton = new Button(QString("Reprendre la partie"));
-    int rbxPos = this->width()/2 - resumeButton->boundingRect().width()/2;
+    int rbxPos = scene->width()/2 - resumeButton->boundingRect().width()/2;
     int rbyPos = 300;
     resumeButton->setPos(rbxPos,rbyPos);
     connect(resumeButton,SIGNAL(clicked()),this,SLOT(start()));
@@ -207,7 +238,7 @@ void Game::displayMainMenu(){
 
     // création du bouton pour abandonner la partie en cours
     Button* quitPlayButton = new Button(QString("Abandonner la partie"));
-    int qpxPos = this->width()/2 - quitPlayButton->boundingRect().width()/2;
+    int qpxPos = scene->width()/2 - quitPlayButton->boundingRect().width()/2;
     int qpyPos = 400;
     quitPlayButton->setPos(qpxPos,qpyPos);
     connect(quitPlayButton,SIGNAL(clicked()),this,SLOT(close()));
@@ -215,7 +246,7 @@ void Game::displayMainMenu(){
 
     // création du bouton pour quitter
     Button* quitButton = new Button(QString("Quitter"));
-    int qxPos = this->width()/2 - quitButton->boundingRect().width()/2;
+    int qxPos = scene->width()/2 - quitButton->boundingRect().width()/2;
     int qyPos = 500;
     quitButton->setPos(qxPos,qyPos);
     connect(quitButton,SIGNAL(clicked()),this,SLOT(close()));
@@ -451,6 +482,33 @@ void Game::startGameWithSettings() {
     qDebug() << "Extension 2:" << extension2Enabled;
 
     start();
+}
+
+void Game::undoLastAction() {
+    if (numRetours > 0 && !history.isEmpty()) {
+        QGraphicsItem* lastAction = history.takeLast();
+        scene->removeItem(lastAction);  // Undo the last action visually
+        delete lastAction;
+        numRetours--;
+        drawGUI();  // Update undo count on GUI
+    } else {
+        QMessageBox::warning(this, "Retour", "Il n'y a plus de retours en arrières!");
+    }
+}
+
+void Game::saveGame() {
+    QFile file("savegame.txt");
+    if (file.open(QIODevice::WriteOnly)) {
+        QTextStream out(&file);
+        out << "Player 1: " << player1Name << " (" << player1Type << ")\n";
+        out << "Player 2: " << player2Name << " (" << player2Type << ")\n";
+        out << "Undo actions remaining: " << numRetours << "\n";
+        // Save additional game state details here.
+        file.close();
+        QMessageBox::information(this, "Enregistrement", "Le jeu a bien été sauvegardé.");
+    } else {
+        QMessageBox::warning(this, "Enregistrement", "Erreur, le jeu n'a pas été sauvegardé.");
+    }
 }
 
 

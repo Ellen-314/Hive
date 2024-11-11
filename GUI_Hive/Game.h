@@ -9,12 +9,13 @@
 #include <QComboBox>
 #include <QSpinBox>
 #include <QCheckBox>
+#include "Button.h"  // Ensure this includes Button if it's a custom class
 
 class Game: public QGraphicsView{
     Q_OBJECT
 public:
-    // constructeur
-    Game(QWidget* parent=NULL);
+    // Constructor
+    Game(QWidget* parent = nullptr);
 
     void displayMainMenu();
     QString getWhosTurn();
@@ -22,14 +23,12 @@ public:
     void pickUppawn(Hex* pawn);
     void placepawn(Hex* hexToReplace);
     void nextPlayersTurn();
-    void removeFromDeck(Hex* pawn,QString player);
+    void removeFromDeck(Hex* pawn, QString player);
     void addPawnToPlayer(QString player, QString insectType, int quantity, QList<Hex*>& pawnList);
     bool createReplacementPawn(QString insectType, QString player);
 
-
-
-    // events
-    void mouseMoveEvent(QMouseEvent *event);
+    // Events
+    void mouseMoveEvent(QMouseEvent* event);
     void mousePressEvent(QMouseEvent* event);
 
     QGraphicsScene* scene;
@@ -40,6 +39,8 @@ public:
 public slots:
     void start();
     void displayGameSetupMenu();
+    void undoLastAction();  // New slot for undo
+    void saveGame();        // New slot for save
 
 private:
     void drawPanel(int x, int y, int width, int height, QColor color, double opacity);
@@ -54,20 +55,24 @@ private:
     QString player1Type;
     QString player2Type;
 
-    QLineEdit* player1NameInput; // Champ de texte pour le nom du joueur 1
-    QLineEdit* player2NameInput; // Champ de texte pour le nom du joueur 2
-    QComboBox* player1TypeComboBox;  // Type de joueur 1 (Humain/IA)
-    QComboBox* player2TypeComboBox;  // Type de joueur 2 (Humain/IA)
-    QSpinBox* undoSpinBox;  // Sélecteur pour le nombre de retours arrière possibles
-    QCheckBox* extension1CheckBox;  // Checkbox pour activer/désactiver l'extension 1
-    QCheckBox* extension2CheckBox;  // (Optionnel) Pour une autre extension si nécessaire
+    QLineEdit* player1NameInput;
+    QLineEdit* player2NameInput;
+    QComboBox* player1TypeComboBox;
+    QComboBox* player2TypeComboBox;
+    QSpinBox* undoSpinBox;
+    QCheckBox* extension1CheckBox;
+    QCheckBox* extension2CheckBox;
+
     QString whosTurn_;
     QGraphicsTextItem* whosTurnText;
-    QList<Hex* > player1pawns;     // Liste des pions visibles du joueur 1
-    QList<Hex* > player2pawns;     // Liste des pions visibles du joueur 2
-    QList<Hex*> player1RemainingPawns;    // Liste des pions en réserve du joueur 1
-    QList<Hex*> player2RemainingPawns;    // Liste des pions en réserve du joueur 2
+    QList<Hex*> player1pawns;
+    QList<Hex*> player2pawns;
+    QList<Hex*> player1RemainingPawns;
+    QList<Hex*> player2RemainingPawns;
 
+    // Undo and save
+    int numRetours;  // Number of undo actions left
+    QList<QGraphicsItem*> history;  // Track game state changes for undo
 };
 
 #endif // GAME_H

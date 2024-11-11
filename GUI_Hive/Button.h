@@ -9,6 +9,8 @@ class Button:public QObject, public QGraphicsRectItem{
 public:
     // constructeur
     Button(QString name, QGraphicsItem* parent=NULL);
+    void setFontSize(int size); // New method to set font size
+
 
     // méthodes gestion des events
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
