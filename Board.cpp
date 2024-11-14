@@ -248,7 +248,7 @@ bool Board::est_dans_possibilite (const BoardSpot* spot, std::vector <const Boar
 
     for (size_t i = 0; i< possibilite.size(); i++)
         {
-           if (spot == possibilite[i])
+           if (spot->getCoordinates() == possibilite[i]->getCoordinates())
            {
 
                return true;
