@@ -4,7 +4,7 @@
 #include "Board.h"
 #include "Insect.h"
 
-
+#include "fonctionsannexes.h"
 #include <iostream>
 
 // Exception pour gestion des erreurs dans la classe Controleur
@@ -20,7 +20,8 @@ public:
 class Controleur {
 private:
     Board board;
-
+    static unsigned int compteurDeToursBlanc;
+    static unsigned int compteurDeToursNoir;
     // Méthode pour afficher le menu principal avec les différentes actions disponibles
     void afficherMenu() const;
 
@@ -46,7 +47,13 @@ public:
     // Méthode pour annuler un coup
     void annulerCoup();
 
-
+    //Methodes liées
+    static unsigned int getCompteurDeToursBlanc(){return compteurDeToursBlanc;}
+    static unsigned int getCompteurDeToursNoir(){return compteurDeToursNoir;}
+    static void ajouterCompteurDeToursBlanc(){compteurDeToursBlanc++;}
+    static void ajouterCompteurDeToursNoir(){compteurDeToursNoir++;}
+    //fonction qui permet de mettre à jour le tour du joueur;
+    void incCompteur(bool color);
 
     // Constructeur
     Controleur()=default;
