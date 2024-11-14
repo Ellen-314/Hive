@@ -1,5 +1,10 @@
 #include "Controleur.h"
 
+
+unsigned int Controleur::compteurDeToursBlanc = 0;
+unsigned int Controleur::compteurDeToursNoir = 0;
+
+
 // Méthode pour afficher le menu principal avec les différentes actions disponibles
 void Controleur::afficherMenu() const {
     std::cout << "\n=== Menu de Jeu ===\n";
@@ -13,6 +18,8 @@ void Controleur::afficherMenu() const {
     std::cout << "98. Supprimer une case\n";
     std::cout << "Entrez votre choix : ";
 }
+
+
 
 // Méthode pour obtenir de la part l'utilisateur des coordonnées de la case où une action doit être effectuée
 std::pair<int, int> Controleur::demanderCoordonnees() const {
@@ -78,9 +85,29 @@ void Controleur::ajouterInsecte() {
         unsigned int color;
         std::cout << "Choisissez la couleur de l'insecte (1 pour blanc, 0 pour noir) : ";
         std::cin >> color;
+        std::cout << color;
+        std::cout << "\n nombre d'insect posé blanc" << Controleur::getCompteurDeToursBlanc();
+        std::cout << "\n nombre d'insect posé noir" << Controleur::getCompteurDeToursNoir();
+
         if(color!=1 && color!=0){ throw ControleurException("Couleur choisie incorrecte."); }
-
-
+        std::vector<const BoardSpot* > possibilite;
+        //si c'est le premier pour chacun tour on cree le premier spot pour insecte
+         if (((color == 1)&& (Controleur::getCompteurDeToursBlanc() == 0))||((color==0)&&(Controleur::getCompteurDeToursNoir() == 0)))
+        {    std::cout << "Rentre dans la boucle des conditions";
+            if (color == 1 ){
+            board.addSpot(0, 0);
+            std::cout << "j'ajoute un spot" ;
+            const BoardSpot* spot = board.getSpot(0, 0);
+            possibilite.push_back(spot);}
+            if (color == 0){
+            std::cout << "Ajout du spot pour la couleur noire à la position (0, 1)";
+            board.addSpot(0, 1);
+            std::cout << "j'ajoute un spot" ;
+            const BoardSpot* spot = board.getSpot(0, 1);
+            possibilite.push_back(spot);
+            std::cout<< "j'affiche \n";
+            board.afficherpossibilite(possibilite);}
+        }
 
         int choix_insect;
         Insect* insect = nullptr;
@@ -89,6 +116,7 @@ void Controleur::ajouterInsecte() {
         std::cout << "Quel insecte souhaitez vous ajouter? :\n 1: reine, 2: fourmie, 3: arreignée , 4: sauterelle, 5: scarabé, 6:revenir au menu  \n";
         //TODO: voir pour gérér quand on ajoute l'extension
         std::cin >> choix_insect;
+
 
         switch (choix_insect)
 
@@ -124,14 +152,27 @@ void Controleur::ajouterInsecte() {
 
         insect->setColor(color);
 
-        std::vector<const BoardSpot* > possibilite = board.possibleplacer(color);
+
+        if (((color == 1)&& (Controleur::getCompteurDeToursBlanc() != 0))||((color==0)&&(Controleur::getCompteurDeToursNoir() != 0))){
+            possibilite = board.possibleplacer(color);}
+        std::cout<<"afficher possibilités:  \n";
         board.afficherpossibilite(possibilite);
-        auto [x, y] = demanderCoordonnees();
+        BoardSpot spot(0, 0);
+        int x, y;
+        do {auto [newx, newy] = demanderCoordonnees();
+            spot = BoardSpot(newx, newy);
+            x = newx;
+            y = newy;
 
 
+           }while( !board.est_dans_possibilite(&spot, possibilite));
+
+        board.addSpot(x, y);
         board.addInsectToSpot(x, y, insect);
         //TO DO: fonction creer cases vides autour de l'insect ajouté
         std::cout << "Insecte ajouté à la case (" << x << ", " << y << ").\n";
+        incCompteur(color);
+
     }
     catch (const SetException& e){
         std::cout << e.getMessage() <<"\n";
@@ -196,5 +237,9 @@ void Controleur::annulerCoup(){
     std::cout << "cette fonction n'est pas encore implémentée.\n";
 }
 
-
+//fonction qui permet de mettre à jour le tour du joueur;
+void Controleur::incCompteur(bool color){
+if (color == 1)     Controleur::ajouterCompteurDeToursBlanc();
+if (color == 0)   Controleur::ajouterCompteurDeToursNoir();
+}
 
