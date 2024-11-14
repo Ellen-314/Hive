@@ -46,10 +46,20 @@ public:
         f << "Coordonn�es: (" << coordinates.first << ", " << coordinates.second << ")";
         if (insect_pose) {
             f << " avec un insecte.";
+            if (insect_pose->getColor()==0)
+            {
+                f << " noir.";
+            }
+            if (insect_pose->getColor()==1)
+            {
+                f << " blanc.";
+            }
+
         }
         else {
             f << " sans insecte.";
         }
+
     }
 
 };
