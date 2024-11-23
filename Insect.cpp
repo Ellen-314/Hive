@@ -1,9 +1,5 @@
-﻿#include "Insect.h"
-#include <iostream>
-
-#include <vector>
-
-#include "Board.h"
+﻿
+#include "Insect.h"
 
 using namespace std;
 
@@ -11,7 +7,7 @@ using namespace std;
 Insect::Insect()
     : neighborTop(nullptr), neighborBottom(nullptr), neighborTopRight(nullptr),
     neighborBottomRight(nullptr), neighborTopLeft(nullptr), neighborBottomLeft(nullptr),
-    InsectCovering(nullptr), color(false) {}
+    covered(false), color(false) {}
 
 // Setter and Getter pour neighborTop
 void Insect::setNeighborTop(Insect* insect) {
@@ -72,8 +68,8 @@ bool Insect::isCovered() const {
     return covered;
 }
 
-void Insect::setCovered(Insect* i) {
-    InsectCovering = i;
+void Insect::setCovered(bool cov) {
+    covered = cov;
 }
 
 // Setter and Getter pour color
@@ -84,5 +80,7 @@ bool Insect::getColor() const {
 void Insect::setColor(bool col) {
     color = col;
 }
+
+
 
 Insect::~Insect() {}

@@ -102,12 +102,16 @@ public:
     std::vector<const BoardSpot*> voisinsNull(int x, int y) const;
     //trouve les voisins avec insects de la pi�ce demand�e et les renvoies dans un vecteur;
     std::vector<const BoardSpot*> trouverVoisinsInsects(int x, int y) const;
-    std::vector<const BoardSpot*>possibleplacer( bool couleur);
+    std::vector<const BoardSpot*>possibleplacer( bool couleur)const;
 
          //affiche chaque element d'une liste de possibilités
-    void afficherpossibilite (std::vector <const BoardSpot*> possibilite);
+    void afficherpossibilite (std::vector <const BoardSpot*> possibilite)const;
     //revoie true si le spot est dans les possibilités et false sinon
-    bool est_dans_possibilite (const BoardSpot* spot, std::vector <const BoardSpot* > possibilite);
+    bool est_dans_possibilite (const BoardSpot* spot, std::vector <const BoardSpot* > possibilite)const;
+    //ajouter les cases null autour d'une pièce
+    void addNullSpot(int x, int y);
+    //renvoyer toutes les pièces possédées par un joueur
+    std::vector<const BoardSpot*> piecejoueur(bool couleur) const;
 
     ~Board();
     Board(const Board& other);

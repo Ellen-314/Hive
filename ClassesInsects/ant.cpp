@@ -4,7 +4,7 @@ const unsigned int Ant::Max =3;
 unsigned int Ant::poseBlanc = 0;
 unsigned int Ant::poseNoir = 0;
 
-std::vector<const BoardSpot*> Ant::moov(int x, int y, const Board& board){
+std::vector<const BoardSpot*> Ant::moov(int x, int y, const Board& board)const{
 std::vector <const BoardSpot*> possibilite;
 std::queue <const BoardSpot*> Averifier;//queue permet de creer FIFO
 std::set <const BoardSpot*> verifie; //set peremet le tri et l'unicité des éléments

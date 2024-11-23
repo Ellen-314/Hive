@@ -1,10 +1,9 @@
 ﻿#ifndef INSECT_H_INCLUDED
 #define INSECT_H_INCLUDED
-
 #include <vector>
 class Board;
 class BoardSpot;
-class Insect {
+class Insect{
 private:
     // Pointeurs vers les insectes voisins
     Insect* neighborTop;
@@ -15,7 +14,7 @@ private:
     Insect* neighborBottomLeft;
 
     // Autres attributs
-    Insect* InsectCovering; // couvert ou non par un autre insecte
+    bool covered; // couvert ou non par un scarab�e
     bool color; // True pour blanc et False pour noir
 
 public:
@@ -45,13 +44,14 @@ public:
 
     // Getter and Setter pour cover() et color()
     bool isCovered() const;
-    void setCovered(Insect* i);
+    void setCovered(bool covered);
 
     bool getColor() const;
     void setColor(bool color);
 
     // Methode moov() virtuelle car surchargée pour chaque insect. Elle renvoie les possibilités de mouvements
-    virtual std::vector<const BoardSpot*> moov(int x, int y, const Board& board) = 0;
+    virtual std::vector<const BoardSpot*> moov(int x, int y, const Board& board)const = 0;
+
 };
 
 #endif // INSECT_H_INCLUDED
