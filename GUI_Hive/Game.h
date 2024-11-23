@@ -1,6 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
-
+#include "Memento.h"
+#include <QStack>
 #include <QGraphicsView>
 #include <QGraphicsScene>
 #include "HexBoard.h"
@@ -9,13 +10,16 @@
 #include <QComboBox>
 #include <QSpinBox>
 #include <QCheckBox>
-#include "Button.h"  // Ensure this includes Button if it's a custom class
+#include "Button.h"
+#include "Memento.h"
 
 class Game: public QGraphicsView{
     Q_OBJECT
 public:
-    // Constructor
+    // Constructeur
     Game(QWidget* parent = nullptr);
+    // Destructeur
+    ~Game();
 
     void displayMainMenu();
     QString getWhosTurn();
@@ -26,10 +30,15 @@ public:
     void removeFromDeck(Hex* pawn, QString player);
     void addPawnToPlayer(QString player, QString insectType, int quantity, QList<Hex*>& pawnList);
     bool createReplacementPawn(QString insectType, QString player);
+    Hex* cloneHex(Hex* original);
 
     // Events
     void mouseMoveEvent(QMouseEvent* event);
     void mousePressEvent(QMouseEvent* event);
+
+    //Memento
+    void saveState();
+    void restoreState();
 
     QGraphicsScene* scene;
     HexBoard* hexBoard;
@@ -49,6 +58,11 @@ private:
     void createInitialpawns();
     void drawpawns();
     void startGameWithSettings();
+
+
+    //Memento
+    QStack<Memento*> history;
+    void storeCurrentState();
 
     QString player1Name;
     QString player2Name;
@@ -72,7 +86,20 @@ private:
 
     // Undo and save
     int numRetours;  // Number of undo actions left
-    QList<QGraphicsItem*> history;  // Track game state changes for undo
+    //QList<QGraphicsItem*> history;  // Track game state changes for undo
 };
+
+class GameState {
+public:
+    QList<Hex*> player1Pawns;
+    QList<Hex*> player2Pawns;
+    QString currentTurn;
+    int undoCount;
+
+    // Constructor to save state
+    GameState(const QList<Hex*>& p1, const QList<Hex*>& p2, const QString& turn, int undos)
+        : player1Pawns(p1), player2Pawns(p2), currentTurn(turn), undoCount(undos) {}
+};
+
 
 #endif // GAME_H

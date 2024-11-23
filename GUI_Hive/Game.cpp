@@ -5,8 +5,8 @@
 #include <QBrush>
 #include <QMessageBox>
 #include <QFile>
-
 #include <QDebug>
+
 Game::Game(QWidget *parent): QGraphicsView(parent), numRetours(0), pawnToPlace(nullptr) {
     //adapter la taille dynamiquement en fonction de l'écran
     QSize screenSize = QGuiApplication::primaryScreen()->availableGeometry().size();
@@ -26,6 +26,12 @@ Game::Game(QWidget *parent): QGraphicsView(parent), numRetours(0), pawnToPlace(n
     pawnToPlace = NULL;
 }
 
+Game::~Game() {
+    while (!history.isEmpty()) {
+        delete history.pop();
+    }
+}
+
 void Game::start(){
     // remettre l'écran vide
     scene->clear();
@@ -34,6 +40,7 @@ void Game::start(){
     hexBoard->placeHexes(200,30,15,15);
     drawGUI();
     createInitialpawns();
+    saveState();
 }
 
 void Game::drawPanel(int x, int y, int width, int height, QColor color, double opacity){
@@ -97,7 +104,7 @@ void Game::drawGUI() {
     backButton->setScale(0.5);
     backButton->setFontSize(18);
     backButton->setPos(scene->width() / 2 - 300, 0);  // Left aligned further for button
-    connect(backButton, SIGNAL(clicked()), this, SLOT(undoLastAction()));
+    connect(backButton, &Button::clicked, this, &Game::undoLastAction);
     scene->addItem(backButton);
 
     // Bouton enregistrer
@@ -280,6 +287,8 @@ void Game::pickUppawn(Hex *pawn){
 void Game::placepawn(Hex *hexToReplace) {
     if (!pawnToPlace) return;
 
+    saveState();  // Save the state before placing the pawn (pour le Memento)
+
     // Placer le pion sélectionné
     pawnToPlace->setPos(hexToReplace->pos());
     hexBoard->getHexes().removeAll(hexToReplace);
@@ -299,7 +308,7 @@ void Game::placepawn(Hex *hexToReplace) {
 }
 
 
-bool Game::createReplacementPawn(QString insectType, QString player) { // Plus besoin de cette méthode
+bool Game::createReplacementPawn(QString insectType, QString player) { // Plus besoin de cette méthode?
     Hex* newPawn = nullptr;
 
     if (player == player1Name) {
@@ -485,30 +494,110 @@ void Game::startGameWithSettings() {
 }
 
 void Game::undoLastAction() {
-    if (numRetours > 0 && !history.isEmpty()) {
-        QGraphicsItem* lastAction = history.takeLast();
-        scene->removeItem(lastAction);  // Undo the last action visually
-        delete lastAction;
-        numRetours--;
-        drawGUI();  // Update undo count on GUI
-    } else {
-        QMessageBox::warning(this, "Retour", "Il n'y a plus de retours en arrières!");
+    if (history.isEmpty()) {
+        QMessageBox::warning(this, "Retour","Pas d'action de retour en arrière !");
+        return;
     }
+
+    // Restaurer l'état
+    restoreState();
+
+    // Redessiner la scène avec l'état restauré
+    scene->clear();
+    hexBoard->placeHexes(200, 30, 15, 15);  // Réaffichez le plateau de jeu
+    drawGUI();
+    drawpawns();
 }
 
+
+
+
 void Game::saveGame() {
+    qDebug() << "Saving game state...";
+    qDebug() << "Player 1 Pawns:";
+    for (Hex* pawn : player1pawns) {
+        qDebug() << "P1 Pawn " << pawn->getInsectType() << " at ("
+                 << pawn->pos().x() << ", " << pawn->pos().y() << ")";
+    }
+
+    qDebug() << "Player 2 Pawns:";
+    for (Hex* pawn : player2pawns) {
+        qDebug() << "P2 Pawn " << pawn->getInsectType() << " at ("
+                 << pawn->pos().x() << ", " << pawn->pos().y() << ")";
+    }
+
     QFile file("savegame.txt");
     if (file.open(QIODevice::WriteOnly)) {
         QTextStream out(&file);
         out << "Player 1: " << player1Name << " (" << player1Type << ")\n";
         out << "Player 2: " << player2Name << " (" << player2Type << ")\n";
         out << "Undo actions remaining: " << numRetours << "\n";
-        // Save additional game state details here.
+        out << "Whose turn: " << getWhosTurn() << "\n";
+
+        // Save the pawns and their positions
+        for (Hex* pawn : player1pawns) {
+            out << "P1 Pawn " << pawn->getInsectType() << " at "
+                << pawn->pos().x() << "," << pawn->pos().y() << "\n";
+        }
+        for (Hex* pawn : player2pawns) {
+            out << "P2 Pawn " << pawn->getInsectType() << " at "
+                << pawn->pos().x() << "," << pawn->pos().y() << "\n";
+        }
+
         file.close();
         QMessageBox::information(this, "Enregistrement", "Le jeu a bien été sauvegardé.");
     } else {
         QMessageBox::warning(this, "Enregistrement", "Erreur, le jeu n'a pas été sauvegardé.");
     }
 }
+
+Hex* Game::cloneHex(Hex* original) {
+    Hex* copy = new Hex();
+    copy->setInsectType(original->getInsectType());
+    copy->setOwner(original->getOwner());
+    copy->setColor(original->getColor());
+    copy->setIsPlaced(original->getIsPlaced());
+    copy->setPos(original->pos()); // Use setPos() to set the position
+    return copy;
+}
+
+// Save the current game state into the history stack
+void Game::saveState() {
+    QList<Hex*> p1Copy;
+    QList<Hex*> p2Copy;
+
+    for (Hex* pawn : player1pawns) {
+        p1Copy.append(cloneHex(pawn)); // Assuming Hex has a proper copy constructor
+    }
+    for (Hex* pawn : player2pawns) {
+        p2Copy.append(cloneHex(pawn));
+    }
+
+    history.push(new Memento(whosTurn_, p1Copy, p2Copy));
+    qDebug() << "State saved. Current turn: " << whosTurn_;
+    // Si vous avez un nombre de retours maximum, vous pouvez le gérer ici :
+    if (history.size() > numRetours) {
+        // On supprime l'état le plus ancien si on dépasse le nombre maximum de retours
+        delete history.pop(); // Effacer le Memento le plus ancien pour éviter une mémoire trop grande
+    }
+}
+
+
+// Restore the last saved state from the history stack
+void Game::restoreState() {
+    if (!history.isEmpty()) {
+        Memento* memento = history.pop();
+        whosTurn_ = memento->getWhosTurn();
+        player1pawns = memento->getPlayer1Pawns();
+        player2pawns = memento->getPlayer2Pawns();
+
+        drawpawns();
+        setWhosTurn(whosTurn_);
+        delete memento;  // Clean up
+    } else {
+        QMessageBox::warning(this, "Retour","Pas d'action de retour en arrière !");
+    }
+}
+
 
 

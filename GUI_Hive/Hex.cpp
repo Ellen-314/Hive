@@ -55,6 +55,11 @@ QColor Hex::getColor() const {
     return color;
 }
 
+void Hex::setColor(const QColor& color) {
+    this->color = color; // Assuming `color` is the member variable for storing the color
+    setBrush(QBrush(color)); // Apply the color to the QGraphicsPolygonItem visually
+}
+
 
 void Hex::mousePressEvent(QGraphicsSceneMouseEvent *event){
     // si hex est pas placé (=pion) alors le prendre
