@@ -6,7 +6,7 @@ const unsigned int Spider::Max =2;
 unsigned int Spider::poseBlanc = 0;
 unsigned int Spider::poseNoir = 0;
 
-std::vector<const BoardSpot*> Spider::moov(int x, int y, const Board& board) {
+std::vector<const BoardSpot*> Spider::moov(int x, int y, const Board& board)const {
     std::vector<const BoardSpot*> possibilite;
     std::queue<std::pair<const BoardSpot*, int>> Averifier; // queue avec distance pour chaque case
     std::set<const BoardSpot*> verifie;
@@ -54,3 +54,15 @@ std::vector<const BoardSpot*> Spider::moov(int x, int y, const Board& board) {
     }
     return possibilite;
 }
+
+bool Spider::estPasAuMax(bool couleur){
+        if (couleur)
+        {
+            return getPoseNoir()< getMax();
+
+        }
+    else{
+        return getPoseBlanc()< getMax();
+
+    }
+     }

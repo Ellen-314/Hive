@@ -6,7 +6,7 @@ unsigned int Grasshopper::poseBlanc = 0;
 unsigned int Grasshopper::poseNoir = 0;
 
 
-std::vector<const BoardSpot*> Grasshopper::moov(int x, int y, const Board& board)
+std::vector<const BoardSpot*> Grasshopper::moov(int x, int y, const Board& board)const
 {
     std::vector<const BoardSpot*> possibleMoves;
     const BoardSpot* currentSpot = board.getSpot(x, y);
@@ -46,3 +46,15 @@ std::vector<const BoardSpot*> Grasshopper::moov(int x, int y, const Board& board
     return possibleMoves;
 
 }
+
+bool Grasshopper::estPasAuMax(bool couleur){
+        if (couleur)
+        {
+            return getPoseNoir()< getMax();
+
+        }
+    else{
+        return getPoseBlanc()< getMax();
+
+    }
+     }

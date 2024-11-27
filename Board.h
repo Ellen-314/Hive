@@ -4,10 +4,14 @@
 #include "Insect.h"
 #include "ClassesInsects/ant.h"
 #include "ClassesInsects/queenbee.h"
+#include  "ClassesInsects/spider.h"
+#include "ClassesInsects/grasshopper.h"
+#include "ClassesInsects/beetle.h"
 #include <iostream>
 #include <stdexcept>
 #include <utility>
 #include <vector>
+#include <algorithm> // pour la fonction std::find
 
 
 
@@ -112,10 +116,15 @@ public:
     void addNullSpot(int x, int y);
     //renvoyer toutes les pièces possédées par un joueur
     std::vector<const BoardSpot*> piecejoueur(bool couleur) const;
+    //verifie si le tableau est toujours en un morceau;
+    bool isConnexe() const;
+    void moovInsect (int oldX, int oldY, int newX, int newY);
 
     ~Board();
     Board(const Board& other);
     Board& operator=(const Board& other);
+
+
 };
 
 #endif

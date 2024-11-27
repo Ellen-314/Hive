@@ -4,7 +4,7 @@
 #include "Board.h"
 #include "Insect.h"
 
-#include "fonctionsannexes.h"
+
 #include <iostream>
 
 // Exception pour gestion des erreurs dans la classe Controleur

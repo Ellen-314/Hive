@@ -134,7 +134,27 @@ void Controleur::ajouterInsecte() {
                      break;
                  }
             //TODO ecrire les case pour les autres insects et leur ajouter leurs methodes estPasAuMax;
-
+            case 3:
+                 if (Spider::estPasAuMax(color))
+                 {
+                     insect = new Spider();
+                     choix_insect=10;
+                     break;
+                 }
+             case 4:
+             if (Grasshopper::estPasAuMax(color))
+             {
+                 insect = new Grasshopper ();
+                 choix_insect=10;
+                 break;
+             }
+              case 5:
+             if (Beetle::estPasAuMax(color))
+             {
+                 insect = new Beetle ();
+                 choix_insect=10;
+                 break;
+             }
             case 6 :
                 std::cout << "retour au menu\n";
                 return;
@@ -205,14 +225,14 @@ void Controleur::deplacerInsecte() {
 
 
            }while( !board.est_dans_possibilite(spot, piece));
-             std::cout << "j'arrive dans la partie d'après.\n";
+
 
 
                 //appel de moov pour retourner les cases possibles (et potentiellement vérifier s'il y a bien un insecte sur cette case)
                     std::cout << "affichage des possibilités de la pièce\n";
                      std::vector <const BoardSpot*> possibilite = spot->getInsect()->moov(x, y, board);
                      board.afficherpossibilite(possibilite);
-
+                //TODO gerer pour que si il n'y ai pas de possibilité on ne puisse pas entrer 1
                 std::cout <<"entrez 1 pour placer la pièce à l'un des emplacements donnés.\n ";
                 std::cout <<"entrez 2 pour voir les mouvements possibles d'une autre pièce.\n ";
                 std::cout <<"entrez 3 pour retourner au menu.\n ";
@@ -234,11 +254,11 @@ void Controleur::deplacerInsecte() {
 
                     }while( !board.est_dans_possibilite(spot2, possibilite));
                     {
-                        board.modifySpot(x, y, newX, newY);
-                        //TODO creer une autre fonction modify spot.
+                        board.moovInsect(x, y, newX, newY);
+                        //TODO gerer les problèmes avec le scarabé
                         board.addNullSpot(newX,newY);
 
-                        //std::cout << "Insecte déplacé de (" << oldX << ", " << oldY << ") à (" << newX << ", " << newY << ").\n";
+                        std::cout << "Insecte déplacé de (" << x << ", " << y << ") à (" << newX << ", " << newY << ").\n";
                         choix = 3;//TO DO: ameliorer pour que ça passe au tour de l'autre direct
                     }}
 
