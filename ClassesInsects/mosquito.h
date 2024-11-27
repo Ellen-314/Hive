@@ -4,7 +4,7 @@
 #include "Insect.h"
 
 class Mosquito : public Insect {
-static unsigned int Max;
+static const unsigned int Max;
 static unsigned int poseBlanc;
 static unsigned int poseNoir;
 
