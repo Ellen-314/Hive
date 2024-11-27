@@ -1,5 +1,5 @@
 #include "grasshopper.h"
-#include "Board.h"
+#include "../Board.h"
 
 const unsigned int Grasshopper::Max =3;
 unsigned int Grasshopper::poseBlanc = 0;
@@ -32,13 +32,13 @@ std::vector<const BoardSpot*> Grasshopper::moov(int x, int y, const Board& board
             nextSpot = board.getSpot(nextSpot->getCoordinates().first + newX,
                                     nextSpot->getCoordinates().second + newY);
 
-            // Arrête si la case est vide ou invalide (en dehors des limites)
+            // Arrï¿½te si la case est vide ou invalide (en dehors des limites)
             if (!nextSpot || !nextSpot->hasInsect()) {
                 break;
             }
         }
 
-        // Si une case vide est trouvée, elle est ajoutée aux mouvements possibles
+        // Si une case vide est trouvï¿½e, elle est ajoutï¿½e aux mouvements possibles
         if (nextSpot && !nextSpot->hasInsect()) {
             possibleMoves.push_back(nextSpot);
         }

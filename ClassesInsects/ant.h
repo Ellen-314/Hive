@@ -5,8 +5,8 @@
 
 #include <stdio.h>
 #include <iostream>
-#include "Insect.h"
-#include "Board.h"
+#include "../Insect.h"
+#include "../Board.h"
 #include <queue>
 #include <set>
 #include <vector>

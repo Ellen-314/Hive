@@ -1,8 +1,8 @@
 #ifndef LADYBUG_H
 #define LADYBUG_H
 
-#include "Insect.h"
-#include "Board.h"
+#include "../Insect.h"
+#include "../Board.h"
 
 class Ladybug : public Insect {
 static const unsigned int Max;

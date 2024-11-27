@@ -1,7 +1,7 @@
 #ifndef MOSQUITO_H
 #define MOSQUITO_H
 
-#include "Insect.h"
+#include "../Insect.h"
 
 class Mosquito : public Insect {
 static const unsigned int Max;

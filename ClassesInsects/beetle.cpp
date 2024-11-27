@@ -1,5 +1,5 @@
 #include "beetle.h"
-#include "Board.h"
+#include "../Board.h"
 
 const unsigned int Beetle::Max = 2;
 unsigned int Beetle::poseBlanc = 0;

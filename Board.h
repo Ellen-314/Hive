@@ -2,8 +2,8 @@
 #define BOARD_H
 
 #include "Insect.h"
-#include "ant.h"
-#include "queenbee.h"
+#include "ClassesInsects/ant.h"
+#include "ClassesInsects/queenbee.h"
 #include <iostream>
 #include <stdexcept>
 #include <utility>

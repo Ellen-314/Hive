@@ -1,8 +1,8 @@
 #ifndef SPIDER_H
 #define SPIDER_H
 
-#include "Insect.h"
-#include "Board.h"
+#include "../Insect.h"
+#include "../Board.h"
 
 #include <vector>
 #include <queue>

@@ -3,8 +3,8 @@
 #define QUEENBEE_H
 #include <stdio.h>
 #include <iostream>
-#include "Insect.h"
-#include "Board.h"
+#include "../Insect.h"
+#include "../Board.h"
 #include <vector>
 class QueenBee : public Insect {
 

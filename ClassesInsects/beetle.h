@@ -1,8 +1,8 @@
 #ifndef BEETLE_H
 #define BEETLE_H
 
-#include "Insect.h"
-#include "Board.h"
+#include "../Insect.h"
+#include "../Board.h"
 
 
 class Beetle : public Insect {

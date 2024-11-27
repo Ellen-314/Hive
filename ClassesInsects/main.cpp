@@ -1,5 +1,5 @@
-﻿#include "Board.h"
-#include "Insect.h"
+﻿#include "../Board.h"
+#include "../Insect.h"
 #include "Ant.h"
 #include "Spider.h"
 #include <iostream>

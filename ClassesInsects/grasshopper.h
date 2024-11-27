@@ -1,8 +1,8 @@
 #ifndef GRASSHOPPER_H
 #define GRASSHOPPER_H
 
-#include "Insect.h"
-#include "Board.h"
+#include "../Insect.h"
+#include "../Board.h"
 
 class Grasshopper : public Insect {
 static const unsigned int Max;

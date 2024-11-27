@@ -1,5 +1,5 @@
 #include "spider.h"
-#include "Board.h"
+#include "../Board.h"
 #include <set>
 
 const unsigned int Spider::Max =2;
@@ -13,19 +13,19 @@ std::vector<const BoardSpot*> Spider::moov(int x, int y, const Board& board) {
 
     const BoardSpot* SpotArraignee = board.getSpot(x, y);
 
-    Averifier.push({SpotArraignee, 0}); // Pousse la position de départ avec distance 0
+    Averifier.push({SpotArraignee, 0}); // Pousse la position de dï¿½part avec distance 0
     verifie.insert(SpotArraignee);
 
     while (!Averifier.empty()) {
-        // On récupère la case actuelle et sa distance
+        // On rï¿½cupï¿½re la case actuelle et sa distance
         const BoardSpot* currentSpot = Averifier.front().first;
         int currentDistance = Averifier.front().second;
         Averifier.pop();
 
-        // Si la distance est exactement 3, on ajoute la case à "possibilite"
+        // Si la distance est exactement 3, on ajoute la case ï¿½ "possibilite"
         if (currentDistance == 3) {
             possibilite.push_back(currentSpot);
-            continue; // Passe au prochain élément dans la queue sans ajouter de voisins
+            continue; // Passe au prochain ï¿½lï¿½ment dans la queue sans ajouter de voisins
         }
 
         // Sinon, on continue d'explorer les voisins
@@ -35,7 +35,7 @@ std::vector<const BoardSpot*> Spider::moov(int x, int y, const Board& board) {
         );
 
         // Spider est un insecte glisseur donc il ne peut pas avoir plus de 5 voisins
-        // en réalité on prend pas en compte tous les moments où il ne pourrait pas glisser ...
+        // en rï¿½alitï¿½ on prend pas en compte tous les moments oï¿½ il ne pourrait pas glisser ...
         for (const auto& voisin : voisins) {
             if (verifie.find(voisin) == verifie.end()) {
                 int surroundingInsects = board.trouverVoisinsInsects(
