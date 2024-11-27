@@ -1,3 +1,5 @@
+#include <algorithm> // pour la fonction std::find
+
 bool Board::isConnexe() const {
 
     // Collecter toutes les cases avec des insectes
