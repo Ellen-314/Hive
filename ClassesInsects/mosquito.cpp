@@ -1,3 +1,3 @@
 #include "mosquito.h"
 
-const usigned int Mosquito::Max =1;
+const unsigned int Mosquito::Max =1;
