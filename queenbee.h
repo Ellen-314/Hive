@@ -6,6 +6,8 @@
 #include "Insect.h"
 #include "Board.h"
 #include <vector>
+#include <string>
+
 class QueenBee : public Insect {
 
 static const unsigned int Max;
@@ -18,6 +20,7 @@ public:
    static unsigned int getPoseNoir(){return poseNoir;}
    static void ajouterBlanc(){poseBlanc++;}
    static void ajouterNoir(){poseNoir++;}
+    std::string getType() override {return "queenbee";}
 
     //m�thode qui renvoit true si la reine est entour�e
     //TODO

@@ -103,25 +103,42 @@ const BoardSpot& Board::getSpotIndex(size_t index) const {
 Board::Board(const Board& other) {
     nb = other.nb;
     nbMax = other.nbMax;
-    board_spots = new BoardSpot * [nbMax];
-    for (size_t i = 0; i < nb; i++) {
-        board_spots[i] = other.board_spots[i];
+    // Deep copy of the board_spots array
+    if (other.board_spots) {
+        board_spots = new BoardSpot*[nbMax];
+        for (size_t i = 0; i < nb; ++i) {
+            board_spots[i] = new BoardSpot(*other.board_spots[i]); // Deep copy of each spot
+        }
+    } else {
+        board_spots = nullptr;
     }
 }
 
 // Op�rateur d'affectation pour Board
 Board& Board::operator=(const Board& other) {
-    if (this == &other) return *this;
+    if (this != &other) {
+        // Clean up existing resources
+        if (board_spots) {
+            for (size_t i = 0; i < nb; ++i) {
+                delete board_spots[i];
+            }
+            delete[] board_spots;
+        }
 
-    delete[] board_spots;
+        // Copy scalar fields
+        nb = other.nb;
+        nbMax = other.nbMax;
 
-    nb = other.nb;
-    nbMax = other.nbMax;
-    board_spots = new BoardSpot * [nbMax];
-    for (size_t i = 0; i < nb; i++) {
-        board_spots[i] = other.board_spots[i];
+        // Deep copy of the board_spots array
+        if (other.board_spots) {
+            board_spots = new BoardSpot*[nbMax];
+            for (size_t i = 0; i < nb; ++i) {
+                board_spots[i] = new BoardSpot(*other.board_spots[i]);
+            }
+        } else {
+            board_spots = nullptr;
+        }
     }
-
     return *this;
 }
 
@@ -259,7 +276,7 @@ void Board::afficherpossibilite (std::vector <const BoardSpot*> possibilite)cons
 
                 std::cout <<"{"<<coords.first<<";"<<coords.second<<"}vide;";
             }else{
-                std::cout <<"{"<<coords.first<<";"<<coords.second<<"}"<<possibilite[i]->getInsect()<<"  ;";
+                std::cout <<"{"<<coords.first<<";"<<coords.second<<"}"<<possibilite[i]->getInsect()-> getType()<<"  ;";
             }
         }
     }}

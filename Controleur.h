@@ -1,10 +1,16 @@
 #ifndef CONTROLEUR_H
 #define CONTROLEUR_H
+#include <stack>
+#include <iostream>
+#include <stack>
+#include <fstream>
+#include <stdexcept>
+#include <string>
 
 #include "Board.h"
 #include "Insect.h"
 
-#include "fonctionsannexes.h"
+// #include "fonctionsannexes.h"
 #include <iostream>
 
 // Exception pour gestion des erreurs dans la classe Controleur
@@ -19,7 +25,9 @@ public:
 
 class Controleur {
 private:
+    int nbRetoursEnArriere;
     Board board;
+    std::stack<Board> historyStack;
     static unsigned int compteurDeToursBlanc;
     static unsigned int compteurDeToursNoir;
     // Méthode pour afficher le menu principal avec les différentes actions disponibles
@@ -47,13 +55,26 @@ public:
     // Méthode pour annuler un coup
     void annulerCoup();
 
+    //Méthode pour enregistrer le plateau
+    void enregistrerBoard();
+
+    //Méthode pour save une partie
+    void saveGame(std::stack<Board> boardStack);
+
+    //Méthode pour reload une partie
+    std::stack<Board> reloadGame();
+
     //Methodes liées
     static unsigned int getCompteurDeToursBlanc(){return compteurDeToursBlanc;}
     static unsigned int getCompteurDeToursNoir(){return compteurDeToursNoir;}
     static void ajouterCompteurDeToursBlanc(){compteurDeToursBlanc++;}
     static void ajouterCompteurDeToursNoir(){compteurDeToursNoir++;}
+    static void enleverCompteurDeToursBlanc(){compteurDeToursBlanc--;}
+    static void enleverCompteurDeToursNoir(){compteurDeToursNoir--;}
     //fonction qui permet de mettre à jour le tour du joueur;
     void incCompteur(bool color);
+    //fonction qui permet d'annuler le tour du joueur;
+    void decCompteur();
 
     // Constructeur
     Controleur()=default;
