@@ -12,13 +12,6 @@ std::vector<const BoardSpot*> Beetle::moov(int x, int y, const Board& board)cons
 }
 
 bool Beetle::estPasAuMax(bool couleur){
-        if (couleur)
-        {
-            return getPoseNoir()< getMax();
-
-        }
-    else{
-        return getPoseBlanc()< getMax();
-
-    }
-     }
+    if (couleur==0){ return getPoseNoir()< getMax(); }
+    else{ return getPoseBlanc()< getMax(); }
+}

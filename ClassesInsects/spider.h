@@ -4,10 +4,6 @@
 #include "../Insect.h"
 #include "../Board.h"
 
-#include <vector>
-#include <queue>
-#include <set>
-
 class Spider : public Insect {
 static const unsigned int Max;
 static unsigned int poseBlanc;
@@ -20,6 +16,7 @@ public:
    static void ajouterBlanc(){poseBlanc++;}
    static void ajouterNoir(){poseNoir++;}
    static bool estPasAuMax(bool couleur);
+   std::string getType() const { return "spider"; }
 
    std::vector<const BoardSpot*> moov(int x, int y, const Board& board)const override;//override est utillis� pour indiquer que la fonction prends le pas sur celle de insect.
    ~Spider() override{};

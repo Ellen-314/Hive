@@ -56,13 +56,7 @@ std::vector<const BoardSpot*> Spider::moov(int x, int y, const Board& board)cons
 }
 
 bool Spider::estPasAuMax(bool couleur){
-        if (couleur)
-        {
-            return getPoseNoir()< getMax();
+    if (couleur==0){ return getPoseNoir()< getMax(); }
+    else{ return getPoseBlanc()< getMax(); }
+}
 
-        }
-    else{
-        return getPoseBlanc()< getMax();
-
-    }
-     }

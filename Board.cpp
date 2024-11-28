@@ -1,6 +1,7 @@
 #include "Board.h"
 #include <iostream>
 
+
 using namespace std;
 
 // Ajout d'un spot sur le plateau
@@ -33,8 +34,6 @@ void Board::deleteInsectFromSpot(int x, int y) {
     for (size_t i = 0; i < nb; ++i) { // Parcourt les cases jusqu'� nb
         if (board_spots[i]->getCoordinates() == std::make_pair(x, y)) {
             if (board_spots[i]->hasInsect()) {
-                // Cette ligne n'a pas lieu d'être ????
-                //delete board_spots[i]->getInsect(); // Supprime l'insecte de la m�moire
                 board_spots[i]->setInsect(nullptr); // Met le pointeur � nullptr
                 return;
             }
@@ -70,11 +69,14 @@ const BoardSpot* Board::getSpot(int x, int y) const {
 
 // Affichage du plateau
 void Board::print(ostream& f) const {
-    f << "Le plateau contient " << nb << " spots." << endl;
+    //f << "Le plateau contient " << nb << " spots." << endl;
     for (size_t i = 0; i < nb; i++) {
-        f << "\t";
-        board_spots[i]->print(f);
-        f << "\n";
+        // Pour n'afficher que les spots où il y a des insectes
+        if(board_spots[i]->hasInsect()){
+            f << "\t";
+            board_spots[i]->print(f);
+            f << "\n";
+        }
     }
     f << endl;
 }
@@ -92,7 +94,6 @@ void Board::deleteSpot(int x, int y) {
 }
 
 const BoardSpot& Board::getSpotIndex(size_t index) const {
-
     if (index >= getNb()) {
         throw SetException("Index hors limites dans getSpotIndex.");
     }
@@ -156,8 +157,8 @@ Board::~Board() {
 
 //fonction trouver voisins qui renvoie le vecteur compos� de toutes les coordonn�es d'une liste
 std::vector<const BoardSpot*> Board::trouverVoisins(int x, int y) const {
-
-         std::cout<<"x:"<<x<<"y:"<<y;
+        //std::cout<<"\n=========\nDEBUG : je suis dans touverVoisins\n";
+        //std::cout<<"x:"<<x<<"y:"<<y<<"\n=========\n\n";
 
         std::vector<const BoardSpot*> voisins;
         //cr�ation de la liste de pair des coordon�es de tout les voisins
@@ -174,32 +175,36 @@ std::vector<const BoardSpot*> Board::trouverVoisins(int x, int y) const {
             int newX = x + dir.first;
             int newY = y + dir.second;
 
-
+            //std::cout<<"\n=========\nDEBUG : newx:"<<newX<<"newy:"<<newY <<"\n=========\n\n";
             const BoardSpot* spot = getSpot(newX, newY);
             if (spot) {
-
+                //std::cout<<"\n=========\nDEBUG : j'ajoute à voisins\n=========\n\n";
                 voisins.push_back(spot); //on ajoute les voisins existants au vecteur
             }
-
+            else{
+                //std::cout<<"\n=========\nDEBUG : je n'ajoute PAS à voisins\n=========\n\n";
+            }
         }
+        //afficherpossibilite(voisins);
+        return voisins; //on retourne le vecteur
+}
 
-        return voisins;} //on retourne le vecteur
-
-
-    //fonction trouver voisins nulls qui renvoie le vecteur compos� de toutes les coordonn�es des cases qui n'ont pas d'insects affect�s
-    std::vector<const BoardSpot*> Board::voisinsNull(int x, int y) const {
+//fonction trouver voisins nulls qui renvoie le vecteur compos� de toutes les coordonn�es des cases qui n'ont pas d'insects affect�s
+std::vector<const BoardSpot*> Board::voisinsNull(int x, int y) const {
     std::vector<const BoardSpot*> voisins = trouverVoisins(x, y); //on r�cup�re les voisins � l'aide de la methode trouver voisins.
     std::vector<const BoardSpot*> voisinsNuls;
-    std::cout<<"je suis dans touverVoisinsNuls\n";
-    afficherpossibilite(voisins);
+    //std::cout<<"\n=========\nDEBUG : je suis dans touverVoisinsNuls\n=========\n\n";
+    //afficherpossibilite(voisins);
     for (size_t i = 0; i < voisins.size(); i++) {
 
         if (!voisins[i]->hasInsect()) { //on appele la methode cr�e pour savoir si il y a un insect attribu�
-
+            //std::cout << "\n=========\nDEBUG : Voisin sans insecte trouvé: ";
+            //std::pair<int, int> coords = voisins[i]->getCoordinates();
+            //std::cout << "{" << coords.first << ";" << coords.second << "}\n=========\n\n";
             voisinsNuls.push_back(voisins[i]); // on ajoute � VoisinsNuls
         }
     }
-
+    //afficherpossibilite(voisinsNuls);
     return voisinsNuls; //on retourne le vecteur
 }
 
@@ -217,22 +222,20 @@ std::vector<const BoardSpot*> Board::trouverVoisinsInsects(int x, int y) const {
     return voisinsNuls; //on retourne le vecteur
 }
 
-std::vector<const BoardSpot*> Board::possibleplacer(bool couleur)const
-{
+std::vector<const BoardSpot*> Board::possibleplacer(bool couleur)const{
+
 
     std::vector<const BoardSpot*> possibilite;
 
 
     for (size_t i= 0; i< this->getNb(); i++ )
     {
-        if(getSpotIndex(i).hasInsect() && getSpotIndex(i).getInsect()->getColor()== couleur)
-
-
-                {std::pair<int, int> coords = getSpotIndex(i).getCoordinates();
+        if(getSpotIndex(i).hasInsect() && getSpotIndex(i).getInsect()->getColor()== couleur){
+                 std::pair<int, int> coords = getSpotIndex(i).getCoordinates();
                  std::vector<const BoardSpot*> voisins = voisinsNull(coords.first, coords.second);
 
-                 for (size_t y = 0; y <voisins.size(); y++)
-                 {   const BoardSpot* voisin2 = voisins[y];
+                 for (size_t y = 0; y <voisins.size(); y++){
+                    const BoardSpot* voisin2 = voisins[y];
                     if (!voisin2->hasInsect()){
                          std::pair<int, int> coords2 = voisin2->getCoordinates();
                          std::vector<const BoardSpot*> voisinsdevoisins = trouverVoisins(coords2.first, coords2.second);
@@ -256,6 +259,7 @@ std::vector<const BoardSpot*> Board::possibleplacer(bool couleur)const
         }
 
 
+    //afficherpossibilite(possibilite);
     return possibilite;
 }
 
@@ -271,9 +275,9 @@ void Board::afficherpossibilite (std::vector <const BoardSpot*> possibilite)cons
             if (!possibilite[i]->hasInsect())
             {
 
-                std::cout <<"{"<<coords.first<<";"<<coords.second<<"}vide;";
+                std::cout <<"("<<coords.first<<","<<coords.second<<") vide;\n";
             }else{
-                std::cout <<"{"<<coords.first<<";"<<coords.second<<"}"<<possibilite[i]->getInsect()-> getType()<<"  ;";
+                std::cout <<"("<<coords.first<<","<<coords.second<<") "<<possibilite[i]->getInsect()->getType()<<";\n";
             }
         }
     }}
@@ -290,9 +294,10 @@ bool Board::est_dans_possibilite (const BoardSpot* spot, std::vector <const Boar
 
         }
     return false;
-    }
-void Board::addNullSpot(int x, int y)
-{ std::pair<int, int> directions[] = {
+}
+
+void Board::addNullSpot(int x, int y){
+            std::pair<int, int> directions[] = {
             {1, 0},   // (x + 1, y)
             {1, 1},   // (x + 1, y + 1)
             {0, 1},   // (x, y + 1)
@@ -323,6 +328,7 @@ std::vector<const BoardSpot*> Board::piecejoueur(bool couleur) const{
     }
     return piece;
 }
+
 bool Board::isConnexe() const {
 
     // Collecter toutes les cases avec des insectes
@@ -368,6 +374,7 @@ bool Board::isConnexe() const {
     // Vérifier que toutes les cases avec des insectes ont été visitées
     return visited.size() == insectSpots.size();
 }
+
 void Board::moovInsect (int oldX, int oldY, int newX, int newY){
 
     for (size_t i = 0; i < nb; i++) {

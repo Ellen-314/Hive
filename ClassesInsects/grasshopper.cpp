@@ -48,13 +48,6 @@ std::vector<const BoardSpot*> Grasshopper::moov(int x, int y, const Board& board
 }
 
 bool Grasshopper::estPasAuMax(bool couleur){
-        if (couleur)
-        {
-            return getPoseNoir()< getMax();
-
-        }
-    else{
-        return getPoseBlanc()< getMax();
-
-    }
-     }
+    if (couleur==0){ return getPoseNoir()< getMax(); }
+    else{ return getPoseBlanc()< getMax(); }
+}

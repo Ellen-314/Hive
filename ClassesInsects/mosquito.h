@@ -14,6 +14,7 @@ public:
    static unsigned int getPoseNoir(){return poseNoir;}
    static void ajouterBlanc(){poseBlanc++;}
    static void ajouterNoir(){poseNoir++;}
+   std::string getType() const { return "mosquito"; }
 };
 
 #endif // MOSQUITO_H

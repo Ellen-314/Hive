@@ -4,7 +4,7 @@
 #include "Insect.h"
 #include "ClassesInsects/ant.h"
 #include "ClassesInsects/queenbee.h"
-#include  "ClassesInsects/spider.h"
+#include "ClassesInsects/spider.h"
 #include "ClassesInsects/grasshopper.h"
 #include "ClassesInsects/beetle.h"
 #include <iostream>
@@ -13,7 +13,18 @@
 #include <vector>
 #include <algorithm> // pour la fonction std::find
 
-
+// Codes d’échappement ANSI.
+// Définition de plusieurs caractères de couleur comme des macros
+// qui seviront de caractères d'échappement pour changer de couleur.
+//
+// Exemple : pour avoir des lettres noires sur un fond blanc on utilisera \e[30;47m
+//
+// Lien pour les codes : https://en.wikipedia.org/wiki/ANSI_escape_code#Colors
+// le \e est un caractère d’échappement ASCII. un caractère de parenthèse suivis de paramètres
+#define WHITE "\e[30;47m"   // noir fond blanc
+#define BLACK "\e[37;40m"   // blanc fond noir
+#define RED "\e[31;40m"      // rouge
+#define CYAN "\e[31;40m"     // bleu clair
 
 
 // Exception pour gestion des erreurs dans la classe Board
@@ -47,25 +58,16 @@ public:
     bool hasInsect() const { return insect_pose != nullptr; }
 
     void print(std::ostream& f) const {
-        f << "Coordonn�es: (" << coordinates.first << ", " << coordinates.second << ")";
+        //f << "Coordonn�es: ";
+        f << "(" << coordinates.first << ", " << coordinates.second << ") ";
         if (insect_pose) {
-            f << " avec un insecte ";
-            if (insect_pose->getColor()==0)
-            {
-                f << "noir (" << insect_pose->getType() << ").";
-            }
-            if (insect_pose->getColor()==1)
-            {
-                f << "blanc (" << insect_pose->getType() << ").";
-            }
-
+            //f << " avec un insecte : ";
+            f << insect_pose->getType()<<" ";
+            if (insect_pose->getColor()==0){ f << "noir."; }
+            if (insect_pose->getColor()==1){ f << WHITE << "blanc" << BLACK <<"."; }
         }
-        else {
-            f << " sans insecte.";
-        }
-
+        else { f << " sans insecte."; }
     }
-
 };
 
 // Classe pour g�rer le plateau de jeu
@@ -77,9 +79,9 @@ private:
 
 public:
     Board() = default;
-    //acceder à la taille max
+    // acceder à la taille max
     size_t getNb()const{return nb;}
-    //  ajouter une case au plateau
+    // ajouter une case au plateau
     void addSpot(int x, int y);
 
     // acc�der � une case sp�cifique par coordonn�es
@@ -98,17 +100,17 @@ public:
     // Suppression d'un spot du plateau
     void deleteSpot(int x, int y);
 
-    //permet d'acceder au boardspot par son index
+    // permet d'acceder au boardspot par son index
     const BoardSpot& getSpotIndex(size_t index) const ;
     //trouve les voisins de la pi�ce demand�e et les renvoies dans un vecteur;
     std::vector<const BoardSpot*> trouverVoisins(int x, int y) const;
-    //trouve les voisins sans insects de la pi�ce demand�e et les renvoies dans un vecteur;
+    // trouve les voisins sans insects de la pi�ce demand�e et les renvoies dans un vecteur;
     std::vector<const BoardSpot*> voisinsNull(int x, int y) const;
-    //trouve les voisins avec insects de la pi�ce demand�e et les renvoies dans un vecteur;
+    // trouve les voisins avec insects de la pi�ce demand�e et les renvoies dans un vecteur;
     std::vector<const BoardSpot*> trouverVoisinsInsects(int x, int y) const;
-    std::vector<const BoardSpot*>possibleplacer( bool couleur)const;
+    std::vector<const BoardSpot*>possibleplacer(bool couleur)const;
 
-         //affiche chaque element d'une liste de possibilités
+    // affiche chaque element d'une liste de possibilités
     void afficherpossibilite (std::vector <const BoardSpot*> possibilite)const;
     //revoie true si le spot est dans les possibilités et false sinon
     bool est_dans_possibilite (const BoardSpot* spot, std::vector <const BoardSpot* > possibilite)const;

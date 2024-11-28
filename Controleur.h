@@ -6,11 +6,11 @@
 #include <fstream>
 #include <stdexcept>
 #include <string>
+#include <iostream>
 
 #include "Board.h"
 #include "Insect.h"
 
-#include <iostream>
 
 // Exception pour gestion des erreurs dans la classe Controleur
 class ControleurException : public std::exception {
@@ -26,6 +26,9 @@ class Controleur {
 private:
     int nbRetoursEnArriere;
     Board board;
+    // Vecteurs des insectes restant a poser
+    std::vector<Insect*> insectsBlanc;
+    std::vector<Insect*> insectsNoir;
     std::stack<Board> historyStack;
     static unsigned int compteurDeToursBlanc;
     static unsigned int compteurDeToursNoir;
@@ -75,8 +78,14 @@ public:
     //fonction qui permet d'annuler le tour du joueur;
     void decCompteur();
 
+    void printInsectsNoir(std::ostream& f);
+    void printInsectsBlanc(std::ostream& f);
+
+    //methode qui renvoit true si la reine de la couleur color est entouree
+    bool isQueenSurrounded(bool color) const;
+
     // Constructeur
-    Controleur()=default;
+    Controleur();
 
     const Board& getPlateau() const { return board; }
     Board& getPlateau() { return board; }
@@ -86,10 +95,7 @@ public:
     Controleur& operator=(const Controleur& c) = delete;
 
     // Destructeur
-    ~Controleur() {
-        // pour l'instant on delete, mais il y aura certainement une manip à faire pour gérer les sauvegardes
-        board.~Board();
-    }
+    ~Controleur()=default;
 };
 
 #endif // CONTROLEUR_H
