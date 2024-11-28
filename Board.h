@@ -49,14 +49,14 @@ public:
     void print(std::ostream& f) const {
         f << "Coordonn�es: (" << coordinates.first << ", " << coordinates.second << ")";
         if (insect_pose) {
-            f << " avec un insecte.";
+            f << " avec un insecte ";
             if (insect_pose->getColor()==0)
             {
-                f << " noir.";
+                f << "noir (" << insect_pose->getType() << ").";
             }
             if (insect_pose->getColor()==1)
             {
-                f << " blanc.";
+                f << "blanc (" << insect_pose->getType() << ").";
             }
 
         }

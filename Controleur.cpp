@@ -1,10 +1,18 @@
 #include "Controleur.h"
-
+#include <string>
+#include "Board.h"
 
 unsigned int Controleur::compteurDeToursBlanc = 0;
 unsigned int Controleur::compteurDeToursNoir = 0;
 
+//Méthode pour enregistrer le plateau
+void Controleur::enregistrerBoard() {
+    std::cout << "Board sauvegardé\n";
+    historyStack.push(board);
+    std::cout << "Le nombre d'entrées dans la stack: " << historyStack.size() << std::endl;
 
+
+}
 // Méthode pour afficher le menu principal avec les différentes actions disponibles
 void Controleur::afficherMenu() const {
     std::cout << "\n=== Menu de Jeu ===\n";
@@ -12,6 +20,7 @@ void Controleur::afficherMenu() const {
     std::cout << "2. Déplacer un insecte déjà posé\n";
     std::cout << "3. Afficher le plateau\n";
     std::cout << "4. Annuler le coup\n";
+    std::cout << "5.Sauvegarder la partie\n";
     std::cout << "0. Quitter\n";
     std::cout << "=== Menu de Debug ===\n"; // n'existera pas pendant une partie
     std::cout << "99. Ajouter une case\n";
@@ -32,15 +41,46 @@ std::pair<int, int> Controleur::demanderCoordonnees() const {
 // Méthode principale pour gérer les interactions utilisateur
 void Controleur::demarrerPartie() {
     //ici qu'on crée tous nos insectes dès le départ ?
+    std::string c;
+    std::cout<<"Voulez-vous recharger la partie précédente ? Oui/Non:";
+    std::cin>>c;
+    if (c=="Oui"){
+            std::stack<Board> tempStack;
+            std::stack<Board> tempStack1;
+            tempStack=reloadGame();
+            while (!tempStack.empty()){
+                //Inverser la pile pour l'ordre
+                tempStack1.push(tempStack.top());
+                tempStack.pop();
+            }
+            historyStack=tempStack1;
+            historyStack.pop();
+            historyStack.top().print(std::cout);
+            board = historyStack.top();
+    }
+    else {
+        std::cout << "Nombre maximal de retours en arrière : ";
+        std::cin >> nbRetoursEnArriere;
+        if(nbRetoursEnArriere<0){
+            std::cout << "Le nombre maximal de retours en arrière doit être positif";
+            while(nbRetoursEnArriere<0){
+            std::cout << "Nombre maximal de retours en arrière : ";
+            std::cin >> nbRetoursEnArriere;
+        }
+    }
+
+    }
+
     int choix;
     bool quitter = false;
-
+    Controleur::enregistrerBoard();
     while (!quitter) {
         afficherMenu();
         std::cin >> choix;
 
         switch (choix) {
             case 0:
+                saveGame(historyStack);
                 quitter = true;
                 break;
             case 1:
@@ -54,6 +94,9 @@ void Controleur::demarrerPartie() {
                 break;
             case 4:
                 annulerCoup();
+                break;
+            case 5:
+                saveGame(historyStack);
                 break;
             case 99:
                 ajouterCase();
@@ -72,6 +115,7 @@ void Controleur::ajouterCase() {
     auto [x, y] = demanderCoordonnees();
     board.addSpot(x, y);
     std::cout << "Case ajoutée aux coordonnées (" << x << ", " << y << ").\n";
+
 }
 
 // Méthode pour ajouter un insecte à une case
@@ -192,6 +236,8 @@ void Controleur::ajouterInsecte() {
 
         std::cout << "Insecte ajouté à la case (" << x << ", " << y << ").\n";
         incCompteur(color);
+        Controleur::enregistrerBoard();
+
 
     }
     catch (const SetException& e){
@@ -264,6 +310,8 @@ void Controleur::deplacerInsecte() {
 
 
                  }while(choix!=3);
+    Controleur::enregistrerBoard();
+
     }
 
 
@@ -285,7 +333,24 @@ void Controleur::supprimerCase() {
 }
 
 void Controleur::annulerCoup(){
-    std::cout << "cette fonction n'est pas encore implémentée.\n";
+    std::cout << "Le nombre d'entrées dans la stack: " << historyStack.size() << std::endl;
+
+    if (historyStack.size() == 1) {
+        std::cout << "Vous êtes déjà au début de la partie.\n";
+        return;
+    }
+    if (nbRetoursEnArriere<=0){
+        std::cout << "Vous avez atteint le nombre maximum de retours en arriere de la partie.\n";
+        return;
+    }
+    historyStack.pop();
+    board = historyStack.top();
+    nbRetoursEnArriere--;
+    decCompteur();
+    std::cout << "Coup annulé\n";
+    std::cout << "Nombre de retours en arriere restants: "<<nbRetoursEnArriere<<"\n";
+
+    //TODO => Regarder pour enlever les tours
 }
 
 //fonction qui permet de mettre à jour le tour du joueur;
@@ -294,3 +359,113 @@ if (color == 1)     Controleur::ajouterCompteurDeToursBlanc();
 if (color == 0)   Controleur::ajouterCompteurDeToursNoir();
 }
 
+//fonction qui permet d'annuler le tour du joueur;
+void Controleur::decCompteur(){
+    if (compteurDeToursBlanc>compteurDeToursNoir){
+        enleverCompteurDeToursBlanc();
+    }
+    else {
+        enleverCompteurDeToursNoir();
+    }
+}
+
+//Méthode pour sauvegarder la partie
+void Controleur::saveGame(std::stack<Board> boardStack){
+    try {
+        const std::string& filename = "boards.sauv";
+        std::ofstream outFile(filename);
+        if (!outFile) {
+            throw std::runtime_error("Failed to open file for writing.");
+        }
+
+        while (!boardStack.empty()) {
+            Board board = boardStack.top();
+            boardStack.pop();
+
+            // Save the board
+            outFile << board.getNb() << "\n";  // Write the number of spots
+            for (size_t i = 0; i < board.getNb(); ++i) {
+                BoardSpot spot = board.getSpotIndex(i);
+                //serialize a BoardSpot to a file
+                // Write coordinates (x, y)
+                auto coordinates = spot.getCoordinates();
+                outFile << coordinates.first << " " << coordinates.second << " ";
+
+                // Write insect type if present
+                if (spot.hasInsect()) {
+                    Insect* insect = spot.getInsect();
+                    outFile << insect->getType() << " " << insect->getColor() << "\n"; // Save insect type and color
+                } else {
+                    outFile << "none\n";  // Indicate no insect present
+                }
+            }
+
+        } std::cout<<"Fichier sauvegardé avec succès !\n";
+
+        outFile.close();
+    }
+    catch (const std::exception& e) {
+        std::cerr << "Error saving boards: " << e.what() << std::endl;
+    }
+}
+
+//Méthode pour reload la partie
+std::stack<Board> Controleur::reloadGame(){
+    try {
+
+        const std::string& filename = "boards.sauv";
+        std::ifstream inFile(filename);
+        if (!inFile) {
+            throw std::runtime_error("Failed to open file for reading.");
+        }
+
+        std::stack<Board> boardStack;
+        while (inFile.peek() != EOF) {  // Loop until the end of the file
+            size_t nb;
+            inFile >> nb;  // Read the number of spots for this board
+
+            Board board;
+            for (size_t i = 0; i < nb; ++i) {
+
+                int x, y;
+                inFile >> x >> y;  // Read coordinates
+                std::cout<<"x="<<x<<"\n";
+                std::cout<<"y="<<y<<"\n";
+                BoardSpot spot(x, y);
+
+                std::string insectType;
+                inFile >> insectType;  // Read insect type
+
+                if (insectType != "none") {
+                    int color;
+                    inFile >> color;  // Read insect color
+
+                    // You would need to properly reconstruct the insect based on its type and color
+                    Insect* insect = nullptr;
+                    if (insectType == "ant") {
+                        insect = new Ant(); // Example, you'd need to handle creating the correct insect type
+                    } else if (insectType == "queenbee") {
+                        insect = new QueenBee();  // Similarly for QueenBee or other types
+                    }
+
+                    spot.setInsect(insect);
+                }
+                board.addSpot(spot.getCoordinates().first, spot.getCoordinates().second);  // Add to the board
+                if (spot.hasInsect()) {
+                    std::cout<<"here\n";
+                    board.addInsectToSpot(spot.getCoordinates().first, spot.getCoordinates().second, spot.getInsect());
+                }
+            }
+
+            boardStack.push(board);  // Push the board to the stack
+        }
+
+    inFile.close();
+    std::cout << "Boards chargés avec succès!" << std::endl;
+    return boardStack;
+
+
+    } catch (const std::exception& e) {
+        std::cerr << "Erreur au chargement des boards: " << e.what() << std::endl;
+    }
+}

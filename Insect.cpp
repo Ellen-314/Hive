@@ -81,6 +81,9 @@ void Insect::setColor(bool col) {
     color = col;
 }
 
+string Insect::getType() {
+return "General insect";
+}
 
 
 Insect::~Insect() {}

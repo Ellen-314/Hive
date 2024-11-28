@@ -1,6 +1,8 @@
 ﻿#ifndef INSECT_H_INCLUDED
 #define INSECT_H_INCLUDED
 #include <vector>
+#include <string>
+
 class Board;
 class BoardSpot;
 class Insect{
@@ -49,6 +51,7 @@ public:
     bool getColor() const;
     void setColor(bool color);
 
+    virtual std::string getType() ;
     // Methode moov() virtuelle car surchargée pour chaque insect. Elle renvoie les possibilités de mouvements
     virtual std::vector<const BoardSpot*> moov(int x, int y, const Board& board)const = 0;
 

@@ -1,0 +1,83 @@
+# depslib dependency file v1.0
+1732385865 source:c:\users\ellen\documents\utc\gi01\lo21\debug teo\hive\insect.cpp
+	"Insect.h"
+
+1732385834 c:\users\ellen\documents\utc\gi01\lo21\debug teo\hive\insect.h
+	<vector>
+	<string>
+
+1584205420 source:c:\users\ellen\documents\utc\gi01\lo21\debug teo\hive\hive\main.cpp
+	<iostream>
+
+1732382654 source:c:\users\ellen\documents\utc\gi01\lo21\debug teo\hive\ant.cpp
+	"ant.h"
+
+1732385829 c:\users\ellen\documents\utc\gi01\lo21\debug teo\hive\ant.h
+	<string>
+	<stdio.h>
+	<iostream>
+	"Insect.h"
+	"Board.h"
+	<queue>
+	<set>
+	<vector>
+
+1732386231 c:\users\ellen\documents\utc\gi01\lo21\debug teo\hive\board.h
+	"Insect.h"
+	"ant.h"
+	"queenbee.h"
+	<iostream>
+	<stdexcept>
+	<utility>
+	<vector>
+
+1732716869 c:\users\ellen\documents\utc\gi01\lo21\debug teo\hive\queenbee.h
+	<stdio.h>
+	<iostream>
+	"Insect.h"
+	"Board.h"
+	<vector>
+	<string>
+
+1732622371 source:c:\users\ellen\documents\utc\gi01\lo21\debug teo\hive\board.cpp
+	"Board.h"
+	<iostream>
+
+1732382654 source:c:\users\ellen\documents\utc\gi01\lo21\debug teo\hive\queenbee.cpp
+	"QueenBee.h"
+
+1732735058 source:c:\users\ellen\documents\utc\gi01\lo21\debug teo\hive\controleur.cpp
+	"Controleur.h"
+	<string>
+	"Board.h"
+
+1732726076 c:\users\ellen\documents\utc\gi01\lo21\debug teo\hive\controleur.h
+	<stack>
+	<iostream>
+	<stack>
+	<fstream>
+	<stdexcept>
+	<string>
+	"Board.h"
+	"Insect.h"
+	<iostream>
+
+1732725476 source:c:\users\ellen\documents\utc\gi01\lo21\debug teo\hive\main.cpp
+	"Board.h"
+	"Insect.h"
+	"Controleur.h"
+	<iostream>
+	"test.h"
+
+1732717929 c:\users\ellen\documents\utc\gi01\lo21\debug teo\hive\test.h
+	<iostream>
+	<stack>
+	<fstream>
+	<stdexcept>
+	<string>
+	"Board.h"
+	"Insect.h"
+	"ant.h"
+	"queenbee.h"
+	"Controleur.h"
+
