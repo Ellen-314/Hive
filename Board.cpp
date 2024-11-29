@@ -20,7 +20,7 @@ void Board::addSpot(int x, int y) {
 }
 
 // Associe l'insecte � la case trouv�e
-void Board::addInsectToSpot(int x, int y, Insect* insect) {
+void Board::addInsectToSpot(int x, int y,Insect* insect) {
     for (size_t i = 0; i < nb; ++i) { // Parcourt les spots jusqu'� nb
         if (board_spots[i]->getCoordinates() == std::make_pair(x, y)) {
             board_spots[i]->setInsect(insect); // Associe l'insecte � cette case
@@ -58,6 +58,15 @@ void Board::modifySpot(int oldX, int oldY, int newX, int newY) {
 
 //  acc�der � une case sp�cifique par coordonn�es
 const BoardSpot* Board::getSpot(int x, int y) const {
+    for (size_t i = 0; i < nb; i++) {
+        if (board_spots[i]->getCoordinates() == std::make_pair(x, y)) {
+            return board_spots[i];
+        }
+    }
+    return nullptr;
+}
+//acceder à une case par coordonnée et modifiable
+BoardSpot* Board::getSpotModify(int x, int y) {
     for (size_t i = 0; i < nb; i++) {
         if (board_spots[i]->getCoordinates() == std::make_pair(x, y)) {
             return board_spots[i];
@@ -375,19 +384,20 @@ bool Board::isConnexe() const {
     return visited.size() == insectSpots.size();
 }
 
-void Board::moovInsect (int oldX, int oldY, int newX, int newY){
+void Board::moovInsect(int oldX, int oldY, int newX, int newY) {
+    if (getSpotModify(oldX, oldY)->getInsectModify()->getType() == "beetle") {
+        Beetle* beetle = dynamic_cast<Beetle*>(getSpot(oldX, oldY)->getInsect());
 
-    for (size_t i = 0; i < nb; i++) {
-        if (board_spots[i]->getCoordinates() == std::make_pair(oldX, oldY)) {
-            Insect* ins = board_spots[i]->getInsect();
-            deleteInsectFromSpot(oldX, oldY);
-            addInsectToSpot(newX, newY, ins);
+        getSpotModify(oldX, oldY)->setInsect(beetle->getcouvertModify());
+        beetle->setInsectUnder(getSpot(newX, newY)->getInsect());
+        getSpotModify(newX, newY)->setInsect(beetle);
 
-
-
-        return;
-
-        }
+    } else {
+        getSpotModify(newX, newY)->setInsect(getSpot(oldX, oldY)->getInsect());
+        deleteInsectFromSpot(oldX, oldY);
     }
-    throw SetException("Case non trouv�e pour modification");
+
+    return;
 }
+
+

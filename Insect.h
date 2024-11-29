@@ -49,6 +49,10 @@ public:
     void setNeighborBottomLeft(Insect* insect);
     Insect* getNeighborBottomLeft() const;
 
+
+
+
+
     // Getter and Setter pour cover() et color()
     bool isCovered() const;
     void setCovered(bool covered);
@@ -59,6 +63,7 @@ public:
     virtual std::string getType() const = 0;
     // Methode moov() virtuelle car surchargée pour chaque insect. Elle renvoie les possibilités de mouvements
     virtual std::vector<const BoardSpot*> moov(int x, int y, const Board& board)const = 0;
+
 
 };
 

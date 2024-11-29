@@ -15,3 +15,4 @@ bool Beetle::estPasAuMax(bool couleur){
     if (couleur==0){ return getPoseNoir()< getMax(); }
     else{ return getPoseBlanc()< getMax(); }
 }
+

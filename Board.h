@@ -50,9 +50,10 @@ public:
 
     std::pair<int, int> getCoordinates() const { return coordinates; }
     Insect* getInsect() const { return insect_pose; }
+    Insect* getInsectModify(){return insect_pose;}
 
     void setCoordinates(int x, int y) { coordinates = std::make_pair(x, y); }
-    void setInsect(Insect* insect) { insect_pose = insect; }
+    void setInsect( Insect* insect) { insect_pose = insect; }
 
     // V�rifier si un insecte est pr�sent sur la case
     bool hasInsect() const { return insect_pose != nullptr; }
@@ -87,8 +88,12 @@ public:
     // acc�der � une case sp�cifique par coordonn�es
     const BoardSpot* getSpot(int x, int y) const;
 
+    //acceder à une case par coordonnée et modifiable
+    BoardSpot* getSpotModify(int x, int y) ;
+
     //  modifier une case sp�cifique par coordonn�es
     void modifySpot(int oldX, int oldY, int newX, int newY);
+
 
     void addInsectToSpot(int x, int y, Insect* insect);
     void deleteInsectFromSpot(int x, int y);
@@ -120,7 +125,10 @@ public:
     std::vector<const BoardSpot*> piecejoueur(bool couleur) const;
     //verifie si le tableau est toujours en un morceau;
     bool isConnexe() const;
+
+    //permet de deplacer un insect d'une case à une autre
     void moovInsect (int oldX, int oldY, int newX, int newY);
+
 
     ~Board();
     Board(const Board& other);
