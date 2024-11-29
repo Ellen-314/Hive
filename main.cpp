@@ -1,8 +1,8 @@
 #include "Board.h"
 #include "Insect.h"
-
+#include "Jeu.h"
 #include "Controleur.h"
-#include <iostream>
+
 
 int main() {
 
@@ -34,7 +34,7 @@ int main() {
     board.print(std::cout);
 */
     Controleur controleur;
-    controleur.demarrerPartie();
+    controleur.demarrage();
 
     return 0;
 }

@@ -10,7 +10,7 @@
 
 #include "Board.h"
 #include "Insect.h"
-
+#include "Jeu.h"
 
 // Exception pour gestion des erreurs dans la classe Controleur
 class ControleurException : public std::exception {
@@ -23,79 +23,21 @@ public:
 };
 
 class Controleur {
-private:
-    int nbRetoursEnArriere;
-    Board board;
-    // Vecteurs des insectes restant a poser
-    std::vector<Insect*> insectsBlanc;
-    std::vector<Insect*> insectsNoir;
-    std::stack<Board> historyStack;
-    static unsigned int compteurDeToursBlanc;
-    static unsigned int compteurDeToursNoir;
-    // Méthode pour afficher le menu principal avec les différentes actions disponibles
-    void afficherMenu() const;
-
-    // Méthode pour obtenir de la part l'utilisateur des coordonnées de la case où une action doit être effectuée
-    std::pair<int, int> demanderCoordonnees() const;
-
+    Jeu jeu;
 public:
-    // Méthode principale pour lancer le jeu et gérer les interactions utilisateur durant la partie
-    void demarrerPartie();
-
-    // Méthode pour ajouter une case au plateau
-    void ajouterCase();
-
-    // Méthode pour ajouter un insecte à une case
-    void ajouterInsecte();
-
-    // Méthode pour déplacer un insecte, différent de moov dans Insect qui testera les différentes possibilités de déplacement
-    void deplacerInsecte();
-
-    // Méthode pour supprimer une case du plateau
-    void supprimerCase();
-
-    // Méthode pour annuler un coup
-    void annulerCoup();
-
-    //Méthode pour enregistrer le plateau
-    void enregistrerBoard();
-
-    //Méthode pour save une partie
-    void saveGame(std::stack<Board> boardStack);
-
-    //Méthode pour reload une partie
-    std::stack<Board> reloadGame();
-
-    //Methodes liées
-    static unsigned int getCompteurDeToursBlanc(){return compteurDeToursBlanc;}
-    static unsigned int getCompteurDeToursNoir(){return compteurDeToursNoir;}
-    static void ajouterCompteurDeToursBlanc(){compteurDeToursBlanc++;}
-    static void ajouterCompteurDeToursNoir(){compteurDeToursNoir++;}
-    static void enleverCompteurDeToursBlanc(){compteurDeToursBlanc--;}
-    static void enleverCompteurDeToursNoir(){compteurDeToursNoir--;}
-    //fonction qui permet de mettre à jour le tour du joueur;
-    void incCompteur(bool color);
-    //fonction qui permet d'annuler le tour du joueur;
-    void decCompteur();
-
-    void printInsectsNoir(std::ostream& f);
-    void printInsectsBlanc(std::ostream& f);
-
-    //methode qui renvoit true si la reine de la couleur color est entouree
-    bool isQueenSurrounded(bool color) const;
-
     // Constructeur
-    Controleur();
+    Controleur()=default;
 
-    const Board& getPlateau() const { return board; }
-    Board& getPlateau() { return board; }
+    // Pour l'instant
+    ~Controleur()=default;
 
-    // Pour éviter la création de plusieurs controleurs
+    // Méthode principale pour démarrer le menu, lancer une nouvelle partie, choisir les options, etc...
+    void demarrage();
+
+    // Pour éviter la création de plusieurs Controleurs
     Controleur(const Controleur& c) = delete;
     Controleur& operator=(const Controleur& c) = delete;
-
-    // Destructeur
-    ~Controleur()=default;
 };
+
 
 #endif // CONTROLEUR_H
