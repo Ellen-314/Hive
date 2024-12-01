@@ -1,10 +1,5 @@
 #include "Controleur.h"
-<<<<<<< Updated upstream
-#include <string>
-#include "Board.h"
-=======
 #include "Jeu.h"
->>>>>>> Stashed changes
 
 unsigned int Controleur::compteurDeToursBlanc = 0;
 unsigned int Controleur::compteurDeToursNoir = 0;
@@ -57,17 +52,10 @@ void Controleur::demarrerPartie() {
                 tempStack1.push(tempStack.top());
                 tempStack.pop();
             }
-<<<<<<< Updated upstream
-            historyStack=tempStack1;
-            historyStack.pop();
-            historyStack.top().print(std::cout);
-            board = historyStack.top();
-=======
             jeu.historyStack=tempStack1;
             jeu.historyStack.top().print(std::cout);
             jeu.board = jeu.historyStack.top();
             jeu.majListeInsect(jeu.board);
->>>>>>> Stashed changes
     }
     else {
         std::cout << "Nombre maximal de retours en arrière : ";
