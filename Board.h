@@ -50,7 +50,7 @@ public:
 
     std::pair<int, int> getCoordinates() const { return coordinates; }
     Insect* getInsect() const { return insect_pose; }
-    Insect* getInsectModify(){return insect_pose;}
+
 
     void setCoordinates(int x, int y) { coordinates = std::make_pair(x, y); }
     void setInsect( Insect* insect) { insect_pose = insect; }
@@ -88,12 +88,8 @@ public:
     // acc�der � une case sp�cifique par coordonn�es
     const BoardSpot* getSpot(int x, int y) const;
 
-    //acceder à une case par coordonnée et modifiable
-    BoardSpot* getSpotModify(int x, int y) ;
-
     //  modifier une case sp�cifique par coordonn�es
     void modifySpot(int oldX, int oldY, int newX, int newY);
-
 
     void addInsectToSpot(int x, int y, Insect* insect);
     void deleteInsectFromSpot(int x, int y);
@@ -115,6 +111,9 @@ public:
     std::vector<const BoardSpot*> trouverVoisinsInsects(int x, int y) const;
     std::vector<const BoardSpot*>possibleplacer(bool couleur)const;
 
+     // trouver les voisins sans insectes sans saut de la piece demandée et les renovies dans un vecteur;
+    std::vector<const BoardSpot*> trouverVoisinsGlisseur(int x, int y) const;
+
     // affiche chaque element d'une liste de possibilités
     void afficherpossibilite (std::vector <const BoardSpot*> possibilite)const;
     //revoie true si le spot est dans les possibilités et false sinon
@@ -125,10 +124,7 @@ public:
     std::vector<const BoardSpot*> piecejoueur(bool couleur) const;
     //verifie si le tableau est toujours en un morceau;
     bool isConnexe() const;
-
-    //permet de deplacer un insect d'une case à une autre
     void moovInsect (int oldX, int oldY, int newX, int newY);
-
 
     ~Board();
     Board(const Board& other);

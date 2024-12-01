@@ -24,19 +24,13 @@ std::vector<const BoardSpot*> Ant::moov(int x, int y, const Board& board)const{
             );
 
             for (size_t i = 0; i < voisins.size(); i++) {
-                // visite.find(voisins[i]) renvoie visite.end() uniquement si le voisin n'a pas déjà été visité
-                if (verifie.find(voisins[i]) == verifie.end()) {
-                    int surroundingInsects = board.trouverVoisinsInsects(
-                        voisins[i]->getCoordinates().first,
-                        voisins[i]->getCoordinates().second
-                    ).size(); //surrondingInsects indique combien d'insects il y a autour de l'emplacement
-                            if (surroundingInsects < 5) {// si il y a plus de 5 insects autour de l'emplacement la fourmi ne peut pas y acceder
-                                possibilite.push_back(voisins[i]);
-                                Averifier.push(voisins[i]);
-                                verifie.insert(voisins[i]);
-                            }
-                        }
+            // Vérifie si le voisin n'a pas déjà été vérifié
+            if (verifie.find(voisins[i]) == verifie.end()) {
+                possibilite.push_back(voisins[i]);    // Ajoute le voisin à la liste des possibilités
+                Averifier.push(voisins[i]);          // Ajoute le voisin à la liste à vérifier
+                verifie.insert(voisins[i]);          // Marque le voisin comme vérifié
             }
+        }
     }
     return possibilite;
 }

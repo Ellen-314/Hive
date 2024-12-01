@@ -29,28 +29,11 @@ std::vector<const BoardSpot*> Spider::moov(int x, int y, const Board& board)cons
         }
 
         // Sinon, on continue d'explorer les voisins
-        std::vector<const BoardSpot*> voisins = board.voisinsNull(
+        std::vector<const BoardSpot*> voisins = board.trouverVoisinsGlisseur(
             currentSpot->getCoordinates().first,
             currentSpot->getCoordinates().second
         );
 
-        // Spider est un insecte glisseur donc il ne peut pas avoir plus de 5 voisins
-        // en r�alit� on prend pas en compte tous les moments o� il ne pourrait pas glisser ...
-        for (const auto& voisin : voisins) {
-            if (verifie.find(voisin) == verifie.end()) {
-                int surroundingInsects = board.trouverVoisinsInsects(
-                    voisin->getCoordinates().first,
-                    voisin->getCoordinates().second
-                ).size();
-
-                // Si le voisin est accessible (moins de 5 insectes autour)
-                if (surroundingInsects < 5) {
-                    // On ajoute le voisin avec distance + 1 dans la queue
-                    Averifier.push({voisin, currentDistance + 1});
-                    verifie.insert(voisin);
-                }
-            }
-        }
     }
     return possibilite;
 }

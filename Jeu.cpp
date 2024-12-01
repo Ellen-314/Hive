@@ -111,7 +111,6 @@ std::pair<int, int> Jeu::demanderCoordonnees() const {
 void Jeu::demarrerPartie() {
     int choix;
     bool quitter = false;
-    Jeu::enregistrerBoard();
     while (!quitter) {
 
         //Test de victoire du joueur qui vient de jouer (on vérifie d'abord sur la reine adverse, c'est à dire la reine du joueur qui est sur le point de jouer)
@@ -890,6 +889,7 @@ void Jeu::majListeInsect(Board& board_i) {
                                        });
 
                 if (it != insectsNoir.end()) {
+
                     insectsNoir.erase(it);
 
                     // Increment the count for the corresponding insect type
