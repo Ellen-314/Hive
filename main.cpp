@@ -1,11 +1,27 @@
 #include "Board.h"
 #include "Insect.h"
+<<<<<<< Updated upstream
 
 #include "Controleur.h"
 #include <iostream>
 #include "test.h"
 
 int main() {
+=======
+#include "Jeu.h"
+#include "Controleur.h"
+#include <cstdio>
+#include <windows.h>
+
+#pragma execution_character_set("utf-8")
+
+int main() {
+    SetConsoleOutputCP( 65001 );
+
+/*
+    std::cout << "Pour l'instant tout va bien";
+
+>>>>>>> Stashed changes
     Board board;
 
     //test();
@@ -32,6 +48,8 @@ int main() {
 
     Controleur controleur;
     controleur.demarrerPartie();
+
+
 
     return 0;
 }

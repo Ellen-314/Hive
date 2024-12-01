@@ -1,0 +1,207 @@
+# depslib dependency file v1.0
+1732796059 source:c:\users\ellen\documents\utc\gi01\lo21\projet hive\hive\main.cpp
+	"Board.h"
+	"Insect.h"
+	"Controleur.h"
+	<iostream>
+
+1732796067 c:\users\ellen\documents\utc\gi01\lo21\projet hive\hive\board.h
+	"Insect.h"
+	"ClassesInsects/ant.h"
+	"ClassesInsects/queenbee.h"
+	"ClassesInsects/spider.h"
+	"ClassesInsects/grasshopper.h"
+	"ClassesInsects/beetle.h"
+	<iostream>
+	<stdexcept>
+	<utility>
+	<vector>
+	<algorithm>
+
+1732796096 c:\users\ellen\documents\utc\gi01\lo21\projet hive\hive\insect.h
+	<vector>
+	<string>
+
+1732796101 c:\users\ellen\documents\utc\gi01\lo21\projet hive\hive\classesinsects\ant.h
+	<string>
+	<stdio.h>
+	<iostream>
+	"../Insect.h"
+	"../Board.h"
+	<queue>
+	<set>
+	<vector>
+
+1732796016 c:\users\ellen\documents\utc\gi01\lo21\projet hive\hive\classesinsects\queenbee.h
+	"../Insect.h"
+	"../Board.h"
+
+1732796016 c:\users\ellen\documents\utc\gi01\lo21\projet hive\hive\classesinsects\spider.h
+	"../Insect.h"
+	"../Board.h"
+
+1732796016 c:\users\ellen\documents\utc\gi01\lo21\projet hive\hive\classesinsects\grasshopper.h
+	"../Insect.h"
+	"../Board.h"
+
+1732796080 c:\users\ellen\documents\utc\gi01\lo21\projet hive\hive\classesinsects\beetle.h
+	"../Insect.h"
+	"../Board.h"
+
+1732796075 c:\users\ellen\documents\utc\gi01\lo21\projet hive\hive\controleur.h
+	<stack>
+	<iostream>
+	<stack>
+	<fstream>
+	<stdexcept>
+	<string>
+	"Board.h"
+	"Insect.h"
+	<iostream>
+
+1732778771 source:c:\users\ellen\documents\utc\gi01\lo21\projet hive\hive\classesinsects\ladybug.cpp
+	"ladybug.h"
+	"../Board.h"
+
+1732796016 c:\users\ellen\documents\utc\gi01\lo21\projet hive\hive\classesinsects\ladybug.h
+	"../Insect.h"
+	"../Board.h"
+
+1732778771 source:c:\users\ellen\documents\utc\gi01\lo21\projet hive\hive\classesinsects\mosquito.cpp
+	"mosquito.h"
+
+1732796016 c:\users\ellen\documents\utc\gi01\lo21\projet hive\hive\classesinsects\mosquito.h
+	"../Insect.h"
+
+1732796062 source:c:\users\ellen\documents\utc\gi01\lo21\projet hive\hive\board.cpp
+	"Board.h"
+	<iostream>
+
+1732796099 source:c:\users\ellen\documents\utc\gi01\lo21\projet hive\hive\classesinsects\ant.cpp
+	"ant.h"
+
+1732796105 source:c:\users\ellen\documents\utc\gi01\lo21\projet hive\hive\classesinsects\beetle.cpp
+	"beetle.h"
+	"../Board.h"
+
+1732796016 source:c:\users\ellen\documents\utc\gi01\lo21\projet hive\hive\classesinsects\grasshopper.cpp
+	"grasshopper.h"
+	"../Board.h"
+
+1732796016 source:c:\users\ellen\documents\utc\gi01\lo21\projet hive\hive\classesinsects\queenbee.cpp
+	"QueenBee.h"
+
+1732796016 source:c:\users\ellen\documents\utc\gi01\lo21\projet hive\hive\classesinsects\spider.cpp
+	"spider.h"
+	"../Board.h"
+	<set>
+
+1732796071 source:c:\users\ellen\documents\utc\gi01\lo21\projet hive\hive\controleur.cpp
+	"Controleur.h"
+	<string>
+	"Board.h"
+
+1732796078 source:c:\users\ellen\documents\utc\gi01\lo21\projet hive\hive\insect.cpp
+	"Insect.h"
+
+1732804910 source:c:\users\ellen\documents\utc\gi01\lo21\projet hive\version\version28-11\hive-main\board.cpp
+	"Board.h"
+	<iostream>
+
+1732804910 c:\users\ellen\documents\utc\gi01\lo21\projet hive\version\version28-11\hive-main\board.h
+	"Insect.h"
+	"ClassesInsects/ant.h"
+	"ClassesInsects/queenbee.h"
+	"ClassesInsects/spider.h"
+	"ClassesInsects/grasshopper.h"
+	"ClassesInsects/beetle.h"
+	<iostream>
+	<stdexcept>
+	<utility>
+	<vector>
+	<algorithm>
+
+1732804910 c:\users\ellen\documents\utc\gi01\lo21\projet hive\version\version28-11\hive-main\insect.h
+	<vector>
+	<string>
+	<stdio.h>
+	<iostream>
+	<queue>
+	<set>
+	<string>
+
+1732804910 c:\users\ellen\documents\utc\gi01\lo21\projet hive\version\version28-11\hive-main\classesinsects\ant.h
+	"../Insect.h"
+	"../Board.h"
+
+1732804910 c:\users\ellen\documents\utc\gi01\lo21\projet hive\version\version28-11\hive-main\classesinsects\queenbee.h
+	"../Insect.h"
+	"../Board.h"
+
+1732804910 c:\users\ellen\documents\utc\gi01\lo21\projet hive\version\version28-11\hive-main\classesinsects\spider.h
+	"../Insect.h"
+	"../Board.h"
+
+1732804910 c:\users\ellen\documents\utc\gi01\lo21\projet hive\version\version28-11\hive-main\classesinsects\grasshopper.h
+	"../Insect.h"
+	"../Board.h"
+
+1732804910 c:\users\ellen\documents\utc\gi01\lo21\projet hive\version\version28-11\hive-main\classesinsects\beetle.h
+	"../Insect.h"
+	"../Board.h"
+
+1732804910 source:c:\users\ellen\documents\utc\gi01\lo21\projet hive\version\version28-11\hive-main\classesinsects\ant.cpp
+	"ant.h"
+
+1732804910 source:c:\users\ellen\documents\utc\gi01\lo21\projet hive\version\version28-11\hive-main\classesinsects\beetle.cpp
+	"beetle.h"
+	"../Board.h"
+
+1732804910 source:c:\users\ellen\documents\utc\gi01\lo21\projet hive\version\version28-11\hive-main\classesinsects\grasshopper.cpp
+	"grasshopper.h"
+	"../Board.h"
+
+1732804910 source:c:\users\ellen\documents\utc\gi01\lo21\projet hive\version\version28-11\hive-main\classesinsects\ladybug.cpp
+	"ladybug.h"
+	"../Board.h"
+
+1732804910 c:\users\ellen\documents\utc\gi01\lo21\projet hive\version\version28-11\hive-main\classesinsects\ladybug.h
+	"../Insect.h"
+	"../Board.h"
+
+1732804910 source:c:\users\ellen\documents\utc\gi01\lo21\projet hive\version\version28-11\hive-main\classesinsects\mosquito.cpp
+	"mosquito.h"
+
+1732804910 c:\users\ellen\documents\utc\gi01\lo21\projet hive\version\version28-11\hive-main\classesinsects\mosquito.h
+	"../Insect.h"
+
+1732804910 source:c:\users\ellen\documents\utc\gi01\lo21\projet hive\version\version28-11\hive-main\classesinsects\queenbee.cpp
+	"QueenBee.h"
+
+1732804910 source:c:\users\ellen\documents\utc\gi01\lo21\projet hive\version\version28-11\hive-main\classesinsects\spider.cpp
+	"spider.h"
+	"../Board.h"
+	<set>
+
+1732883854 source:c:\users\ellen\documents\utc\gi01\lo21\projet hive\version\version28-11\hive-main\controleur.cpp
+	"Controleur.h"
+
+1732875783 c:\users\ellen\documents\utc\gi01\lo21\projet hive\version\version28-11\hive-main\controleur.h
+	<stack>
+	<iostream>
+	<stack>
+	<fstream>
+	<stdexcept>
+	<string>
+	<iostream>
+	"Board.h"
+	"Insect.h"
+
+1732804910 source:c:\users\ellen\documents\utc\gi01\lo21\projet hive\version\version28-11\hive-main\insect.cpp
+
+1732804910 source:c:\users\ellen\documents\utc\gi01\lo21\projet hive\version\version28-11\hive-main\main.cpp
+	"Board.h"
+	"Insect.h"
+	"Controleur.h"
+	<iostream>
+
