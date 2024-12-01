@@ -20,7 +20,7 @@ void Board::addSpot(int x, int y) {
 }
 
 // Associe l'insecte � la case trouv�e
-void Board::addInsectToSpot(int x, int y, Insect* insect) {
+void Board::addInsectToSpot(int x, int y,Insect* insect) {
     for (size_t i = 0; i < nb; ++i) { // Parcourt les spots jusqu'� nb
         if (board_spots[i]->getCoordinates() == std::make_pair(x, y)) {
             board_spots[i]->setInsect(insect); // Associe l'insecte � cette case
@@ -58,6 +58,15 @@ void Board::modifySpot(int oldX, int oldY, int newX, int newY) {
 
 //  acc�der � une case sp�cifique par coordonn�es
 const BoardSpot* Board::getSpot(int x, int y) const {
+    for (size_t i = 0; i < nb; i++) {
+        if (board_spots[i]->getCoordinates() == std::make_pair(x, y)) {
+            return board_spots[i];
+        }
+    }
+    return nullptr;
+}
+//acceder à une case par coordonnée et modifiable
+BoardSpot* Board::getSpotModify(int x, int y) {
     for (size_t i = 0; i < nb; i++) {
         if (board_spots[i]->getCoordinates() == std::make_pair(x, y)) {
             return board_spots[i];
@@ -222,54 +231,6 @@ std::vector<const BoardSpot*> Board::trouverVoisinsInsects(int x, int y) const {
     return voisinsNuls; //on retourne le vecteur
 }
 
-// trouver les voisins sans insectes sans saut de la piece demandée et les renovies dans un vecteur; (pas fait)
-std::vector<const BoardSpot*> Board::trouverVoisinsGlisseur(int x, int y) const{
-    std::vector<const BoardSpot*> voisins;
-
-    //cr�ation de la liste de pair des coordon�es de tout les voisins
-    std::pair<int, int> directions[] = {
-        {1, 0},   // (x + 1, y)
-        {1, 1},   // (x + 1, y + 1)
-        {0, 1},   // (x, y + 1)
-        {-1, 0},  // (x - 1, y)
-        {-1, -1}, // (x - 1, y - 1)
-        {0, -1}   // (x, y - 1)
-    };
-
-    // taille de directions
-    size_t size = sizeof(directions) / sizeof(directions[0]);
-
-    // boucle pour itérer sur les directions
-    for (size_t i = 0; i < size; ++i)
-    {
-        std::pair<int, int> newDirection = directions[i];
-
-        // accès à la direction précédente dans la liste
-        size_t prevIndex = (i==0) ? size - 1 : i - 1; // si i=0, prevIndex devient le dernier élément
-        std::pair<int, int> prevDirecion = directions[prevIndex];
-
-        // accès à la direction suivant dans la liste
-        size_t nextIndex = (i==size) ? 1 : i + 1; // si i=size, prevIndex devient le permier élément
-        std::pair<int, int> nextDirecion = directions[nextIndex];
-
-        const BoardSpot* spot = getSpot(newDirection.first, newDirection.second);
-
-        if (spot){
-            // vérifier que le spot est libre
-            if (!spot->hasInsect()){
-                // vérifier qu'on peut y aller sans sauter
-                const BoardSpot* prevSpot = getSpot(prevDirecion.first, prevDirecion.second);
-                const BoardSpot* nextSpot = getSpot(nextDirecion.first, nextDirecion.second);
-                if (!prevSpot->hasInsect() && !nextSpot->hasInsect()){
-                    voisins.push_back(spot); // on ajoute les voisins existants au vecteur
-                }
-            }
-        }
-    }
-    return voisins;
-}
-
-
 std::vector<const BoardSpot*> Board::possibleplacer(bool couleur)const{
 
 
@@ -423,19 +384,20 @@ bool Board::isConnexe() const {
     return visited.size() == insectSpots.size();
 }
 
-void Board::moovInsect (int oldX, int oldY, int newX, int newY){
+void Board::moovInsect(int oldX, int oldY, int newX, int newY) {
+    if (getSpotModify(oldX, oldY)->getInsectModify()->getType() == "beetle") {
+        Beetle* beetle = dynamic_cast<Beetle*>(getSpot(oldX, oldY)->getInsect());
 
-    for (size_t i = 0; i < nb; i++) {
-        if (board_spots[i]->getCoordinates() == std::make_pair(oldX, oldY)) {
-            Insect* ins = board_spots[i]->getInsect();
-            deleteInsectFromSpot(oldX, oldY);
-            addInsectToSpot(newX, newY, ins);
+        getSpotModify(oldX, oldY)->setInsect(beetle->getcouvertModify());
+        beetle->setInsectUnder(getSpot(newX, newY)->getInsect());
+        getSpotModify(newX, newY)->setInsect(beetle);
 
-
-
-        return;
-
-        }
+    } else {
+        getSpotModify(newX, newY)->setInsect(getSpot(oldX, oldY)->getInsect());
+        deleteInsectFromSpot(oldX, oldY);
     }
-    throw SetException("Case non trouv�e pour modification");
+
+    return;
 }
+
+

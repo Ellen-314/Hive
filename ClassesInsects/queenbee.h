@@ -15,8 +15,6 @@ public:
    static unsigned int getPoseNoir(){return poseNoir;}
    static void ajouterBlanc(){poseBlanc++;}
    static void ajouterNoir(){poseNoir++;}
-   static void resetBlanc() {poseBlanc=0;}
-   static void resetNoir() {poseNoir=0;}
    //dit si le joueur peut encore poser un pion de ce type; si il peut: true sinon: false
    //blanc: True black=False
    static bool estPasAuMax(bool couleur);

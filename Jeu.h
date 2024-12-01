@@ -11,7 +11,6 @@
 #include "Board.h"
 #include "Insect.h"
 
-
 class Controleur;
 
 // Exception pour gestion des erreurs dans la classe Jeu
@@ -26,7 +25,7 @@ public:
 
 class Jeu {
 private:
-    int nbRetoursEnArriere=0;
+    int nbRetoursEnArriere;
     Board board;
     // Vecteurs des insectes restant a poser
     std::vector<Insect*> insectsBlanc;
@@ -68,23 +67,7 @@ public:
     //Méthode pour reload une partie
     std::stack<Board> reloadGame();
 
-    //Méthode pour free les insects
-    void freeListeInsect(std::vector<Insect*>& liste_i);
-
-    //Méthode pour créer les listes avec tous les insects
-    std::vector<Insect*> createInsectsB();
-    std::vector<Insect*> createInsectsN();
-
-    //Méthode qui free la liste de tous les instects restants et refait la liste du début
-    //cherche si l'insecte est sur le board, si oui l'enlève de la liste
-    void majListeInsect(Board& board);
-
-    //Méthode qui reset le compteur
-    void resetInsectCount();
-
     //Methodes liées
-    const int getnbRetoursEnArriere() const {return nbRetoursEnArriere;}
-    void setnbRetoursEnArriere(int n) {nbRetoursEnArriere=n;}
     static unsigned int getCompteurDeToursBlanc(){return compteurDeToursBlanc;}
     static unsigned int getCompteurDeToursNoir(){return compteurDeToursNoir;}
     static void ajouterCompteurDeToursBlanc(){compteurDeToursBlanc++;}
@@ -109,8 +92,8 @@ public:
                 std::cout << "Nombre maximal de retours en arrière : ";
                 std::cin >> n;
             }
-        }
         nbRetoursEnArriere = n;
+        }
     }
 
     // Constructeur sans argument

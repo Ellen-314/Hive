@@ -2,13 +2,9 @@
 #include "Insect.h"
 #include "Jeu.h"
 #include "Controleur.h"
-#include <cstdio>
-#include <windows.h>
 
-#pragma execution_character_set("utf-8")
 
 int main() {
-    SetConsoleOutputCP( 65001 );
 
 /*
     std::cout << "Pour l'instant tout va bien";
@@ -36,11 +32,9 @@ int main() {
     std::cout << "\nSuppression de l'insecte de la case (1, 2)" << std::endl;
     board.deleteInsectFromSpot(1, 2);
     board.print(std::cout);
-
+*/
     Controleur controleur;
-    controleur.demarrerPartie();
-
-
+    controleur.demarrage();
 
     return 0;
 }
