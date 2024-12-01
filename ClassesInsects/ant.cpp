@@ -18,25 +18,34 @@ std::vector<const BoardSpot*> Ant::moov(int x, int y, const Board& board)const{
             Averifier.pop();//on retire l'élement qu'on est en train de verifier de la liste à verifier
 
             //on cree le vecteur voisins qui repertorie les voisins sans insects autour de la position à verifier
-            std::vector<const BoardSpot*> voisins = board.voisinsNull(
+            std::vector<const BoardSpot*> voisins = board.trouverVoisinsGlisseur(
                 currentSpot->getCoordinates().first,
                 currentSpot->getCoordinates().second
             );
 
+//            for (size_t i = 0; i < voisins.size(); i++) {
+//                // visite.find(voisins[i]) renvoie visite.end() uniquement si le voisin n'a pas déjà été visité
+//                if (verifie.find(voisins[i]) == verifie.end()) {
+//                    int surroundingInsects = board.trouverVoisinsInsects(
+//                        voisins[i]->getCoordinates().first,
+//                        voisins[i]->getCoordinates().second
+//                    ).size(); //surrondingInsects indique combien d'insects il y a autour de l'emplacement
+//                            if (surroundingInsects < 5) {// si il y a plus de 5 insects autour de l'emplacement la fourmi ne peut pas y acceder
+//                                possibilite.push_back(voisins[i]);
+//                                Averifier.push(voisins[i]);
+//                                verifie.insert(voisins[i]);
+//                            }
+//                        }
+//            }
+
             for (size_t i = 0; i < voisins.size(); i++) {
-                // visite.find(voisins[i]) renvoie visite.end() uniquement si le voisin n'a pas déjà été visité
-                if (verifie.find(voisins[i]) == verifie.end()) {
-                    int surroundingInsects = board.trouverVoisinsInsects(
-                        voisins[i]->getCoordinates().first,
-                        voisins[i]->getCoordinates().second
-                    ).size(); //surrondingInsects indique combien d'insects il y a autour de l'emplacement
-                            if (surroundingInsects < 5) {// si il y a plus de 5 insects autour de l'emplacement la fourmi ne peut pas y acceder
-                                possibilite.push_back(voisins[i]);
-                                Averifier.push(voisins[i]);
-                                verifie.insert(voisins[i]);
-                            }
-                        }
+            // Vérifie si le voisin n'a pas déjà été vérifié
+            if (verifie.find(voisins[i]) == verifie.end()) {
+                possibilite.push_back(voisins[i]);    // Ajoute le voisin à la liste des possibilités
+                Averifier.push(voisins[i]);          // Ajoute le voisin à la liste à vérifier
+                verifie.insert(voisins[i]);          // Marque le voisin comme vérifié
             }
+        }
     }
     return possibilite;
 }
