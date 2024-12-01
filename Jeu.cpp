@@ -113,6 +113,7 @@ void Jeu::demarrerPartie() {
     bool quitter = false;
     Jeu::enregistrerBoard();
     while (!quitter) {
+
         //Test de victoire du joueur qui vient de jouer (on vérifie d'abord sur la reine adverse, c'est à dire la reine du joueur qui est sur le point de jouer)
         //std::cout << "\n=========\nDEBUG : isQueenSurrounded((compteurDeToursBlanc+compteurDeToursNoir+1)%2==1) = " << isQueenSurrounded((compteurDeToursBlanc+compteurDeToursNoir+1)%2==1) << "\n=========\n";
         //std::cout << "\n=========\nDEBUG : isQueenSurrounded((compteurDeToursBlanc+compteurDeToursNoir)%2==1) = " << isQueenSurrounded((compteurDeToursBlanc+compteurDeToursNoir)%2==1) << "\n=========\n";
@@ -572,17 +573,17 @@ void Jeu::supprimerCase() {
 
 void Jeu::annulerCoup(){
     std::cout << "Le nombre d'entrées dans la stack: " << historyStack.size() << std::endl;
-
-    if (historyStack.size() == 1) {
-        std::cout << "Vous êtes déjà au début de la partie.\n";
-        return;
-    }
     if (nbRetoursEnArriere<=0){
         std::cout << "Vous avez atteint le nombre maximum de retours en arriere de la partie.\n";
         return;
     }
+    if (historyStack.size() == 1) {
+        std::cout << "Vous êtes déjà au début de la partie.\n";
+        return;
+    }
+
     historyStack.pop();
-    board = historyStack.top();
+    majListeInsect(historyStack.top());
     nbRetoursEnArriere--;
     decCompteur();
 
@@ -609,6 +610,8 @@ void Jeu::saveGame(std::stack<Board> boardStack){
         if (!outFile) {
             throw std::runtime_error("Failed to open file for writing.");
         }
+
+        outFile <<getnbRetoursEnArriere() << "\n"; //Ecrire le nombre de retours en arrière dans le ficher
 
         while (!boardStack.empty()) {
             Board board = boardStack.top();
@@ -650,6 +653,13 @@ std::stack<Board> Jeu::reloadGame(){
         if (!inFile) {
             throw std::runtime_error("Failed to open file for reading.");
         }
+        int nb_retours;
+        inFile >> nb_retours;
+        if (inFile.fail()) {
+            throw std::runtime_error("Failed to read number of retours.");
+        }
+        std::cout << "Number of retours: " << nb_retours << "\n";
+        setnbRetoursEnArriere(nb_retours);
 
         std::stack<Board> boardStack;
         while (inFile.peek() != EOF) {  // Loop until the end of the file
@@ -661,10 +671,8 @@ std::stack<Board> Jeu::reloadGame(){
 
                 int x, y;
                 inFile >> x >> y;  // Read coordinates
-                std::cout<<"x="<<x<<"\n";
-                std::cout<<"y="<<y<<"\n";
                 BoardSpot spot(x, y);
-
+                board.addSpot(x, y);  //
                 std::string insectType;
                 inFile >> insectType;  // Read insect type
 
@@ -674,26 +682,63 @@ std::stack<Board> Jeu::reloadGame(){
 
                     // You would need to properly reconstruct the insect based on its type and color
                     Insect* insect = nullptr;
-                    if (insectType == "ant") {
+                    if (insectType == "ant" ) {
                         insect = new Ant(); // Example, you'd need to handle creating the correct insect type
                     } else if (insectType == "queenbee") {
                         insect = new QueenBee();  // Similarly for QueenBee or other types
                     }
+                    else if (insectType == "beetle") {
+                        insect = new Beetle();  // Similarly for QueenBee or other types
+                    }
+                    else if (insectType == "grasshopper") {
+                        insect = new Grasshopper();  // Similarly for QueenBee or other types
+                    }
+                    else if (insectType == "spider") {
+                        insect = new Spider();  // Similarly for QueenBee or other types
+                    }
+                    else if (insectType == "ladybug") {
+                        //insect = new Ladybug();  // Similarly for QueenBee or other types
+                    }
+                    else if (insectType == "mosquito") {
+                        //insect = new Mosquito();  // Similarly for QueenBee or other types
+                    }
 
+                    insect->setColor(color);
+                    //TODO gérer les possibilités + a qui c'est le tour dans le fichier?
                     spot.setInsect(insect);
-                }
-                board.addSpot(spot.getCoordinates().first, spot.getCoordinates().second);  // Add to the board
-                if (spot.hasInsect()) {
-                    std::cout<<"here\n";
-                    board.addInsectToSpot(spot.getCoordinates().first, spot.getCoordinates().second, spot.getInsect());
-                }
-            }
+                    board.addInsectToSpot(x,y, insect);
 
+                }
+
+            }
+            std::cout<<"b:";
+            board.afficherpossibilite(board.possibleplacer(1));
+            std::cout<<"N:";
+            board.afficherpossibilite(board.possibleplacer(0));
+            std::cout<<"\n";
             boardStack.push(board);  // Push the board to the stack
         }
+        //board.afficherpossibilite(insect);
 
         inFile.close();
         std::cout << "Boards chargés avec succès!" << std::endl;
+
+        //Gestion des tours
+        int sizeBoardStack = boardStack.size();
+        if (sizeBoardStack%2==0){ //pair
+                for (int i=0; i<(sizeBoardStack/2)-1;i++){
+                    incCompteur(0);
+                    incCompteur(1);
+                }}
+        else if (sizeBoardStack%2!=0){
+                for (int i=0; i<(sizeBoardStack/2)-1;i++){
+                    incCompteur(0);
+                    incCompteur(1);
+                }
+                incCompteur(1);
+        }
+        std::cout<<"TB:"<<compteurDeToursBlanc<<"\n";
+        std::cout<<"TN:"<<compteurDeToursNoir<<"\n";
         return boardStack;
     } catch (const std::exception& e) {
         std::cerr << "Erreur au chargement des boards: " << e.what() << std::endl;
@@ -713,4 +758,173 @@ bool Jeu::isQueenSurrounded(bool color) const{
     return false;
 }
 
+//Méthode pour free les instects
+void Jeu::freeListeInsect(std::vector<Insect*>& liste_i) {
+    for (auto& i : liste_i) {
+        delete i;
+        i = nullptr;
+    }
+    liste_i.clear();
+}
 
+//Méthode pour créer une liste de tous les insects Blancs
+std::vector<Insect*> Jeu::createInsectsB() {
+    std::vector<Insect*> insectsBlanc; // Initialize the vector properly
+
+    // Add QueenBees
+    for (unsigned int i = 0; i < QueenBee::getMax(); i++) {
+        insectsBlanc.push_back(new QueenBee);
+        insectsBlanc.back()->setColor(true);
+    }
+
+    // Add Ants
+    for (unsigned int i = 0; i < Ant::getMax(); i++) {
+        insectsBlanc.push_back(new Ant);
+        insectsBlanc.back()->setColor(true);
+    }
+
+    // Add Beetles
+    for (unsigned int i = 0; i < Beetle::getMax(); i++) {
+        insectsBlanc.push_back(new Beetle);
+        insectsBlanc.back()->setColor(true);
+    }
+
+    // Add Grasshoppers
+    for (unsigned int i = 0; i < Grasshopper::getMax(); i++) {
+        insectsBlanc.push_back(new Grasshopper);
+        insectsBlanc.back()->setColor(true);
+    }
+
+    // Add Spiders
+    for (unsigned int i = 0; i < Spider::getMax(); i++) {
+        insectsBlanc.push_back(new Spider);
+        insectsBlanc.back()->setColor(true);
+    }
+
+    return insectsBlanc; // Return the vector
+}
+
+//Méthode pour créer une liste de tous les insects Noirs
+std::vector<Insect*> Jeu::createInsectsN() {
+    std::vector<Insect*> insectsNoir; // Initialize the vector properly
+
+    // Add QueenBees
+    for (unsigned int i = 0; i < QueenBee::getMax(); i++) {
+        insectsNoir.push_back(new QueenBee);
+        insectsNoir.back()->setColor(false);
+    }
+
+    // Add Ants
+    for (unsigned int i = 0; i < Ant::getMax(); i++) {
+        insectsNoir.push_back(new Ant);
+        insectsNoir.back()->setColor(false);
+    }
+
+    // Add Beetles
+    for (unsigned int i = 0; i < Beetle::getMax(); i++) {
+        insectsNoir.push_back(new Beetle);
+        insectsNoir.back()->setColor(false);
+    }
+
+    // Add Grasshoppers
+    for (unsigned int i = 0; i < Grasshopper::getMax(); i++) {
+        insectsNoir.push_back(new Grasshopper);
+        insectsNoir.back()->setColor(false);
+    }
+
+    // Add Spiders
+    for (unsigned int i = 0; i < Spider::getMax(); i++) {
+        insectsNoir.push_back(new Spider);
+        insectsNoir.back()->setColor(false);
+    }
+
+    return insectsNoir; // Return the vector
+}
+
+//Méthode qui free la liste de tous les instects restants et refait la liste du début
+//cherche si l'insecte est sur le board, si oui l'enlève de la liste
+void Jeu::majListeInsect(Board& board_i) {
+    // Free the current lists of insects
+    freeListeInsect(insectsBlanc);
+    freeListeInsect(insectsNoir);
+
+
+    // Recreate the lists
+    insectsBlanc = createInsectsB();
+    insectsNoir = createInsectsN();
+
+    resetInsectCount();
+
+    // Check the board and update the lists
+    for (size_t i = 0; i < board_i.getNb(); i++) {
+        const BoardSpot& spot = board_i.getSpotIndex(i); // Access each spot on the board
+        if (spot.hasInsect()) {
+            Insect* insectOnBoard = spot.getInsect();
+
+            if (insectOnBoard->getColor() == 1) {
+                // Remove insect from `insectsBlanc` if found
+                auto it = std::find_if(insectsBlanc.begin(), insectsBlanc.end(),
+                                       [&insectOnBoard](const Insect* insect) {
+                                           return insect->getType() == insectOnBoard->getType();
+                                       });
+
+                if (it != insectsBlanc.end()) {
+                    insectsBlanc.erase(it);
+
+                    // Increment the count for the corresponding insect type
+                    if (insectOnBoard->getType() == "queenbee") { QueenBee::ajouterBlanc(); }
+                    else if (insectOnBoard->getType() == "ant") { Ant::ajouterBlanc(); }
+                    else if (insectOnBoard->getType() == "beetle") { Beetle::ajouterBlanc(); }
+                    //else if (insectOnBoard->getType() == "ladybug") { Ladybug::ajouterBlanc(); }
+                    else if (insectOnBoard->getType() == "spider") { Spider::ajouterBlanc(); }
+                    //else if (insectOnBoard->getType() == "mosquito") { Mosquito::ajouterBlanc(); }
+                } else {
+                    std::cout << RED << "Problème pour l'insect blanc: " << insectOnBoard->getType() << "\n";
+                }
+
+            } else {
+                // Remove insect from `insectsNoir` if found
+                auto it = std::find_if(insectsNoir.begin(), insectsNoir.end(),
+                                       [&insectOnBoard](const Insect* insect) {
+                                           return insect->getType() == insectOnBoard->getType();
+                                       });
+
+                if (it != insectsNoir.end()) {
+                    insectsNoir.erase(it);
+
+                    // Increment the count for the corresponding insect type
+                    if (insectOnBoard->getType() == "queenbee") { QueenBee::ajouterNoir(); }
+                    else if (insectOnBoard->getType() == "ant") { Ant::ajouterNoir(); }
+                    else if (insectOnBoard->getType() == "beetle") { Beetle::ajouterNoir(); }
+                    else if (insectOnBoard->getType() == "spider") { Spider::ajouterNoir(); }
+                    else if (insectOnBoard->getType() == "grasshopper") { Spider::ajouterNoir(); }
+                    //else if (insectOnBoard->getType() == "ladybug") { Ladybug::ajouterNoir(); }
+                    //else if (insectOnBoard->getType() == "mosquito") { Mosquito::ajouterNoir(); }
+                } else {
+                    std::cout << RED << "Problème pour l'insect noir: " << insectOnBoard->getType() << "\n";
+                }
+            }
+        }
+    }
+
+
+    board=board_i;
+}
+
+
+void Jeu::resetInsectCount(){
+    QueenBee::resetBlanc();
+    QueenBee::resetNoir();
+    Ant::resetBlanc();
+    Ant::resetNoir();
+    Beetle::resetBlanc();
+    Beetle::resetNoir();
+    Grasshopper::resetBlanc();
+    Grasshopper::resetNoir();
+    //Ladybug::resetBlanc();
+    //Ladybug::resetNoir();
+    Spider::resetBlanc();
+    Spider::resetNoir();
+    //Mosquito::resetBlanc();
+    //Mosquito::resetNoir();
+}
