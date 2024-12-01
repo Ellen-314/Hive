@@ -15,6 +15,8 @@ Beetle():couvert(nullptr){};
    static unsigned int getMax(){return Max;}
    static unsigned int getPoseBlanc(){return poseBlanc;}
    static unsigned int getPoseNoir(){return poseNoir;}
+   static void resetBlanc() {poseBlanc=0;}
+   static void resetNoir() {poseNoir=0;}
 
    static void ajouterBlanc(){poseBlanc++;}
    static void ajouterNoir(){poseNoir++;}
