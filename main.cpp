@@ -1,14 +1,17 @@
-#include "Board.h"
-#include "Insect.h"
 #include "Jeu.h"
 #include "Controleur.h"
+#include <cstdio>
+#include <windows.h>
 
+#pragma execution_character_set("utf-8")
 
 int main() {
+    SetConsoleOutputCP( 65001 );
 
 /*
     std::cout << "Pour l'instant tout va bien";
 
+>>>>>>> Stashed changes
     Board board;
 
     //test();
@@ -31,10 +34,12 @@ int main() {
     // Suppression de l'insecte de la case (1, 2)
     std::cout << "\nSuppression de l'insecte de la case (1, 2)" << std::endl;
     board.deleteInsectFromSpot(1, 2);
-    board.print(std::cout);
-*/
+    board.print(std::cout);*/
+
     Controleur controleur;
     controleur.demarrage();
+
+
 
     return 0;
 }
