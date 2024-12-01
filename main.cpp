@@ -1,13 +1,5 @@
 #include "Board.h"
 #include "Insect.h"
-<<<<<<< Updated upstream
-
-#include "Controleur.h"
-#include <iostream>
-#include "test.h"
-
-int main() {
-=======
 #include "Jeu.h"
 #include "Controleur.h"
 #include <cstdio>
@@ -21,7 +13,6 @@ int main() {
 /*
     std::cout << "Pour l'instant tout va bien";
 
->>>>>>> Stashed changes
     Board board;
 
     //test();
@@ -37,8 +28,8 @@ int main() {
     std::cout << "\nAjout d'insectes aux cases" << std::endl;
     QueenBee* insect1 = new QueenBee();
     Ant* insect2 = new Ant();
-    board.addInsectToSpot(1, 2, insect1); // Ajoute insect1 à la case (1, 2)
-    board.addInsectToSpot(3, 4, insect2); // Ajoute insect2 à la case (3, 4)
+    board.addInsectToSpot(1, 2, insect1); // Ajoute insect1 ï¿½ la case (1, 2)
+    board.addInsectToSpot(3, 4, insect2); // Ajoute insect2 ï¿½ la case (3, 4)
     board.print(std::cout);
 
     // Suppression de l'insecte de la case (1, 2)
