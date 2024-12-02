@@ -34,6 +34,12 @@ std::vector<const BoardSpot*> Spider::moov(int x, int y, const Board& board)cons
             currentSpot->getCoordinates().second
         );
 
+        for (const BoardSpot* voisin : voisins) {
+            if (verifie.find(voisin) == verifie.end()) { // Si le voisin n'a pas encore été vérifié
+                Averifier.push({voisin, currentDistance + 1}); // Ajoute le voisin avec une distance incrémentée
+                verifie.insert(voisin); // Marque le voisin comme vérifié
+            }
+        }
     }
     return possibilite;
 }
@@ -42,4 +48,3 @@ bool Spider::estPasAuMax(bool couleur){
     if (couleur==0){ return getPoseNoir()< getMax(); }
     else{ return getPoseBlanc()< getMax(); }
 }
-
