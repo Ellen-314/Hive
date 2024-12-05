@@ -7,6 +7,7 @@
 #include "ClassesInsects/spider.h"
 #include "ClassesInsects/grasshopper.h"
 #include "ClassesInsects/beetle.h"
+#include "ClassesInsects/ladybug.h"
 #include <iostream>
 #include <stdexcept>
 #include <utility>

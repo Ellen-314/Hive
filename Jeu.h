@@ -7,6 +7,7 @@
 #include <stdexcept>
 #include <string>
 #include <iostream>
+#include <functional>
 
 #include "Board.h"
 #include "Insect.h"
@@ -31,6 +32,9 @@ private:
     // Vecteurs des insectes restant a poser
     std::vector<Insect*> insectsBlanc;
     std::vector<Insect*> insectsNoir;
+
+    //liste contenant tout les types d'insects et leur nombre max
+    std::vector<std::pair< std::function<Insect*()>, unsigned int>> insectTypes;
     std::stack<Board> historyStack;
     static unsigned int compteurDeToursBlanc;
     static unsigned int compteurDeToursNoir;
@@ -40,6 +44,7 @@ private:
     // Méthode pour obtenir de la part l'utilisateur des coordonnées de la case où une action doit être effectuée
     std::pair<int, int> demanderCoordonnees() const;
     friend Controleur;
+
 public:
     // Méthode principale pour lancer le jeu et gérer les interactions utilisateur durant la partie
     void demarrerPartie();
@@ -74,6 +79,12 @@ public:
     //Méthode pour créer les listes avec tous les insects
     std::vector<Insect*> createInsectsB();
     std::vector<Insect*> createInsectsN();
+
+    //Méthode pour ajouter les types d'insects à la liste de types.
+    void addType( std::function<Insect*()> cree, int maximum){insectTypes.push_back(std::make_pair(cree, maximum));}
+    // méthode qui cree tout les insects sur le plateau
+    void createInsects();
+    const std::vector<std::pair< std::function<Insect*()>, unsigned int>> getInsectTypes()const{return insectTypes;}
 
     //Méthode qui free la liste de tous les instects restants et refait la liste du début
     //cherche si l'insecte est sur le board, si oui l'enlève de la liste
@@ -114,7 +125,7 @@ public:
     }
 
     // Constructeur sans argument
-    Jeu();
+    Jeu()=default;
 
     const Board& getPlateau() const { return board; }
     Board& getPlateau() { return board; }

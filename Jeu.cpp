@@ -23,62 +23,31 @@ void Jeu::enregistrerBoard() {
     std::cout << "Le nombre d'entrées dans la stack: " << historyStack.size() << std::endl;
 }
 
-Jeu::Jeu(){
-    for(unsigned int i=0; i<QueenBee::getMax();i++){
-        //std::cout << "\n=========\nDEBUG : Ajout d'une abeille\n=========\n\n";
-        insectsBlanc.push_back(new QueenBee);
-        insectsNoir.push_back(new QueenBee);
-        insectsBlanc.back()->setColor(true);
-        insectsNoir.back()->setColor(false);
+void Jeu::createInsects(){
+       addType([](){return new QueenBee;}, QueenBee::getMax());
+       addType([](){return new Ant;}, Ant::getMax());
+       addType([](){return new Beetle;}, Beetle::getMax());
+       addType([](){return new Grasshopper;}, Grasshopper::getMax());
+       addType([](){return new Spider;}, Spider::getMax());
+
+
+               for (const auto& insectInfo : insectTypes) {
+            for (unsigned int i = 0; i < insectInfo.second; i++) {
+                // Blanc
+                Insect* blanc = insectInfo.first();
+                blanc->setColor(true);
+                insectsBlanc.push_back(blanc);
+
+                // Noir
+                Insect* noir = insectInfo.first();
+                noir->setColor(false);
+                insectsNoir.push_back(noir);
+            }
+        }
     }
-    for(unsigned int i=0; i<Ant::getMax();i++){
-        //std::cout << "\n=========\nDEBUG : Ajout d'une fourmi\n=========\n\n";
-        insectsBlanc.push_back(new Ant);
-        insectsNoir.push_back(new Ant);
-        insectsBlanc.back()->setColor(true);
-        insectsNoir.back()->setColor(false);
-    }
-    for(unsigned int i=0; i<Beetle::getMax();i++){
-        //std::cout << "\n=========\nDEBUG : Ajout d'une Beetle\n=========\n\n";
-        insectsBlanc.push_back(new Beetle);
-        insectsNoir.push_back(new Beetle);
-        insectsBlanc.back()->setColor(true);
-        insectsNoir.back()->setColor(false);
-    }
-    for(unsigned int i=0; i<Grasshopper::getMax();i++){
-        //std::cout << "\n=========\nDEBUG : Ajout d'une Grasshopper\n=========\n\n";
-        insectsBlanc.push_back(new Grasshopper);
-        insectsNoir.push_back(new Grasshopper);
-        insectsBlanc.back()->setColor(true);
-        insectsNoir.back()->setColor(false);
-    }
-    for(unsigned int i=0; i<Spider::getMax();i++){
-        //std::cout << "\n=========\nDEBUG : Ajout d'une Spider\n=========\n\n";
-        insectsBlanc.push_back(new Spider);
-        insectsNoir.push_back(new Spider);
-        insectsBlanc.back()->setColor(true);
-        insectsNoir.back()->setColor(false);
-    }
-    // TO DO : ajouter la création des autres insectes
-    /*
-    for(unsigned int i=0; i<Ladybug::getMax();i++){
-        //std::cout << "\n=========\nDEBUG : Ajout d'une Ladybug\n=========\n\n";
-        insectsBlanc.push_back(new Ladybug);
-        insectsNoir.push_back(new Ladybug);
-        insectsBlanc.back()->setColor(true);
-        insectsNoir.back()->setColor(false);
-    }
-    for(unsigned int i=0; i<Mosquito::getMax();i++){
-        //std::cout << "\n=========\nDEBUG : Ajout d'une Mosquito\n=========\n\n";
-        insectsBlanc.push_back(new Mosquito);
-        insectsNoir.push_back(new Mosquito);
-        insectsBlanc.back()->setColor(true);
-        insectsNoir.back()->setColor(false);
-    }
-    */
-    //printInsectsNoir();
-    //printInsectsBlanc();
-}
+
+
+
 
 // Méthode pour afficher le menu principal avec les différentes actions disponibles
 void Jeu::afficherMenu() const {
