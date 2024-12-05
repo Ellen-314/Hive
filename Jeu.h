@@ -80,6 +80,11 @@ public:
     std::vector<Insect*> createInsectsB();
     std::vector<Insect*> createInsectsN();
 
+    const std::vector<Insect*> getInsectBlanc()const{return insectsBlanc;}
+    std::vector<Insect*> getInsectBlancMod(){return insectsBlanc;}
+    const std::vector<Insect*> getInsectNoir()const{return insectsNoir;}
+    std::vector<Insect*> getInsectNoirMod(){return insectsNoir;}
+
     //Méthode pour ajouter les types d'insects à la liste de types.
     void addType( std::function<Insect*()> cree, int maximum){insectTypes.push_back(std::make_pair(cree, maximum));}
     // méthode qui cree tout les insects sur le plateau

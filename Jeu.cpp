@@ -228,167 +228,36 @@ void Jeu::ajouterInsecte() {
             int choix_insect;
 
             do {
-                std::cout << "Quel insecte souhaitez vous ajouter? :\n 1: reine, 2: fourmi, 3: araignée, 4: sauterelle, 5: scarabé, 0:revenir au menu\n";
+                std::cout << "Quelle pièce souhaitez vous ajouter?  20:revenir au menu\n";
                 std::cout << "Entrez votre choix : ";
                 //TODO: voir pour gérer quand on ajoute l'extension
                 std::cin >> choix_insect;
-
-                switch (choix_insect){
-                    case 1:
-                        //std::cout << "\n=========\nDEBUG : QueenBee::estPasAuMax(color) -> " << QueenBee::estPasAuMax(color) << "\n=========\n\n";
-                        if (QueenBee::estPasAuMax(color)){
-                            size_t i=0;
-                            do{
-                                if(color==1){
-                                    if("queenbee" == insectsBlanc[i]->getType()){
-                                        //std::cout << "\n=========\nDEBUG : "<< i << " : " << insectsBlanc[i]->getType() << insectsBlanc[i]->getColor() << "\n=========\n\n";
-                                        insect=insectsBlanc[i];
-                                        insectsBlanc.erase(insectsBlanc.begin()+i);
-                                        choix_insect=10;
-                                    }
-                                }
-                                else{
-                                    if("queenbee" == insectsNoir[i]->getType()){
-                                        //std::cout << "\n=========\nDEBUG : "<< i << " : " << insectsNoir[i]->getType() << insectsNoir[i]->getColor() << "\n=========\n\n";
-                                        insect=insectsNoir[i];
-                                        insectsNoir.erase(insectsNoir.begin()+i);
-                                        choix_insect=10;
-                                    }
-                                }
-                                i++;
-                            }while(((color==0 && i<insectsNoir.size()) || (color==1 && i<insectsBlanc.size())) && choix_insect!=10);
-                        }
-                        else{
-                            std::cout  << RED << "Vous ne pouvez plus poser de QueenBee !"<<BLACK<<"\n";
-                        }
-                        break;
-                    case 2:
-                        //std::cout << "\n=========\nDEBUG : Ant::estPasAuMax(color) -> " << Ant::estPasAuMax(color) << "\n=========\n\n";
-                        if (Ant::estPasAuMax(color)){
-                            size_t i=0;
-                            do{
-                                if(color==1){
-                                    if("ant" == insectsBlanc[i]->getType()){
-                                        //std::cout << "\n=========\nDEBUG : "<< i << " : " << insectsBlanc[i]->getType() << insectsBlanc[i]->getColor() << "\n=========\n\n";
-                                        insect=insectsBlanc[i];
-                                        insectsBlanc.erase(insectsBlanc.begin()+i);
-                                        choix_insect=10;
-                                    }
-                                }
-                                else{
-                                    if("ant" == insectsNoir[i]->getType()){
-                                        //std::cout << "\n=========\nDEBUG : "<< i << " : " << insectsNoir[i]->getType() << insectsNoir[i]->getColor() << "\n=========\n\n";
-                                        insect=insectsNoir[i];
-                                        insectsNoir.erase(insectsNoir.begin()+i);
-                                        choix_insect=10;
-                                    }
-                                }
-                                i++;
-                            }while(((color==0 && i<insectsNoir.size()) || (color==1 && i<insectsBlanc.size())) && choix_insect!=10);
-                        }
-                        else{
-                            std::cout  << RED << "Vous ne pouvez plus poser de Ant !"<<BLACK<<"\n";
-                        }
-                        break;
-                    case 3:
-                        //std::cout << "\n=========\nDEBUG : Spider::estPasAuMax(color) -> " << Spider::estPasAuMax(color) << "\n=========\n\n";
-                        if (Spider::estPasAuMax(color)){
-                            size_t i=0;
-                            do{
-                                if(color==1){
-                                    if("spider" == insectsBlanc[i]->getType()){
-                                        //std::cout << "\n=========\nDEBUG : "<< i << " : " << insectsBlanc[i]->getType() << insectsBlanc[i]->getColor() << "\n=========\n\n";
-                                        insect=insectsBlanc[i];
-                                        insectsBlanc.erase(insectsBlanc.begin()+i);
-                                        choix_insect=10;
-                                    }
-                                }
-                                else{
-                                    if("spider" == insectsNoir[i]->getType()){
-                                        //std::cout << "\n=========\nDEBUG : "<< i << " : " << insectsNoir[i]->getType() << insectsNoir[i]->getColor() << "\n=========\n\n";
-                                        insect=insectsNoir[i];
-                                        insectsNoir.erase(insectsNoir.begin()+i);
-                                        choix_insect=10;
-                                    }
-                                }
-                                i++;
-                            }while(((color==0 && i<insectsNoir.size()) || (color==1 && i<insectsBlanc.size())) && choix_insect!=10);
-                        }
-                        else{
-                            std::cout  << RED << "Vous ne pouvez plus poser de Spider !"<<BLACK<<"\n";
-                        }
-                        break;
-                    case 4:
-                        //std::cout << "\n=========\nDEBUG : Grasshopper::estPasAuMax(color) -> " << Grasshopper::estPasAuMax(color) << "\n=========\n\n";
-                        if (Grasshopper::estPasAuMax(color)){
-                            size_t i=0;
-                            do{
-                                if(color==1){
-                                    if("grasshopper" == insectsBlanc[i]->getType()){
-                                        //std::cout << "\n=========\nDEBUG : "<< i << " : " << insectsBlanc[i]->getType() << insectsBlanc[i]->getColor() << "\n=========\n\n";
-                                        insect=insectsBlanc[i];
-                                        insectsBlanc.erase(insectsBlanc.begin()+i);
-                                        choix_insect=10;
-                                    }
-                                }
-                                else{
-                                    if("grasshopper" == insectsNoir[i]->getType()){
-                                        //std::cout << "\n=========\nDEBUG : "<< i << " : " << insectsNoir[i]->getType() << insectsNoir[i]->getColor() << "\n=========\n\n";
-                                        insect=insectsNoir[i];
-                                        insectsNoir.erase(insectsNoir.begin()+i);
-                                        choix_insect=10;
-                                    }
-                                }
-                                i++;
-                            }while(((color==0 && i<insectsNoir.size()) || (color==1 && i<insectsBlanc.size())) && choix_insect!=10);
-                        }
-                        else{
-                            std::cout  << RED << "Vous ne pouvez plus poser de Grasshopper !"<<BLACK<<"\n";
-                        }
-                        break;
-                    case 5:
-                        //std::cout << "\n=========\nDEBUG : Beetle::estPasAuMax(color) -> " << Beetle::estPasAuMax(color) << "\n=========\n\n";
-                        if (Beetle::estPasAuMax(color)){
-                            size_t i=0;
-                            do{
-                                if(color==1){
-                                    if("beetle" == insectsBlanc[i]->getType()){
-                                        //std::cout << "\n=========\nDEBUG : "<< i << " : " << insectsBlanc[i]->getType() << insectsBlanc[i]->getColor() << "\n=========\n\n";
-                                        insect=insectsBlanc[i];
-                                        insectsBlanc.erase(insectsBlanc.begin()+i);
-                                        choix_insect=10;
-                                    }
-                                }
-                                else{
-                                    if("beetle" == insectsNoir[i]->getType()){
-                                        //std::cout << "\n=========\nDEBUG : "<< i << " : " << insectsNoir[i]->getType() << insectsNoir[i]->getColor() << "\n=========\n\n";
-                                        insect=insectsNoir[i];
-                                        insectsNoir.erase(insectsNoir.begin()+i);
-                                        choix_insect=10;
-                                    }
-                                }
-                                i++;
-                            }while(((color==0 && i<insectsNoir.size()) || (color==1 && i<insectsBlanc.size())) && choix_insect!=10);
-                        }
-                        else{
-                            std::cout  << RED << "Vous ne pouvez plus poser de Beetle !"<<BLACK<<"\n";
-                        }
-                        break;
-
-                    //TODO ecrire les case pour les autres insects et leur ajouter leurs methodes estPasAuMax;
-                    case 0 :
+                 if (choix_insect == 20){
                         std::cout << "retour au menu\n";
-                        return;
-                        break;
+                        return;}
+                else if(color == 1){
+                if (choix_insect > -1 && choix_insect<getInsectBlanc().size())
+                {
+                    insect = getInsectBlancMod()[choix_insect];
+                    insect->setColor(1);
+                    insectsBlanc.erase(insectsBlanc.begin()+choix_insect);
+                    choix_insect= 100;
+                }}
+                else if (choix_insect >= 0 && choix_insect<getInsectNoir().size())
+                {
+                    insect = getInsectNoirMod()[choix_insect];
+                    insect->setColor(0);
+                    insectsNoir.erase(insectsNoir.begin()+choix_insect);
+                    choix_insect= 100;
+                }
 
 
-                    default:
-                        std::cout << RED <<"Le choix n'est pas valide."<<BLACK<<"\n";
+                else{ std::cout << RED <<"Le choix n'est pas valide."<<BLACK<<"\n";}
 
-                        break;
+
                     }
 
-            }while(choix_insect!= 10);
+            while(choix_insect!= 100);
         }
 
 
