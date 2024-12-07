@@ -2,10 +2,10 @@
 
 void Controleur::demarrage(){
 
-    std::string c;
-    std::cout<<"Voulez-vous recharger la partie précédente ? Oui/Non:";
+    int c;
+    std::cout<<"Voulez-vous recharger la partie précédente ? Tapez 1 pour reprendre ou 0 pour recommencer: ";
     std::cin>>c;
-    if (c=="Oui"||c=="oui"||c=="o"){
+    if (c==1){
             std::stack<Board> tempStack;
             std::stack<Board> tempStack1;
             tempStack=jeu.reloadGame();
