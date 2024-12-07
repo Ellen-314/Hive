@@ -2,10 +2,17 @@
 
 void Controleur::demarrage(){
 
-    std::string c;
-    std::cout<<"Voulez-vous recharger la partie précédente ? Oui/Non:";
-    std::cin>>c;
-    if (c=="Oui"||c=="oui"||c=="o"){
+    int c;
+
+    std::cout<<"Voulez-vous recharger la partie précédente ? 1 pour oui\ 0 pour non \n";
+    c = demanderChoix();
+
+            while(c != 1 && c != 0){
+                std::cout << RED <<"Le choix n'est pas valide."<<BLACK<<"\n";
+                c = demanderChoix();
+                }
+    if (c == 1)
+    {
             std::stack<Board> tempStack;
             std::stack<Board> tempStack1;
             tempStack=jeu.reloadGame();
@@ -23,21 +30,35 @@ void Controleur::demarrage(){
 
         int nbRetoursEnArriere;
         int ext;
-        std::cout << "Nombre maximal de retours en arrière : ";
-        std::cin >> nbRetoursEnArriere;
+        std::cout <<"creation d'une nouvelle partie\n";
+        std::cout << "Nombre maximal de retours en arrière : \n";
+        nbRetoursEnArriere = demanderChoix();
         jeu.setNbRetoursEnArriere(nbRetoursEnArriere);
-        do {std::cout << "Parametrer extension : 0 oui,  1 non \n";
-        std::cin>>ext;} while (ext != 1 && ext != 0);
-        if (ext==0)
-        {
-            do {std::cout<< "souhaitez vous ajouter la coccinelle ? 0 oui, 1 non \n";
-            std::cin>>ext;} while (ext != 1 && ext != 0);
-            if(ext == 0)
+        std::cout << "Parametrer extension : 1 pour oui\ 0 pour non \n";
+        ext = demanderChoix();
+
+            while(ext != 1 && ext != 0){
+                std::cout << RED <<"Le choix n'est pas valide."<<BLACK<<"\n";
+                ext = demanderChoix();
+                }
+
+
+        if (ext==1)
+        {   std::cout<< "souhaitez vous ajouter la coccinelle ? 1 pour oui\ 0 pour non \n";
+            ext = demanderChoix();
+
+            while(ext != 1 && ext != 0){
+                std::cout << RED <<"Le choix n'est pas valide."<<BLACK<<"\n";
+                ext = demanderChoix();
+                }
+            }
+
+            if(ext == 1)
             {
                 jeu.addType([](){return new Ladybug;},Ladybug::getMax());
             }
 
-        }
+
 
     jeu.createInsects();
 

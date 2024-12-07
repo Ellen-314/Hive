@@ -9,6 +9,7 @@ std::vector<const BoardSpot*> QueenBee::moov(int x, int y, const Board& board)co
     std::vector <const BoardSpot*> possibilite = board.trouverVoisinsGlisseur(x, y);
     //std::cout<<"\n=========\nDEBUG : affichage dans le moov \n=========\n\n";
     //board.afficherpossibilite(possibilite);
+    std::cout<< "debug:ok moov";
     return possibilite;
  }
 

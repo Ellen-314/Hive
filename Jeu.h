@@ -38,45 +38,45 @@ private:
     std::stack<Board> historyStack;
     static unsigned int compteurDeToursBlanc;
     static unsigned int compteurDeToursNoir;
-    // MÃ©thode pour afficher le menu principal avec les diffÃ©rentes actions disponibles
+    // Méthode pour afficher le menu principal avec les différentes actions disponibles
     void afficherMenu() const;
 
-    // MÃ©thode pour obtenir de la part l'utilisateur des coordonnÃ©es de la case oÃ¹ une action doit Ãªtre effectuÃ©e
+    // Méthode pour obtenir de la part l'utilisateur des coordonnées de la case où une action doit être effectuée
     std::pair<int, int> demanderCoordonnees() const;
     friend Controleur;
 
 public:
-    // MÃ©thode principale pour lancer le jeu et gÃ©rer les interactions utilisateur durant la partie
+    // Méthode principale pour lancer le jeu et gérer les interactions utilisateur durant la partie
     void demarrerPartie();
 
-    // MÃ©thode pour ajouter une case au plateau
+    // Méthode pour ajouter une case au plateau
     void ajouterCase();
 
-    // MÃ©thode pour ajouter un insecte Ã  une case
+    // Méthode pour ajouter un insecte à une case
     void ajouterInsecte();
 
-    // MÃ©thode pour dÃ©placer un insecte, diffÃ©rent de moov dans Insect qui testera les diffÃ©rentes possibilitÃ©s de dÃ©placement
+    // Méthode pour déplacer un insecte, différent de moov dans Insect qui testera les différentes possibilités de déplacement
     void deplacerInsecte();
 
-    // MÃ©thode pour supprimer une case du plateau
+    // Méthode pour supprimer une case du plateau
     void supprimerCase();
 
-    // MÃ©thode pour annuler un coup
+    // Méthode pour annuler un coup
     void annulerCoup();
 
-    //MÃ©thode pour enregistrer le plateau
+    //Méthode pour enregistrer le plateau
     void enregistrerBoard();
 
-    //MÃ©thode pour save une partie
+    //Méthode pour save une partie
     void saveGame(std::stack<Board> boardStack);
 
-    //MÃ©thode pour reload une partie
+    //Méthode pour reload une partie
     std::stack<Board> reloadGame();
 
-    //MÃ©thode pour free les insects
+    //Méthode pour free les insects
     void freeListeInsect(std::vector<Insect*>& liste_i);
 
-    //MÃ©thode pour crÃ©er les listes avec tous les insects
+    //Méthode pour créer les listes avec tous les insects
     std::vector<Insect*> createInsectsB();
     std::vector<Insect*> createInsectsN();
 
@@ -85,20 +85,20 @@ public:
     const std::vector<Insect*> getInsectNoir()const{return insectsNoir;}
     std::vector<Insect*> getInsectNoirMod(){return insectsNoir;}
 
-    //MÃ©thode pour ajouter les types d'insects Ã  la liste de types.
+    //Méthode pour ajouter les types d'insects à la liste de types.
     void addType( std::function<Insect*()> cree, int maximum){insectTypes.push_back(std::make_pair(cree, maximum));}
-    // mÃ©thode qui cree tout les insects sur le plateau
+    // méthode qui cree tout les insects sur le plateau
     void createInsects();
     const std::vector<std::pair< std::function<Insect*()>, unsigned int>> getInsectTypes()const{return insectTypes;}
 
-    //MÃ©thode qui free la liste de tous les instects restants et refait la liste du dÃ©but
-    //cherche si l'insecte est sur le board, si oui l'enlÃ¨ve de la liste
+    //Méthode qui free la liste de tous les instects restants et refait la liste du début
+    //cherche si l'insecte est sur le board, si oui l'enlève de la liste
     void majListeInsect(Board& board);
 
-    //MÃ©thode qui reset le compteur
+    //Méthode qui reset le compteur
     void resetInsectCount();
 
-    //Methodes liÃ©es
+    //Methodes liées
     const int getnbRetoursEnArriere() const {return nbRetoursEnArriere;}
     void setnbRetoursEnArriere(int n) {nbRetoursEnArriere=n;}
     static unsigned int getCompteurDeToursBlanc(){return compteurDeToursBlanc;}
@@ -107,7 +107,7 @@ public:
     static void ajouterCompteurDeToursNoir(){compteurDeToursNoir++;}
     static void enleverCompteurDeToursBlanc(){compteurDeToursBlanc--;}
     static void enleverCompteurDeToursNoir(){compteurDeToursNoir--;}
-    //fonction qui permet de mettre Ã  jour le tour du joueur;
+    //fonction qui permet de mettre à jour le tour du joueur;
     void incCompteur(bool color);
     //fonction qui permet d'annuler le tour du joueur;
     void decCompteur();
@@ -120,9 +120,9 @@ public:
 
     void setNbRetoursEnArriere(int n){
         if(n<0){
-            std::cout << "Le nombre maximal de retours en arriÃ¨re doit Ãªtre positif";
+            std::cout << "Le nombre maximal de retours en arrière doit être positif";
             while(n<0){
-                std::cout << "Nombre maximal de retours en arriÃ¨re : ";
+                std::cout << "Nombre maximal de retours en arrière : ";
                 std::cin >> n;
             }
         }
@@ -135,8 +135,12 @@ public:
     const Board& getPlateau() const { return board; }
     Board& getPlateau() { return board; }
 
+    //permet de verfifier que ce qui est rentré est bien du type demandé
+
+
     // Destructeur
     ~Jeu()=default;
 };
 
+int demanderChoix ();
 #endif // Jeu_H
