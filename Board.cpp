@@ -66,8 +66,6 @@ const BoardSpot* Board::getSpot(int x, int y) const {
     return nullptr;
 }
 
-
-
 // Affichage du plateau
 void Board::print(ostream& f) const {
     //f << "Le plateau contient " << nb << " spots." << endl;
@@ -144,8 +142,6 @@ Board& Board::operator=(const Board& other) {
     return *this;
 }
 
-
-
 // Destructeur pour Board
 Board::~Board() {
     for (size_t i = 0; i < nb; i++) {
@@ -153,8 +149,6 @@ Board::~Board() {
     }
     delete[] board_spots;
 }
-
-
 
 //fonction trouver voisins qui renvoie le vecteur compos� de toutes les coordonn�es d'une liste
 std::vector<const BoardSpot*> Board::trouverVoisins(int x, int y) const {
@@ -255,7 +249,7 @@ std::vector<const BoardSpot*> Board::trouverVoisinsGlisseur(int x, int y) const{
                 // vérifier qu'on peut y aller sans sauter
                 const BoardSpot* prevSpot = getSpot(prevDirecion.first, prevDirecion.second);
                 const BoardSpot* nextSpot = getSpot(nextDirecion.first, nextDirecion.second);
-                if (!prevSpot->hasInsect() && !nextSpot->hasInsect()){
+                if (!prevSpot->hasInsect() || !nextSpot->hasInsect()){
                     voisins.push_back(spot); // on ajoute les voisins existants au vecteur
                 }
             }
@@ -263,7 +257,6 @@ std::vector<const BoardSpot*> Board::trouverVoisinsGlisseur(int x, int y) const{
     }
     return voisins;
 }
-
 
 std::vector<const BoardSpot*> Board::possibleplacer(bool couleur)const{
 
