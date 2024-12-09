@@ -51,12 +51,27 @@ void Controleur::demarrage(){
                 std::cout << RED <<"Le choix n'est pas valide."<<BLACK<<"\n";
                 ext = demanderChoix();
                 }
-            }
 
             if(ext == 1)
             {
                 jeu.addType([](){return new Ladybug;},Ladybug::getMax());
             }
+
+            std::cout<< "souhaitez vous ajouter le moustique ? 1 pour oui\ 0 pour non \n";
+            ext = demanderChoix();
+
+            while(ext != 1 && ext != 0){
+                std::cout << RED <<"Le choix n'est pas valide."<<BLACK<<"\n";
+                ext = demanderChoix();
+                }
+
+            if(ext == 1)
+            {
+                jeu.addType([](){return new Mosquito;},Mosquito::getMax());
+            }
+            }
+
+
 
 
 

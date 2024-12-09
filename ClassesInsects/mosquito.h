@@ -5,13 +5,6 @@
 
 #include "../Insect.h"
 
-#include "ant.h"
-#include "beetle.h"
-#include "grasshopper.h"
-#include "ladybug.h"
-#include "queenbee.h"
-#include "spider.h"
-
 class Mosquito : public Insect {
 static const unsigned int Max;
 static unsigned int poseBlanc;
