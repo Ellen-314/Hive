@@ -12,6 +12,7 @@
 #include "Insect.h"
 #include "Jeu.h"
 
+
 // Exception pour gestion des erreurs dans la classe Controleur
 class ControleurException : public std::exception {
 private:
@@ -37,6 +38,8 @@ public:
     // Pour éviter la création de plusieurs Controleurs
     Controleur(const Controleur& c) = delete;
     Controleur& operator=(const Controleur& c) = delete;
+
+    
 };
 
 
