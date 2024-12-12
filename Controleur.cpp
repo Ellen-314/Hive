@@ -1,83 +1,67 @@
 #include "Controleur.h"
 
-void Controleur::demarrage(){
+void Controleur::demarrage() {
 
     int c;
 
-    std::cout<<"Voulez-vous recharger la partie précédente ? 1 pour oui\ 0 pour non \n";
+    std::cout << "Voulez-vous recharger la partie précédente ? OUI:1 , NON:0 \n";
     c = demanderChoix();
 
-            while(c != 1 && c != 0){
-                std::cout << RED <<"Le choix n'est pas valide."<<BLACK<<"\n";
-                c = demanderChoix();
-                }
+    while (c != 1 && c != 0) {
+        std::cout << RED << "Le choix n'est pas valide." << BLACK << "\n";
+        c = demanderChoix();
+    }
     if (c == 1)
     {
-            std::stack<Board> tempStack;
-            std::stack<Board> tempStack1;
-            tempStack=jeu.reloadGame();
-            while (!tempStack.empty()){
-                //Inverser la pile pour l'ordre
-                tempStack1.push(tempStack.top());
-                tempStack.pop();
-            }
-            jeu.historyStack=tempStack1;
-            jeu.historyStack.top().print(std::cout);
-            jeu.majListeInsect(jeu.historyStack.top());
+        std::stack<Board> tempStack;
+        std::stack<Board> tempStack1;
+        tempStack = jeu.reloadGame();
+        while (!tempStack.empty()) {
+            //Inverser la pile pour l'ordre
+            tempStack1.push(tempStack.top());
+            tempStack.pop();
+        }
+        jeu.historyStack = tempStack1;
+        jeu.historyStack.top().print(std::cout);
+        jeu.majListeInsect(jeu.historyStack.top());
     }
     else {
 
 
         int nbRetoursEnArriere;
         int ext;
-        std::cout <<"creation d'une nouvelle partie\n";
+        std::cout << "creation d'une nouvelle partie\n";
         std::cout << "Nombre maximal de retours en arrière : \n";
         nbRetoursEnArriere = demanderChoix();
         jeu.setNbRetoursEnArriere(nbRetoursEnArriere);
-        std::cout << "Parametrer extension : 1 pour oui\ 0 pour non \n";
+        std::cout << "Parametrer extension : OUI:1 , NON:0 \n";
         ext = demanderChoix();
 
-            while(ext != 1 && ext != 0){
-                std::cout << RED <<"Le choix n'est pas valide."<<BLACK<<"\n";
-                ext = demanderChoix();
-                }
+        while (ext != 1 && ext != 0) {
+            std::cout << RED << "Le choix n'est pas valide." << BLACK << "\n";
+            ext = demanderChoix();
+        }
 
 
-        if (ext==1)
-        {   std::cout<< "souhaitez vous ajouter la coccinelle ? 1 pour oui\ 0 pour non \n";
+        if (ext == 1)
+        {
+            std::cout << "souhaitez vous ajouter la coccinelle ? OUI:1 , NON:0 \n";
             ext = demanderChoix();
 
-            while(ext != 1 && ext != 0){
-                std::cout << RED <<"Le choix n'est pas valide."<<BLACK<<"\n";
+            while (ext != 1 && ext != 0) {
+                std::cout << RED << "Le choix n'est pas valide." << WHITE << "\n";
                 ext = demanderChoix();
-                }
-
-            if(ext == 1)
-            {
-                jeu.addType([](){return new Ladybug;},Ladybug::getMax());
             }
+        }
 
-            std::cout<< "souhaitez vous ajouter le moustique ? 1 pour oui\ 0 pour non \n";
-            ext = demanderChoix();
-
-            while(ext != 1 && ext != 0){
-                std::cout << RED <<"Le choix n'est pas valide."<<BLACK<<"\n";
-                ext = demanderChoix();
-                }
-
-            if(ext == 1)
-            {
-                jeu.addType([](){return new Mosquito;},Mosquito::getMax());
-            }
-            }
+        if (ext == 1)
+        {
+            jeu.addType([]() {return new Ladybug; }, Ladybug::getMax());
+        }
 
 
+        jeu.createInsects();
 
-
-
-    jeu.createInsects();
-
+        jeu.demarrerPartie();
     }
-
-    jeu.demarrerPartie();
 }
