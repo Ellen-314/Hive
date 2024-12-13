@@ -117,40 +117,42 @@ void Jeu::demarrerPartie() {
             else{ std::cout << "noir";}
             std::cout <<CYAN<< "a gagne !"<<BLACK<<"\n";
         }
-        afficherMenu();
-        choix = demanderChoix();
+        else{
+            afficherMenu();
+            choix = demanderChoix();
 
-        switch (choix) {
-            case 0:
-                saveGame(historyStack);
-                quitter = true;
-                break;
-            case 1:
-                ajouterInsecte();
-                break;
-            case 2:
-                deplacerInsecte();
-                break;
-            case 3:
-                //board.print(std::cout);
-                afficherPartie();
-                break;
-            case 4:
-                annulerCoup();
-                std::cout << "Coup annul�\n";
-                std::cout << "Nombre de retours en arriere restants: "<<nbRetoursEnArriere<<"\n";
-                break;
-            case 5:
-                saveGame(historyStack);
-                break;
-            case 99:
-                ajouterCase();
-                break;
-            case 98:
-                supprimerCase();
-                break;
-            default:
-                std::cout << RED <<"Le choix n'est pas valide."<<BLACK<<"\n";;
+            switch (choix) {
+                case 0:
+                    saveGame(historyStack);
+                    quitter = true;
+                    break;
+                case 1:
+                    ajouterInsecte();
+                    break;
+                case 2:
+                    deplacerInsecte();
+                    break;
+                case 3:
+                    //board.print(std::cout);
+                    afficherPartie();
+                    break;
+                case 4:
+                    annulerCoup();
+                    std::cout << "Coup annul�\n";
+                    std::cout << "Nombre de retours en arriere restants: "<<nbRetoursEnArriere<<"\n";
+                    break;
+                case 5:
+                    saveGame(historyStack);
+                    break;
+                case 99:
+                    ajouterCase();
+                    break;
+                case 98:
+                    supprimerCase();
+                    break;
+                default:
+                    std::cout << RED <<"Le choix n'est pas valide."<<BLACK<<"\n";;
+            }
         }
     }
 }
@@ -214,7 +216,7 @@ void Jeu::ajouterInsecte() {
             possibilite = board.possibleplacer(color);
         }
 
-        std::cout<<"Voici vos possibilités de placement test : \n";
+        std::cout<<"Voici vos possibilités de placement : \n";
         //board.afficherpossibilite(possibilite);
         afficherPartie(&possibilite);
 
@@ -842,7 +844,7 @@ void Jeu::afficherPartie(std::vector<const BoardSpot*>* ptpossibilite){
     std::cout << "\n\n\n";
 
     for(int p = priority_max; p>=priority_min; p--){
-        std::cout << p << "\t";
+        //std::cout << RED << "priority : " << p << "\t";
         if(std::abs(p%2) == std::abs(priority_of_min_x%2)) std::cout << "        ";
         for (int x=min_x; x<=max_x; x++){
             if ((std::abs(x%2)==std::abs(min_x%2) && std::abs(p%2) == std::abs(priority_of_min_x%2))
