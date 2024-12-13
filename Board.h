@@ -26,7 +26,7 @@
 #define WHITE "\e[30;47m"   // noir fond blanc
 #define BLACK "\e[37;40m"   // blanc fond noir
 #define RED "\e[31;40m"      // rouge
-#define CYAN "\e[31;40m"     // bleu clair
+#define CYAN "\e[96;40m"     // bleu clair
 
 
 // Exception pour gestion des erreurs dans la classe Board
@@ -72,6 +72,9 @@ public:
         else { f << " sans insecte."; }
     }
 };
+
+bool compBSco(const BoardSpot* a, const BoardSpot* b);
+bool operator<(const BoardSpot& a, const BoardSpot& b);
 
 // Classe pour g�rer le plateau de jeu
 class Board {

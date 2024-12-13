@@ -425,6 +425,21 @@ void Board::moovInsect(int oldX, int oldY, int newX, int newY) {
     throw SetException("Case non trouv�e pour modification");
 }
 
+bool compBSco(const BoardSpot* a, const BoardSpot* b){
+    /*if (2 * a->getCoordinates().second - a->getCoordinates().first < 2 * b->getCoordinates().second - b->getCoordinates().first) return true;
+    else if (2 * a->getCoordinates().second - a->getCoordinates().first > 2 * b->getCoordinates().second - b->getCoordinates().first) return false;
+    else if (a->getCoordinates().second < b->getCoordinates().second) return true;
+    else return false;*/
+    return *a < *b;
+}
 
-
-
+bool operator<(const BoardSpot& a, const BoardSpot& b){
+    int xa = a.getCoordinates().first;
+    int ya = a.getCoordinates().second;
+    int xb = b.getCoordinates().first;
+    int yb = b.getCoordinates().second;
+    if (2 * ya - xa < 2 * yb - xb) return true;
+    else if (2 * ya - xa > 2 * yb - xb) return false;
+    else if (xa > xb) return true;
+    else return false;
+}

@@ -132,7 +132,8 @@ void Jeu::demarrerPartie() {
                 deplacerInsecte();
                 break;
             case 3:
-                board.print(std::cout);
+                //board.print(std::cout);
+                afficherPartie();
                 break;
             case 4:
                 annulerCoup();
@@ -213,8 +214,9 @@ void Jeu::ajouterInsecte() {
             possibilite = board.possibleplacer(color);
         }
 
-        std::cout<<"Voici vos possibilit�s de placement : \n";
-        board.afficherpossibilite(possibilite);
+        std::cout<<"Voici vos possibilités de placement test : \n";
+        //board.afficherpossibilite(possibilite);
+        afficherPartie(&possibilite);
 
 
         Insect* insect = nullptr;
@@ -376,8 +378,9 @@ void Jeu::deplacerInsecte() {
 
             // On v�fifie qu'il y a bien des possibilit�s avant de proposer un d�placement
             if(!possibilite.empty()){
-                board.afficherpossibilite(possibilite);
-                std::cout << "Voici les possibilit�s de d�placement de votre pi�ce\n";
+                std::cout << "Voici les possibilités de déplacement de votre pièce\n";
+                //board.afficherpossibilite(possibilite);
+                afficherPartie(&possibilite);
 
                 std::cout <<"Entrez 1 pour placer la pi�ce � l'un des emplacements donn�s.\n";}
 
@@ -766,3 +769,129 @@ else  {std::cin.ignore(1000, '\n');
         return c;}
 } while (true);
 }
+
+void Jeu::afficherPartie(std::vector<const BoardSpot*>* ptpossibilite){
+    std::vector<const BoardSpot*> piecesPoseesBlanc = board.piecejoueur(true);
+    std::vector<const BoardSpot*> piecesPoseesNoir = board.piecejoueur(false);
+    std::vector<const BoardSpot*> piecesPosees;
+    piecesPosees.insert(piecesPosees.end(), piecesPoseesBlanc.begin(), piecesPoseesBlanc.end());
+    piecesPosees.insert(piecesPosees.end(), piecesPoseesNoir.begin(), piecesPoseesNoir.end());
+    std::sort(piecesPosees.begin(),piecesPosees.end(), compBSco);
+    std::reverse(piecesPosees.begin(),piecesPosees.end());
+
+
+    // Car on a placé la première pièce en (0;0).
+    int min_x = 0;
+    int max_x = 0;
+    int min_y = 0;
+    int max_y = 0;
+
+    int priority_min = 0;
+    int priority_max = 0;
+    int priority_of_min_x = 0;
+
+
+    int x; int y; int priority;
+
+    std::vector<const BoardSpot*> possibilite;
+    if(ptpossibilite!=nullptr){
+        possibilite = *ptpossibilite;
+        std::sort(possibilite.begin(),possibilite.end(), compBSco);
+        std::reverse(possibilite.begin(),possibilite.end());
+        //std::cout<< "\npossibilites de placement : ";
+        for (const BoardSpot* bs : possibilite){
+            //bs->print(std::cout);
+            x=bs->getCoordinates().first;
+            y=bs->getCoordinates().second;
+            priority = 2*y-x;
+
+            if (x < min_x) {
+                min_x = std::min(x, min_x);
+                priority_of_min_x = priority;
+            }
+            max_x = std::max(x,max_x);
+            min_y = std::min(y, min_y);
+            max_y = std::max(y, max_y);
+            priority_min = std::min(priority, priority_min);
+            priority_max = std::max(priority, priority_max);
+        }
+    }
+
+    //std::cout<<"\npiecesPosees sur le plateau : ";
+    for (const BoardSpot* bs : piecesPosees){
+        //bs->print(std::cout);
+        x=bs->getCoordinates().first;
+        y=bs->getCoordinates().second;
+        priority = 2*y-x;
+
+        if (x < min_x) {
+            min_x = std::min(x, min_x);
+            priority_of_min_x = priority;
+        }
+        max_x = std::max(x,max_x);
+        min_y = std::min(y, min_y);
+        max_y = std::max(y, max_y);
+        priority_min = std::min(priority, priority_min);
+        priority_max = std::max(priority, priority_max);
+    }
+
+    //std::cout << "\nmin_x = " << min_x << "\nmax_x = " << max_x << "\nmin_y = " << min_y << "\nmax_y = " << max_y << "\npriority_min = " << priority_min << "\npriority_max = " << priority_max << "\npriority_of_min_x = " << priority_of_min_x << "\n";
+
+    bool spot_vide = true;
+
+    std::cout << "\n\n\n";
+
+    for(int p = priority_max; p>=priority_min; p--){
+        std::cout << p << "\t";
+        if(std::abs(p%2) == std::abs(priority_of_min_x%2)) std::cout << "        ";
+        for (int x=min_x; x<=max_x; x++){
+            if ((std::abs(x%2)==std::abs(min_x%2) && std::abs(p%2) == std::abs(priority_of_min_x%2))
+                || (std::abs(x%2)!=std::abs(min_x%2) && std::abs(p%2) != std::abs(priority_of_min_x%2))){
+                if (ptpossibilite!=nullptr
+                    && !possibilite.empty()
+                    && 2 * possibilite.front()->getCoordinates().second - possibilite.front()->getCoordinates().first == p
+                    && possibilite.front()->getCoordinates().first == x){
+                    y = possibilite.front()->getCoordinates().second;
+                    spot_vide=false;
+                    std::cout << CYAN << "_";
+                    possibilite.erase(possibilite.begin());
+                }
+                else if (!piecesPosees.empty()
+                         && 2 * piecesPosees.front()->getCoordinates().second - piecesPosees.front()->getCoordinates().first == p
+                         && piecesPosees.front()->getCoordinates().first == x){
+                    y = piecesPosees.front()->getCoordinates().second;
+                    spot_vide=false;
+                    if(piecesPosees.front()->getInsect()->getColor()) std::cout << WHITE;
+                    else std::cout << BLACK;
+                    std::cout << piecesPosees.front()->getInsect()->getType().front();
+                    piecesPosees.erase(piecesPosees.begin());
+                }
+
+                if(spot_vide) std::cout << "          ";
+                else{
+                    std::cout << "(";
+
+                    if (x>=0) std::cout << " ";
+                    std::cout  << x;
+                    if (x > -10 && x < 10) std::cout << " ";
+
+                    std::cout << ";";
+
+                    if (y>=0) std::cout << " ";
+                    std::cout  << y;
+                    if (y > -10 && y < 10) std::cout << " ";
+
+                    std::cout << ")" << BLACK;
+
+                    spot_vide=true;
+                }
+
+                std::cout << "      ";
+            }else if( x == min_x ) std::cout << "          " << "      ";
+        }
+        std::cout << "\n";
+    }
+
+    std::cout << "\n\n\n";
+}
+
