@@ -66,6 +66,17 @@ const BoardSpot* Board::getSpot(int x, int y) const {
     return nullptr;
 }
 
+//acceder à une case par coordonnée et modifiable
+BoardSpot* Board::getSpotModify(int x, int y) {
+    for (size_t i = 0; i < nb; i++) {
+        if (board_spots[i]->getCoordinates() == std::make_pair(x, y)) {
+            return board_spots[i];
+        }
+    }
+    return nullptr;
+}
+
+
 // Affichage du plateau
 void Board::print(ostream& f) const {
     //f << "Le plateau contient " << nb << " spots." << endl;
@@ -412,18 +423,35 @@ bool Board::isConnexe() const {
 }
 
 void Board::moovInsect(int oldX, int oldY, int newX, int newY) {
-    for (size_t i = 0; i < nb; i++) {
-        if (board_spots[i]->getCoordinates() == std::make_pair(oldX, oldY)) {
-            Insect* ins = board_spots[i]->getInsect();
-            deleteInsectFromSpot(oldX, oldY);
-            addInsectToSpot(newX, newY, ins);
+    if (getSpotModify(oldX, oldY)->getInsectModify()->getType() == "beetle") {
+        Beetle* beetle = dynamic_cast<Beetle*>(getSpot(oldX, oldY)->getInsect());
+        getSpotModify(oldX, oldY)->setInsect(beetle->getcouvertModify());
+
+        beetle->setInsectUnder(getSpot(newX, newY)->getInsect());
+        getSpotModify(newX, newY)->setInsect(beetle);
+
+    } else {
+        getSpotModify(newX, newY)->setInsect(getSpot(oldX, oldY)->getInsect());
+        deleteInsectFromSpot(oldX, oldY);
+    }
+
 
         return;
 
         }
-    }
-    throw SetException("Case non trouv�e pour modification");
-}
+
+
+
+
+void Board::deleteNullSpot(int oldX, int oldY){
+        std::vector<const BoardSpot*> voisins= voisinsNull(oldX,oldY);
+        for (auto& voisin:voisins){
+            std::pair<int,int> coord = voisin-> getCoordinates();
+            if (trouverVoisinsInsects(coord.first, coord.second).size()<1)
+                deleteSpot(coord.first, coord.second);}
+        }
+
+
 
 bool compBSco(const BoardSpot* a, const BoardSpot* b){
     /*if (2 * a->getCoordinates().second - a->getCoordinates().first < 2 * b->getCoordinates().second - b->getCoordinates().first) return true;

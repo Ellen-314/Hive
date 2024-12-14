@@ -412,6 +412,7 @@ void Jeu::deplacerInsecte() {
                     board.moovInsect(x, y, newX, newY);
                     //TODO gerer les probl�mes avec le scarab�
                     board.addNullSpot(newX,newY);
+                    board.deleteNullSpot(x,y);
 
                     //std::cout << "\n=========\nDEBUG : Insecte d�plac� de (" << oldX << ", " << oldY << ") � (" << newX << ", " << newY << ").\n=========\n\n";
                     incCompteur(color);
