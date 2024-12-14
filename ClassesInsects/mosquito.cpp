@@ -24,3 +24,8 @@ std::vector<const BoardSpot*> Mosquito::moov(int x, int y, const Board& board)co
     }
     return possibilite;
 }
+
+bool Mosquito::estPasAuMax(bool couleur){
+    if (couleur==0){ return getPoseNoir()< getMax(); }
+    else{ return getPoseBlanc()< getMax(); }
+}

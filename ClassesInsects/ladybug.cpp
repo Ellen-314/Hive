@@ -58,7 +58,7 @@ std::vector<const BoardSpot*> Ladybug::moov(int x, int y, const Board& board)con
     return possibilite;
 }
 
-//bool Ladybug::estPasAuMax(bool couleur){
-//    if (couleur==0){ return getPoseNoir()< getMax(); }
-//    else{ return getPoseBlanc()< getMax(); }
-//}
+bool Ladybug::estPasAuMax(bool couleur){
+   if (couleur==0){ return getPoseNoir()< getMax(); }
+   else{ return getPoseBlanc()< getMax(); }
+}
