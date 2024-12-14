@@ -61,7 +61,7 @@ public:
     void setColor(bool color);
 
     virtual std::string getType() const = 0;
-    // Methode moov() virtuelle car surchargée pour chaque insect. Elle renvoie les possibilités de mouvements
+    // Methode moov() virtuelle pure car surchargée pour chaque insect. Elle renvoie les possibilités de mouvements
     virtual std::vector<const BoardSpot*> moov(int x, int y, const Board& board)const = 0;
 
 

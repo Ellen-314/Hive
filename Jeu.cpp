@@ -325,8 +325,16 @@ void Jeu::ajouterInsecte() {
             if(color==1){Beetle::ajouterBlanc();}
             else{Beetle::ajouterNoir();}
         }
+        else if(insect->getType()== "ladybug"){
+            if(color==1){Ladybug::ajouterBlanc();}
+            else{Ladybug::ajouterNoir();}
+        }
+        else if(insect->getType()== "mosquito"){
+            if(color==1){Mosquito::ajouterBlanc();}
+            else{Mosquito::ajouterNoir();}
+        }
         // TO DO : incr�menter les compteurs des autres insectes
-        else{ std::cout << RED <<"le choix n'est pas valide, mais �a ne devrait pas arriver ici... (ajout du nombre d'insectes pos�s dans Jeu::ajouterInsecte)"<<BLACK<<"/n"; }
+        else{ std::cout << RED <<"Le choix n'est pas valide, mais ca ne devrait pas arriver ici... (ajout du nombre d'insectes poses dans Jeu::ajouterInsecte)"<<BLACK<<" /n"; }
 
     }
     catch (const SetException& e){
