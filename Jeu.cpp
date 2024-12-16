@@ -53,16 +53,17 @@ void Jeu::createInsects(){
 void Jeu::afficherMenu() const {
     std::cout << "\n=== Menu de Jeu ===\n";
     std::cout << "1. Poser un nouvel insecte sur le plateau\n";
-    std::cout << "2. D�placer un insecte d�j� pos�\n";
+    std::cout << "2. Déplacer un insecte déja posé\n";
     std::cout << "3. Afficher le plateau\n";
     std::cout << "4. Annuler le coup\n";
     std::cout << "5. Sauvegarder la partie\n";
+    std::cout << "6. Faire jouer l'IA\n";
     std::cout << "0. Quitter\n";
     /*std::cout << "=== Menu de Debug ===\n"; // n'existera pas pendant une partie
     std::cout << "99. Ajouter une case\n";
     std::cout << "98. Supprimer une case\n";*/
     std::cout << "===================\n";
-    std::cout << "Tour du joueur ";
+    std::cout << "Tour du joueur "; //Le blanc commence
     if((compteurDeToursBlanc+compteurDeToursNoir+1)%2==0){ std::cout << "noir.\n"; }
     else{ std::cout << WHITE << "blanc"<<BLACK<<".\n"; }
     std::cout << "Entrez votre choix : ";
@@ -93,8 +94,22 @@ std::pair<int, int> Jeu::demanderCoordonnees() const {
 
 // M�thode principale pour g�rer les interactions utilisateur
 void Jeu::demarrerPartie() {
+
+    int num;
+    std::cout << "Voulez vous jouer contre un bot ? NON:0 , OUI:1 \n";
+    num = demanderChoix();
+    while (num != 1 && num != 0) {
+        std::cout << RED << "Le choix n'est pas valide." << WHITE << "\n";
+        num = demanderChoix();
+    }
+    //On crée le Bot + on initialise à 1 si on joue contre un bot
+    if (num == 1) {setHasbot(1);}
+    
+
+    
     int choix;
     bool quitter = false;
+    
     while (!quitter) {
 
         //Test de victoire du joueur qui vient de jouer (on v�rifie d'abord sur la reine adverse, c'est � dire la reine du joueur qui est sur le point de jouer)
@@ -108,11 +123,11 @@ void Jeu::demarrerPartie() {
             else{ std::cout << "noir"; }
             std::cout <<CYAN<< "a gagne !"<<BLACK<<"\n";
         }
-        // On v�rifie maintenant sur la reine du joueur qui vient de jouer, dans le cas o� il s'est fait perdre tout seul
+        // On vérifie maintenant sur la reine du joueur qui vient de jouer, dans le cas où il s'est fait perdre tout seul
         else if(isQueenSurrounded((compteurDeToursBlanc+compteurDeToursNoir)%2==1)){
             std::cout <<CYAN<< "Le joueur ";
 
-            // Ici on annonce la victoire du joueur qui �tait sur le point de jouer (c'est pour cela qu'on a un +1 dans le calcul du modulo
+            // Ici on annonce la victoire du joueur qui était sur le point de jouer (c'est pour cela qu'on a un +1 dans le calcul du modulo
             if((compteurDeToursBlanc+compteurDeToursNoir+1)%2==1){ std::cout << WHITE << "blanc" << BLACK;}
             else{ std::cout << "noir";}
             std::cout <<CYAN<< "a gagne !"<<BLACK<<"\n";
@@ -120,6 +135,18 @@ void Jeu::demarrerPartie() {
         else{
             afficherMenu();
             choix = demanderChoix();
+
+            //ici on force a taper 6 quand c'est à l'IA de jouer
+            while (getHasbot() == 1 && choix != 6 && ((compteurDeToursBlanc + compteurDeToursNoir + 1) % 2 == 0)) {
+                std::cout << RED<< "C'est au tour de l'IA de jouer, veuillez taper 6 \n "<< BLACK<< "\n";
+                afficherMenu();
+                choix = demanderChoix();
+            }
+            while (getHasbot() == 1 && choix == 6 && ((compteurDeToursBlanc + compteurDeToursNoir + 1) % 2 != 0)) {
+                std::cout << RED << "C'est a toi de jouer pas à l'IA, t'as cru contourner le système ? \n " << BLACK << "\n";
+                afficherMenu();
+                choix = demanderChoix();
+            }
 
             switch (choix) {
                 case 0:
@@ -138,11 +165,14 @@ void Jeu::demarrerPartie() {
                     break;
                 case 4:
                     annulerCoup();
-                    std::cout << "Coup annul�\n";
+                    std::cout << "Coup annulé\n";
                     std::cout << "Nombre de retours en arriere restants: "<<nbRetoursEnArriere<<"\n";
                     break;
                 case 5:
                     saveGame(historyStack);
+                    break;
+                case 6:
+                    botIsPlayingToWin();
                     break;
                 case 99:
                     ajouterCase();
@@ -159,12 +189,14 @@ void Jeu::demarrerPartie() {
 
 // M�thode pour ajouter une case au plateau
 void Jeu::ajouterCase() {
-    auto [x, y] = demanderCoordonnees();
+    std::pair<int, int> coordonnees = demanderCoordonnees();
+    int x = coordonnees.first;
+    int y = coordonnees.second;
     board.addSpot(x, y);
-    std::cout << "Case ajout�e aux coordonn�es (" << x << ", " << y << ").\n";
+    std::cout << "Case ajoutée aux coordonnées (" << x << ", " << y << ").\n";
 }
 
-// M�thode pour ajouter un insecte � une case
+// Methode pour ajouter un insecte a une case
 void Jeu::ajouterInsecte() {
     try {
         std::cout << "Placement d'un nouvel insecte sur le plateau : joueur ";
@@ -191,7 +223,7 @@ void Jeu::ajouterInsecte() {
         else{ printInsectsBlanc(); }
 
         std::vector<const BoardSpot* > possibilite;
-        //si c'est le premier pour chacun tour on cree le premier spot pour insecte
+        //si c'est le premier pour chaque tour on cree le premier spot pour insecte
         if (((color == 0)&& (Jeu::getCompteurDeToursNoir() == 0))||((color==1)&&(Jeu::getCompteurDeToursBlanc() == 0))){
             //std::cout << "\n=========\nDEBUG : Rentre dans la boucle des conditions\n=========\n\n";
             if (color == 1){
@@ -288,7 +320,9 @@ void Jeu::ajouterInsecte() {
         BoardSpot spot(0, 0);
         int x, y;
         do {
-            auto [newx, newy] = demanderCoordonnees();
+            std::pair<int, int> coordonnees = demanderCoordonnees();
+            int newx = coordonnees.first;
+            int newy = coordonnees.second;
             spot = BoardSpot(newx, newy);
             x = newx;
             y = newy;
@@ -300,6 +334,12 @@ void Jeu::ajouterInsecte() {
 
         board.addInsectToSpot(x, y, insect);
         board.addNullSpot(x,y);
+        // Vérifier la connexité
+        if (!board.isConnexe()) {
+            std::cout << RED << "Placement annulé : cela romprait la connexité du graphe." << BLACK << "\n";
+            board.deleteInsectFromSpot(x, y); 
+            return;
+        }
 
         //std::cout << "\n=========\nDEBUG : Insecte ajout� � la case (" << x << ", " << y << ").\n=========\n\n";
         incCompteur(color);
@@ -372,19 +412,19 @@ void Jeu::deplacerInsecte() {
             int x, y;
             const BoardSpot* spot = nullptr;
             do {
-                auto [oldX, oldY] = demanderCoordonnees();
-                spot = board.getSpot(oldX, oldY);
-                x = oldX;
-                y = oldY;
-                std::cout<< "debug : je viens de demander les coordonnees";
+                std::pair<int, int> coordonnees = demanderCoordonnees();
+                int newx = coordonnees.first;
+                int newy = coordonnees.second;
+                spot = board.getSpot(newx, newy);
+                x = newx;
+                y = newy;
+                // std::cout<< "debug : je viens de demander les coordonnees";
             }while( !board.est_dans_possibilite(spot, piece));
             //std::cout << "\n=========\nDEBUG : j'arrive dans la partie d'apr�s.\n=========\n\n";
 
-            std::cout<< "debug : je viens de sortir du while";
+            //std::cout<< "debug : je viens de sortir du while";
             //appel de moov pour retourner les cases possibles (et potentiellement v�rifier s'il y a bien un insecte sur cette case)
             std::vector <const BoardSpot*> possibilite = spot->getInsect()->moov(x, y, board);
-
-
 
             // On v�fifie qu'il y a bien des possibilit�s avant de proposer un d�placement
             if(!possibilite.empty()){
@@ -418,6 +458,14 @@ void Jeu::deplacerInsecte() {
                     }while( !board.est_dans_possibilite(spot2, possibilite) );
 
                     board.moovInsect(x, y, newX, newY);
+                    
+                    // Vérifier la connexité
+                    if (!board.isConnexe()) {
+                        std::cout << RED << "Déplacement annulé : cela romprait la connexité du graphe." << BLACK << "\n";
+                        board.moovInsect(newX, newY, x, y); // Annuler le déplacement temporaire
+                        return;
+                    } 
+
                     //TODO gerer les probl�mes avec le scarab�
                     board.addNullSpot(newX,newY);
                     board.deleteNullSpot(x,y);
@@ -439,9 +487,11 @@ void Jeu::deplacerInsecte() {
 // M�thode pour supprimer une case du plateau
 void Jeu::supprimerCase() {
     try{
-        auto [x, y] = demanderCoordonnees();
+        std::pair<int, int>coordonnees = demanderCoordonnees();
+        int x = coordonnees.first;
+        int y = coordonnees.second;
         board.deleteSpot(x, y);
-        std::cout << "Case supprim�e aux coordonn�es (" << x << ", " << y << ").\n";
+        //std::cout << "Case supprim�e aux coordonn�es (" << x << ", " << y << ").\n";
     }
     catch (const SetException& e){
         std::cout << e.getMessage() <<"\n";
@@ -904,5 +954,162 @@ void Jeu::afficherPartie(std::vector<const BoardSpot*>* ptpossibilite){
     }
 
     std::cout << "\n\n\n";
+}
+
+
+
+//======================== METHODES DU BOT ==================================//
+
+void Jeu::botIsPlayingToWin() {
+    unsigned int color = 0; // Le bot est toujours joueur noir
+
+    // Si toutes les pièces sont posées, le bot doit déplacer une pièce
+    if (insectsNoir.empty()) {
+        std::cout << "Le bot n'a plus d'insectes à poser. Il déplace une pièce.\n";
+        botMoveInsect();
+        ++compteurDeToursNoir;
+        enregistrerBoard();
+        return;
+    }
+
+    // Si la reine n'est pas posée ou si le bot décide de déplacer une pièce (25% de chance)
+    if (!QueenBee::estPasAuMax(color) && (rand() % 2 == 0)) {
+        std::cout << "Le bot décide de déplacer une pièce.\n";
+        botMoveInsect();
+        ++compteurDeToursNoir;
+        enregistrerBoard();
+        return;
+    }
+
+    std::cout << "Le bot décide de poser une nouvelle pièce.\n";
+
+    int choix_insect = rand() % insectsNoir.size();
+    Insect* insect = insectsNoir[choix_insect];
+    insectsNoir.erase(insectsNoir.begin() + choix_insect);
+
+    std::vector<const BoardSpot*> possibilite = board.possibleplacer(color);
+
+    // Forcer la pose de la reine au premier tour
+    if (Jeu::getCompteurDeToursNoir() == 0) {
+
+        // Rechercher la reine dans les insectes 
+        Insect* queenBee = nullptr;
+        for (size_t i = 0; i < insectsNoir.size(); ++i) {
+            if (insectsNoir[i]->getType() == "queenbee") {
+                queenBee = insectsNoir[i];
+                insectsNoir.erase(insectsNoir.begin() + i);
+                break;
+            }
+        }
+
+        if (queenBee) {
+            // Ajouter la reine à sa position (0,1)
+            if (board.getSpot(0, 1) == nullptr) {
+                board.addSpot(0, 1);
+            }
+            const BoardSpot* spot = board.getSpot(0, 1);
+
+            int x = spot->getCoordinates().first;
+            int y = spot->getCoordinates().second;
+            board.addInsectToSpot(x, y, queenBee);
+            board.addNullSpot(x, y);
+
+            std::cout << "Le bot a placé sa reine à la position (" << x << ", " << y << ").\n";
+
+            // Mettre à jour l'état de la reine posée
+            QueenBee::ajouterNoir();
+
+            ++compteurDeToursNoir;
+            enregistrerBoard();
+            return;
+        }
+        else {
+            std::cerr << "Erreur : la reine n'a pas été trouvée parmi les pièces restantes !\n";
+            return;
+        }
+    }
+
+
+    int choix_position = rand() % possibilite.size();
+    const BoardSpot* spot = possibilite[choix_position];
+    int x = spot->getCoordinates().first;
+    int y = spot->getCoordinates().second;
+
+    board.addInsectToSpot(x, y, insect);
+    board.addNullSpot(x, y);
+
+    std::cout << "Le bot a placé un " << insect->getType()
+        << " à la position (" << x << ", " << y << ").\n";
+
+    ++compteurDeToursNoir;
+    enregistrerBoard();
+}
+
+void Jeu::botMoveInsect() {
+    unsigned int color = 0; // Le bot est toujours joueur noir
+
+    try {
+        // Vérifie si le bot a des pièces à déplacer
+        if (board.piecejoueur(color).empty() || QueenBee::estPasAuMax(color)) {
+            std::cout << "Le bot ne peut pas déplacer de pièce.\n";
+            return;
+        }
+         
+        std::vector<const BoardSpot*> pieces = board.piecejoueur(color);
+        bool pieceMoved = false;
+
+        while (!pieceMoved && !pieces.empty()) {
+            // Choisir une pièce aléatoire parmi celles disponibles
+            int randomIndex = rand() % pieces.size();
+            const BoardSpot* selectedPiece = pieces[randomIndex];
+
+            if (selectedPiece == nullptr || selectedPiece->getInsect() == nullptr) {
+                pieces.erase(pieces.begin() + randomIndex); // Retirer la pièce invalide
+                continue;
+            }
+
+            int x = selectedPiece->getCoordinates().first;
+            int y = selectedPiece->getCoordinates().second;
+
+            std::vector<const BoardSpot*> possibilites = selectedPiece->getInsect()->moov(x, y, board);
+
+            if (!possibilites.empty()) {
+                int randomDestIndex = rand() % possibilites.size();
+                const BoardSpot* destination = possibilites[randomDestIndex];
+
+                int destX = destination->getCoordinates().first;
+                int destY = destination->getCoordinates().second;
+
+                board.moovInsect(x, y, destX, destY);
+
+                // Vérification de la connexité
+                if (board.isConnexe()) {
+                    std::cout << "Le bot a déplacé une pièce de (" << x << ", " << y << ") à (" << destX << ", " << destY << ").\n";
+
+                    enregistrerBoard();
+                    pieceMoved = true; 
+                }
+                else {
+                    std::cout << "Déplacement annulé : cela romprait la connexité du graphe.\n";
+                    // Annuler le déplacement
+                    board.moovInsect(destX, destY, x, y);
+                }
+            }
+
+            // Si aucune possibilité ou échec, retirer la pièce de la liste
+            if (!pieceMoved) {
+                pieces.erase(pieces.begin() + randomIndex);
+            }
+
+            // Vérification si toutes les pièces ont été essayées
+            if (pieces.empty() && !pieceMoved) {
+                std::cout << "Le bot ne peut déplacer aucune pièce valide.\n";
+                return;
+            }
+        }
+    }
+    catch (const std::exception& e) {
+        std::cerr << "Erreur dans le déplacement par le bot : " << e.what() << "\n";
+    }
 }
 

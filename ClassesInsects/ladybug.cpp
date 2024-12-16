@@ -2,6 +2,8 @@
 #include "../Board.h"
 
 const unsigned int Ladybug::Max =1;
+unsigned int Ladybug::poseBlanc=0;
+unsigned int Ladybug::poseNoir=0;
 
 std::vector<const BoardSpot*> Ladybug::moov(int x, int y, const Board& board)const {
     std::vector<const BoardSpot*> possibilite;

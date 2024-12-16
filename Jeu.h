@@ -28,6 +28,7 @@ public:
 class Jeu {
 private:
     int nbRetoursEnArriere=0;
+    int hasbot=0;
     Board board;
     // Vecteurs des insectes restant a poser
     std::vector<Insect*> insectsBlanc;
@@ -46,6 +47,10 @@ private:
     friend Controleur;
 
 public:
+    // Accesseurs pour bot
+    int getHasbot() const { return hasbot; }
+    void setHasbot(int value) { hasbot = value; }
+
     // Méthode principale pour lancer le jeu et gérer les interactions utilisateur durant la partie
     void demarrerPartie();
 
@@ -137,7 +142,10 @@ public:
     const Board& getPlateau() const { return board; }
     Board& getPlateau() { return board; }
 
-    //permet de verfifier que ce qui est rentré est bien du type demandé
+    //======================== METHODES DU BOT ==============================//
+    void botIsPlayingToWin();
+    void botMoveInsect();
+    //======================================================================//
 
 
     // Destructeur

@@ -2,6 +2,8 @@
 #include "../Board.h"
 
 const unsigned int Mosquito::Max =1;
+unsigned int Mosquito::poseBlanc=0;
+unsigned int Mosquito::poseNoir=0;
 
 
 std::vector<const BoardSpot*> Mosquito::moov(int x, int y, const Board& board)const

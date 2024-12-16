@@ -4,13 +4,13 @@ void Controleur::demarrage(){
 
     int c;
 
-    std::cout<<"Voulez-vous recharger la partie précédente ? 1 pour oui\ 0 pour non \n";
+    std::cout << "Voulez-vous recharger la partie précédente ? OUI:1 , NON:0 \n";
     c = demanderChoix();
 
-            while(c != 1 && c != 0){
-                std::cout << RED <<"Le choix n'est pas valide."<<BLACK<<"\n";
-                c = demanderChoix();
-                }
+    while (c != 1 && c != 0) {
+        std::cout << RED << "Le choix n'est pas valide." << BLACK << "\n";
+        c = demanderChoix();
+    }
     if (c == 1)
     {
             std::stack<Board> tempStack;
@@ -34,30 +34,32 @@ void Controleur::demarrage(){
         std::cout << "Nombre maximal de retours en arrière : \n";
         nbRetoursEnArriere = demanderChoix();
         jeu.setNbRetoursEnArriere(nbRetoursEnArriere);
-        std::cout << "Parametrer extension : 1 pour oui\ 0 pour non \n";
+        std::cout << "Parametrer extension : OUI:1 , NON:0 \n";
         ext = demanderChoix();
 
-            while(ext != 1 && ext != 0){
-                std::cout << RED <<"Le choix n'est pas valide."<<BLACK<<"\n";
-                ext = demanderChoix();
-                }
+        while(ext != 1 && ext != 0){
+            std::cout << RED <<"Le choix n'est pas valide."<<BLACK<<"\n";
+            ext = demanderChoix();
+        }
 
 
         if (ext==1)
-        {   std::cout<< "souhaitez vous ajouter la coccinelle ? 1 pour oui\ 0 pour non \n";
+        {   
+            std::cout << "souhaitez vous ajouter la coccinelle ? OUI:1 , NON:0 \n";
             ext = demanderChoix();
 
             while(ext != 1 && ext != 0){
                 std::cout << RED <<"Le choix n'est pas valide."<<BLACK<<"\n";
                 ext = demanderChoix();
                 }
+                
 
             if(ext == 1)
             {
                 jeu.addType([](){return new Ladybug;},Ladybug::getMax());
             }
 
-            std::cout<< "souhaitez vous ajouter le moustique ? 1 pour oui\ 0 pour non \n";
+            std::cout<< "souhaitez vous ajouter le moustique ? OUI:1 , NON:0 \n";
             ext = demanderChoix();
 
             while(ext != 1 && ext != 0){
@@ -69,7 +71,7 @@ void Controleur::demarrage(){
             {
                 jeu.addType([](){return new Mosquito;},Mosquito::getMax());
             }
-            }
+        }
 
 
 
