@@ -33,9 +33,6 @@ Game::Game(QWidget *parent): QGraphicsView(parent), numRetours(0), pawnToPlace(n
 }
 
 Game::~Game() {
-    while (!history.isEmpty()) {
-        delete history.pop();
-    }
 }
 
 void Game::start(){
@@ -47,7 +44,7 @@ void Game::start(){
     drawGUI();
     createInsects();
     createInitialpawns();
-    saveState();
+
 
 }
 
@@ -100,27 +97,27 @@ void Game::drawGUI() {
     scene->addItem(whosTurnText);
 
     // Label pour les retours en arrière
-    QString retoursLabel = QString("Retours en arrière: %1").arg(numRetours); // Use dynamic numRetours
+    QString retoursLabel = QString("Retours en arrière: %1").arg(numRetours);
     QGraphicsTextItem* retoursText = new QGraphicsTextItem(retoursLabel);
     retoursText->setDefaultTextColor(Qt::black);
     retoursText->setFont(QFont("Arial", 8));
-    retoursText->setPos(scene->width() / 2 - 180, 6); // Adjusted left of whosTurnText
+    retoursText->setPos(scene->width() / 2 - 180, 6);
     scene->addItem(retoursText);
 
     // Bouton pour les retours en arrière
     Button* backButton = new Button(QString("Retour"));
     backButton->setScale(0.5);
     backButton->setFontSize(18);
-    backButton->setPos(scene->width() / 2 - 300, 0);  // Left aligned further for button
-    connect(backButton, &Button::clicked, this, &Game::undoLastAction);
+    backButton->setPos(scene->width() / 2 - 300, 0);
+    //connect(backButton, &Button::clicked, this, &Game::undoLastAction); //Pas mis en place
     scene->addItem(backButton);
 
     // Bouton enregistrer
     Button* saveButton = new Button(QString("Enregistrer"));
     saveButton->setScale(0.5);
     saveButton->setFontSize(18);  // Taille de la police
-    saveButton->setPos(scene->width() / 2 + 80, 0);  // Right of whosTurnText for save button
-    connect(saveButton, SIGNAL(clicked()), this, SLOT(saveGame()));
+    saveButton->setPos(scene->width() / 2 + 80, 0);
+    //connect(saveButton, SIGNAL(clicked()), this, SLOT(saveGame()));
     scene->addItem(saveButton);
 }
 
@@ -284,8 +281,6 @@ void Game::pickUppawn(Hex *pawn){
 
 void Game::placepawn(Hex *hexToReplace) {
     if (!pawnToPlace) return;
-
-    saveState();  // Save the state before placing the pawn (pour le Memento)
 
     // Placer le pion sélectionné
     pawnToPlace->setPos(hexToReplace->pos());
@@ -572,7 +567,7 @@ void Game::startGameWithSettings() {
     start();
 }
 
-void Game::undoLastAction() {
+/*void Game::undoLastAction() {
     if (history.isEmpty()) {
         QMessageBox::warning(this, "Retour","Pas d'action de retour en arrière !");
         return;
@@ -584,11 +579,11 @@ void Game::undoLastAction() {
     hexBoard->placeHexes(200, 30, 15, 15);
     drawGUI();
     drawpawns();
-}
+} */
 
 
 
-void Game::saveGame() {
+/*void Game::saveGame() {
     qDebug() << "Saving game state...";
     qDebug() << "Player 1 Pawns:";
     for (Hex* pawn : player1pawns) {
@@ -625,7 +620,7 @@ void Game::saveGame() {
     } else {
         QMessageBox::warning(this, "Enregistrement", "Erreur, le jeu n'a pas été sauvegardé.");
     }
-}
+} */
 
 Hex* Game::cloneHex(Hex* original) {
     Hex* copy = new Hex();
@@ -638,7 +633,7 @@ Hex* Game::cloneHex(Hex* original) {
 }
 
 // Save the current game state into the history stack
-void Game::saveState() {
+/*void Game::saveState() {
     QList<Hex*> p1Copy;
     QList<Hex*> p2Copy;
 
@@ -651,11 +646,11 @@ void Game::saveState() {
 
     history.push(new Memento(whosTurn_, p1Copy, p2Copy));
     qDebug() << "State saved. Current turn: " << whosTurn_;
-}
+} */
 
 
 // Restaurer le dernier état
-void Game::restoreState() {
+/*void Game::restoreState() {
     if (!history.isEmpty()) {
         Memento* memento = history.pop();
         whosTurn_ = memento->getWhosTurn();
@@ -668,7 +663,7 @@ void Game::restoreState() {
     } else {
         QMessageBox::warning(this, "Retour","Pas d'action de retour en arrière !");
     }
-}
+} */
 
 
 void Game::createInsects(){

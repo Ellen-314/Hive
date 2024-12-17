@@ -1,7 +1,5 @@
 #include <QApplication>
 #include "N_game.h"
-#include "Jeu.h"
-#include "Controleur.h"
 #include <cstdio>
 #include <windows.h>
 #pragma execution_character_set("utf-8")

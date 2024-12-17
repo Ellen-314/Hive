@@ -1,5 +1,5 @@
 #include "HexBoard.h"
-#include "Game.h"
+#include "N_game.h"
 #include <QDebug>
 #include "ClassesInsects/ant.h"
 #include "ColorDictionnary.h"

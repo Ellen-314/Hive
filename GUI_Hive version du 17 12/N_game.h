@@ -1,6 +1,5 @@
 #ifndef N_GAME_H
 #define N_GAME_H
-#include "Memento.h"
 #include <QStack>
 #include <QGraphicsView>
 #include <QGraphicsScene>
@@ -75,8 +74,8 @@ public:
 public slots:
     void start();
     void displayGameSetupMenu();
-    void undoLastAction();
-    void saveGame();
+    //void undoLastAction();
+    //void saveGame();
 
 private:
     void drawPanel(int x, int y, int width, int height, QColor color, double opacity);
@@ -98,8 +97,7 @@ private:
     static unsigned int compteurDeToursBlanc;
     static unsigned int compteurDeToursNoir;
 
-    //Memento
-    QStack< Memento*> history;
+
     void storeCurrentState();
 
     QString player1Name;
