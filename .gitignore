@@ -44,3 +44,6 @@ GUI_Hive version du 09 12/Game.cpp
 GUI_Hive version du 09 12/Game.h
 GUI_Hive version du 09 12/Image GUI.png
 test/test.depend
+test/test2/boards.sauv
+test/test2/test2.cbp
+test/test2/test2.depend
