@@ -27,16 +27,7 @@ void HexBoard::placeHexes(int x, int y, int cols, int rows){
         createHexColumn(x+X_SHIFT*i,y+Y_SHIFT,rows,i);
 
     }
-    /*QPoint zero(0,0);
-    hexHighlight(zero);
-    hexHighlightErase(zero);
-    zero.setX(1);
-    zero.setY(0);
-    hexHighlight(zero);*/
-    Ant b;
-    board.addSpot(1,0);
-    board.addInsectToSpot(1,0,&b);
-    //afficherBoardQt();
+
 }
 
 void HexBoard::createHexColumn(int x, int y, int numOfRows,int numOfcols){
@@ -54,6 +45,7 @@ void HexBoard::createHexColumn(int x, int y, int numOfRows,int numOfcols){
         // initialisation
         hex->setOwner(QString("NOONE"));
         hex->setIsPlaced(true);
+        hex->setIsEmpty(true);
     }
 }
 

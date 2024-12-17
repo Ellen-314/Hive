@@ -5,6 +5,7 @@
 #include <QBrush>
 #include "N_game.h"
 #include <QPixmap>
+#include "Insect.h"
 
 extern Game* game;
 
@@ -56,24 +57,62 @@ QColor Hex::getColor() const {
 }
 
 void Hex::setColor(const QColor& color) {
-    this->color = color; // Assuming `color` is the member variable for storing the color
-    setBrush(QBrush(color)); // Apply the color to the QGraphicsPolygonItem visually
+    this->color = color;
+    setBrush(QBrush(color));
 }
 
 void Hex::unSetColor() {
-    this->color = Qt::white; // Assuming `color` is the member variable for storing the color
-    setBrush(Qt::NoBrush); // Apply the color to the QGraphicsPolygonItem visually
+    this->color = Qt::white;
+    setBrush(Qt::NoBrush);
 }
 
-
+//gestion de posage et des déplacements graphiques des insects
 void Hex::mousePressEvent(QGraphicsSceneMouseEvent *event){
-    Board board = game->getPlateau();
+    Board& board = game->getPlateau();
+    if(getIsPlaced()&& getOwner() == game->getWhosTurn()){
+        if(!getIsEmpty()&& getOwner() == game->getWhosTurn()){
+            HexBoard* hexboard = game->hexBoard;
+            hexboard->eraseHighlighted();
+            qDebug()<<getCoord();
+        //mettre possibilités de move
+        const BoardSpot* spot = nullptr;
+        spot = board.getSpot(getCoord().x(), getCoord().y());
+        qDebug()<<spot->getCoordinates();
+        qDebug()<<spot->getInsect();
+
+        std::vector <const BoardSpot*> possibilite = spot->getInsect()->moov(getCoord().x(), getCoord().y(), board);
+        for(const auto& spot : possibilite){
+            auto [x,y] = spot->getCoordinates();
+            Hex& hex = hexboard->getHex(QPoint(x, y));
+            qDebug()<<"x:"<<x<<" y:"<<y;
+            hexboard->addHighlightedHex(&hex, "magenta");
+        }
+        game->pawnToMove = this;
+
+        return;
+
+
+    }
+    }
+
+    if(this->isEmpty && game->pawnToMove!=NULL && game->hexBoard->inHighlighted(this)){
+        game->getPlateau().print_debug();
+        game->getPlateau().moovInsect(game->pawnToMove->getCoord().x(), game->pawnToMove->getCoord().y(), this->getCoord().x(), this->getCoord().y());
+        game->getPlateau().print_debug();
+        game->getPlateau().addNullSpot(this->getCoord().x(),this->getCoord().y());
+        game->exchangeSpot(game->hexBoard, game->pawnToMove, this);
+        game->pawnToMove=NULL;
+        game->hexBoard->eraseHighlighted();
+        game->nextPlayersTurn();
+        return;
+}
 
 
     // si hex est pas placé (=pion) alors le prendre
     if (getIsPlaced() == false && getOwner() == game->getWhosTurn() ){
-
-
+        game->pawnToMove=NULL;
+        HexBoard* hexboard = game->hexBoard;
+        hexboard->eraseHighlighted();
         std::vector<const BoardSpot*> possibilites = board.possibleplacer(getCouleur());
         if(game->getColorToPlay() == 1){
             if (board.getSpot(0, 0)==nullptr){
@@ -92,7 +131,6 @@ void Hex::mousePressEvent(QGraphicsSceneMouseEvent *event){
             possibilites.push_back(spot);
         }
         int x, y;
-        HexBoard* hexboard = game->hexBoard;
         qDebug()<<possibilites.size();
         for(const auto& spot : possibilites){
             auto [x,y] = spot->getCoordinates();
@@ -115,28 +153,6 @@ void Hex::mousePressEvent(QGraphicsSceneMouseEvent *event){
 void Hex::setOwner(QString player){
     // MAJ owner
     owner = player;
-
-    /*// changer la couleur
-    if (player == QString("Anonyme")){
-        QBrush brush;
-        brush.setStyle(Qt::SolidPattern);
-        brush.setColor(Qt::lightGray);
-        setBrush(brush);
-    }
-
-    if (player == QString("Joueur1")){
-        QBrush brush;
-        brush.setStyle(Qt::SolidPattern);
-        brush.setColor(Qt::blue);
-        setBrush(brush);
-    }
-
-    if (player == QString("Joueur2")){
-        QBrush brush;
-        brush.setStyle(Qt::SolidPattern);
-        brush.setColor(Qt::red);
-        setBrush(brush);
-    } */
 }
 
 void Hex::setIsPlaced(bool b){
@@ -148,8 +164,13 @@ void Hex::setInsectType(const QString& type) {
 
     // Crée un label pour afficher le type d'insecte
     QGraphicsTextItem* label = new QGraphicsTextItem(type, this);
+    setLabel(label);
     label->setDefaultTextColor(Qt::white);
     label->setPos(3, 7);  // Ajuster pour centrer le label dans l'hexagone
 
+}
 
+void Hex::majLabelCoord(){
+    QString coord = QStringLiteral("(%1,%2)").arg(getCoord().x()).arg(getCoord().y());
+    getLabel()->setPlainText(coord);
 }

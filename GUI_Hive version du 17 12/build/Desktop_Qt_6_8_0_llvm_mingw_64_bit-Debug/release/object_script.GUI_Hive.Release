@@ -1,0 +1,17 @@
+release/Board.o
+release/Button.o
+release/ant.o
+release/beetle.o
+release/grasshopper.o
+release/ladybug.o
+release/mosquito.o
+release/queenbee.o
+release/spider.o
+release/ColorDictionnary.o
+release/Hex.o
+release/HexBoard.o
+release/Insect.o
+release/N_game.o
+release/main.o
+release/moc_Button.o
+release/moc_N_game.o

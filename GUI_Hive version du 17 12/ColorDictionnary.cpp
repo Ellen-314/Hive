@@ -1,6 +1,6 @@
 #include "ColorDictionnary.h"
 
-// Static function to initialize the color map
+// Fonction statique pour initialiser la color map
 static QMap<QString, QColor> initializeColorMap()
 {
     QMap<QString, QColor> colorMap;
@@ -15,18 +15,18 @@ static QMap<QString, QColor> initializeColorMap()
     return colorMap;
 }
 
-// Static color map instance
+//instance statique de la color map
 static QMap<QString, QColor> colorMap = initializeColorMap();
 
-// Returns the entire color map
+// retourne toute la color map
 QMap<QString, QColor> ColorDictionary::getColorMap()
 {
     return colorMap;
 }
 
-// Returns the color for a given name, or black if not found
+// retourne la couleur d'un nom particuler sinon noir
 QColor ColorDictionary::getColor(const std::string colorName)
 {
     QString colorNameQS = QString::fromStdString(colorName);
-    return colorMap.value(colorNameQS, QColor(Qt::black)); // Default to black if not found
+    return colorMap.value(colorNameQS, QColor(Qt::black)); // Par defaut noir si pas trouvé
 }

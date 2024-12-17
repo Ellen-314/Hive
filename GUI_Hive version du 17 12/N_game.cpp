@@ -48,6 +48,7 @@ void Game::start(){
     createInsects();
     createInitialpawns();
     saveState();
+
 }
 
 void Game::drawPanel(int x, int y, int width, int height, QColor color, double opacity){
@@ -166,7 +167,6 @@ void Game::createInitialpawns() {
         player2pawns.append(pawn2);
 
     }
-
     // Dessiner tous les pions pour les deux joueurs
     drawpawns();
 }
@@ -268,7 +268,6 @@ void Game::setWhosTurn(QString player){
     whosTurn_ = player;
 
     // mise à jour QGraphicsTextItem
-   // whosTurnText->setPlainText(QString("Tour de: %1").arg(player));
     whosTurnText->setPlainText(QString("Tour de : ") + player);
 }
 
@@ -319,11 +318,10 @@ void Game::poserInsect(Hex *source, Hex *destination){
     Insect* insect = nullptr;
     std::string insectLabel = source->getInsectType().toStdString();
     if(color == 1){
-        int choix_insect = -1; // Initialize with -1 to indicate "not found"
+        int choix_insect = -1; // Initialissation avec -1 pour indiquer pas trouvé
 
-        // Find the index of the insect in the blanc list
+        // Trouver l'index de l'insect dans la liste blanc
         for (int  i = 0; i < getInsectBlancMod().size(); ++i) {
-            qDebug() << "== " << getInsectBlancMod()[i]->getType()  << "\n";
             if (getInsectBlancMod()[i]->getType() == insectLabel) {
                 choix_insect = i;
             }
@@ -333,15 +331,13 @@ void Game::poserInsect(Hex *source, Hex *destination){
             throw std::runtime_error("No matching insect found in the noir list.");
         }
 
-        // Continue with your existing logic using choix_insect
-
     insect = getInsectBlancMod()[choix_insect];
     insectsBlanc.erase(insectsBlanc.begin()+choix_insect);
     }
     else {
-        int choix_insect = -1; // Initialize with -1 to indicate "not found"
+        int choix_insect = -1; // Initialisation avec -1 pour indiquer pas trouvé
 
-        // Find the index of the insect in the noir list
+        // Trouver l'index de l'insect dans la liste noir
         for (size_t i = 0; i < getInsectNoirMod().size(); ++i) {
             if (getInsectNoirMod()[i]->getType() == insectLabel) {
                 choix_insect = static_cast<int>(i);
@@ -353,8 +349,6 @@ void Game::poserInsect(Hex *source, Hex *destination){
             throw std::runtime_error("No matching insect found in the noir list.");
         }
 
-        // Continue with your existing logic using choix_insect
-
     insect = getInsectNoirMod()[choix_insect];
     insectsNoir.erase(insectsNoir.begin()+choix_insect);
     }
@@ -363,32 +357,27 @@ void Game::poserInsect(Hex *source, Hex *destination){
     x = destination->getCoord().x();
     y = destination->getCoord().y();
     BoardSpot spot(x,y);
+    if(board.getSpot(x,y)==nullptr){
     board.addSpot(x,y);
+    }
     board.addInsectToSpot(x, y, insect);
     board.addNullSpot(x,y);
 
 
-    //TODO clean this code
+    static std::unordered_map<std::string, std::function<void(int)>> insectCountUpdate = {
+        {"queenbee", [](int color) { color == 1 ? QueenBee::ajouterBlanc() : QueenBee::ajouterNoir(); }},
+        {"ant", [](int color) { color == 1 ? Ant::ajouterBlanc() : Ant::ajouterNoir(); }},
+        {"spider", [](int color) { color == 1 ? Spider::ajouterBlanc() : Spider::ajouterNoir(); }},
+        {"grasshopper", [](int color) { color == 1 ? Grasshopper::ajouterBlanc() : Grasshopper::ajouterNoir(); }},
+        {"beetle", [](int color) { color == 1 ? Beetle::ajouterBlanc() : Beetle::ajouterNoir(); }}
+    };
 
-    if(insect->getType()== "queenbee"){
-        if(color==1){QueenBee::ajouterBlanc();}
-        else{QueenBee::ajouterNoir();}
-    }
-    else if(insect->getType()== "ant"){
-        if(color==1){Ant::ajouterBlanc();}
-        else{Ant::ajouterNoir();}
-    }
-    else if(insect->getType()== "spider"){
-        if(color==1){Spider::ajouterBlanc();}
-        else{Spider::ajouterNoir();}
-    }
-    else if(insect->getType()== "grasshopper"){
-        if(color==1){Grasshopper::ajouterBlanc();}
-        else{Grasshopper::ajouterNoir();}
-    }
-    else if(insect->getType()== "beetle"){
-        if(color==1){Beetle::ajouterBlanc();}
-        else{Beetle::ajouterNoir();}
+    // En fonction du type de l'insect
+    auto it = insectCountUpdate.find(insect->getType());
+    if (it != insectCountUpdate.end()) {
+        it->second(color);  // Executer le lambda correspondant
+    } else {
+        qDebug() << "Unknown insect type: " << QString::fromStdString(insect->getType());
     }
 
 }
@@ -453,6 +442,7 @@ void Game::mouseMoveEvent(QMouseEvent *event){
     // s'il y a un pawnToPlace, alors le faire suivre le mvt de la souris
     if (pawnToPlace){
         pawnToPlace->setPos(event->pos());
+
     }
 
     QGraphicsView::mouseMoveEvent(event);
@@ -464,9 +454,10 @@ void Game::mousePressEvent(QMouseEvent *event){
         if (pawnToPlace){
             pawnToPlace->setPos(originalPos);
             pawnToPlace = NULL;
-            hexBoard->eraseHighlighted();
-            return;
+
         }
+        hexBoard->eraseHighlighted();
+        return;
 
     }
 
@@ -652,7 +643,7 @@ void Game::saveState() {
     QList<Hex*> p2Copy;
 
     for (Hex* pawn : player1pawns) {
-        p1Copy.append(cloneHex(pawn)); // Assuming Hex has a proper copy constructor
+        p1Copy.append(cloneHex(pawn));
     }
     for (Hex* pawn : player2pawns) {
         p2Copy.append(cloneHex(pawn));
@@ -663,7 +654,7 @@ void Game::saveState() {
 }
 
 
-// Restore the last saved state from the history stack
+// Restaurer le dernier état
 void Game::restoreState() {
     if (!history.isEmpty()) {
         Memento* memento = history.pop();
@@ -673,7 +664,7 @@ void Game::restoreState() {
 
         drawpawns();
         setWhosTurn(whosTurn_);
-        delete memento;  // Clean up
+        delete memento;
     } else {
         QMessageBox::warning(this, "Retour","Pas d'action de retour en arrière !");
     }
@@ -718,155 +709,20 @@ int Game::getColorToPlay(){
         return 1;
     }
     return 0;
-};
+}
 
-// void Game::ajouterInsecte(int x, int y, Insect insect) {
+void Game::exchangeSpot(HexBoard* hb, Hex* h1, Hex* h2) {
 
-//         // Joueur blanc commence
-//         unsigned int color=(compteurDeToursBlanc+compteurDeToursNoir+1)%2;
+    QPointF temp = h1->pos();
+    QPoint temp1 = h1->getCoord();
+    //swap des positions
+    h1->setPos(h2->pos());
+    h2->setPos(temp);
+    //swap des coordonnées
+    h1->setCoord(h2->getCoord().x(), h2->getCoord().y());
+    h2->setCoord(temp1.x(), temp1.y());
+    qDebug() << "Swapped coordinates. New h1 coord:" << h1->getCoord() << ", New h2 coord:" << h2->getCoord();
+    h2->majLabelCoord();
+    qDebug() << "Finished exchangeSpot function.";
+}
 
-//         /*if(color!=1 && color!=0){ throw JeuException("Couleur choisie incorrecte."); }
-//         if(color==1){ std::cout << WHITE << "Blanc\n" << BLACK; }
-//         else{ std::cout << "Noir\n"; }
-//         // Affichage et retour au menu si jamais le joueur n'a plus d'insecte à poser
-//         if((color==0 && insectsNoir.empty()) || (color==1 && insectsBlanc.empty())) {
-//             std::cout << RED << "Vous n'avez plus d'insecte à poser !!" << BLACK << "\n";
-//             return;
-//         }*/
-
-//         //std::cout <<BLACK<< "Voici les insectes que vous pouvez poser :\n";
-
-//         /*if(color==0){ printInsectsNoir(); }
-//         else{ printInsectsBlanc(); } */
-
-//         std::vector<const BoardSpot* > possibilite;
-//         //si c'est le premier pour chacun tour on cree le premier spot pour insecte
-//         if (((color == 0)&& (getCompteurDeToursNoir() == 0))||((color==1)&&(getCompteurDeToursBlanc() == 0))){
-//             if (color == 1){
-//                 if (board.getSpot(0, 0)==nullptr){
-//                     board.addSpot(0, 0);
-//                      }
-//                 const BoardSpot* spot = board.getSpot(0, 0);
-//                 possibilite.push_back(spot);
-//             }
-//             if (color == 0){
-//                 if (board.getSpot(0, 1) == nullptr) {
-//                     board.addSpot(0, 1);
-//                 }
-//                 const BoardSpot* spot = board.getSpot(0, 1);
-//                 possibilite.push_back(spot);
-//             }
-//         }
-
-//         if (((color == 1)&& (getCompteurDeToursBlanc() != 0))||((color==0)&&(getCompteurDeToursNoir() != 0))){
-//             possibilite = board.possibleplacer(color);
-//         }
-
-//         //faire une fonction de highlight des possibilités plutôt
-//         board.afficherpossibilite(possibilite);
-
-
-//         Insect* insect = nullptr;
-
-//         /*
-//         if((color==0 && getCompteurDeToursNoir()== 3 && QueenBee::getPoseNoir()==0) || (color==1 && getCompteurDeToursBlanc()== 3 && QueenBee::getPoseBlanc()==0)){
-//             std::cout  << RED << "C'est votre 4e tour, vous devez poser votre reine !"<<BLACK<<"\n";
-//             size_t i=0;
-//             do{
-//                 if(color==1){
-//                     if("queenbee" == insectsBlanc[i]->getType()){
-//                         //std::cout << "\n=========\nDEBUG : "<< i << " : " << insectsBlanc[i]->getType() << insectsBlanc[i]->getColor() << "\n=========\n\n";
-//                         insect=insectsBlanc[i];
-//                         insectsBlanc.erase(insectsBlanc.begin()+i);
-//                     }
-//                 }
-//                 else{
-//                     if("queenbee" == insectsNoir[i]->getType()){
-//                         //std::cout << "\n=========\nDEBUG : "<< i << " : " << insectsNoir[i]->getType() << insectsNoir[i]->getColor() << "\n=========\n\n";
-//                         insect=insectsNoir[i];
-//                         insectsNoir.erase(insectsNoir.begin()+i);
-//                     }
-//                 }
-//                 i++;
-//             }while(((color==0 && i<insectsNoir.size()) || (color==1 && i<insectsBlanc.size())));
-//         }else{
-//             int choix_insect;
-
-//             do {
-//                 std::cout << "Quelle pièce souhaitez vous ajouter?  20:revenir au menu\n";
-//                 std::cout << "Entrez votre choix : ";
-//                 //TODO: voir pour gérer quand on ajoute l'extension
-//                 std::cin >> choix_insect;
-//                 if (choix_insect == 20){
-//                     std::cout << "retour au menu\n";
-//                     return;}
-//                 else if(color == 1){
-//                     if (choix_insect > -1 && choix_insect<getInsectBlanc().size())
-//                     {
-//                         insect = getInsectBlancMod()[choix_insect];
-//                         insect->setColor(1);
-//                         insectsBlanc.erase(insectsBlanc.begin()+choix_insect);
-//                         choix_insect= 100;
-//                     }}
-//                 else if (choix_insect >= 0 && choix_insect<getInsectNoir().size())
-//                 {
-//                     insect = getInsectNoirMod()[choix_insect];
-//                     insect->setColor(0);
-//                     insectsNoir.erase(insectsNoir.begin()+choix_insect);
-//                     choix_insect= 100;
-//                 }
-
-
-//                 else{ std::cout << RED <<"Le choix n'est pas valide."<<BLACK<<"\n";}
-
-
-//             }
-
-//             while(choix_insect!= 100); */
-//         }
-
-
-//         BoardSpot spot(0, 0);
-//         //int x, y;
-//         do {
-//             //auto [newx, newy] = demanderCoordonnees();
-//             spot = BoardSpot(x, y);
-//            // x = newx;
-//             //y = newy;
-//             if (!board.est_dans_possibilite(&spot, possibilite)) {
-//                 //std::cout  << RED << "Coordonnées invalides, veuillez réessayer."<<BLACK<<"\n";
-//             }
-//         }while( !board.est_dans_possibilite(&spot, possibilite) );
-
-
-//         board.addInsectToSpot(x, y, insect);
-//         board.addNullSpot(x,y);
-
-//         incCompteur(color);
-//         //Jeu::enregistrerBoard();
-
-//         if(insect->getType()== "queenbee"){
-//             if(color==1){QueenBee::ajouterBlanc();}
-//             else{QueenBee::ajouterNoir();}
-//         }
-//         else if(insect->getType()== "ant"){
-//             if(color==1){Ant::ajouterBlanc();}
-//             else{Ant::ajouterNoir();}
-//         }
-//         else if(insect->getType()== "spider"){
-//             if(color==1){Spider::ajouterBlanc();}
-//             else{Spider::ajouterNoir();}
-//         }
-//         else if(insect->getType()== "grasshopper"){
-//             if(color==1){Grasshopper::ajouterBlanc();}
-//             else{Grasshopper::ajouterNoir();}
-//         }
-//         else if(insect->getType()== "beetle"){
-//             if(color==1){Beetle::ajouterBlanc();}
-//             else{Beetle::ajouterNoir();}
-//         }
-//         // TO DO : incrémenter les compteurs des autres insectes
-//         else{ //std::cout << RED <<"le choix n'est pas valide, mais ça ne devrait pas arriver ici... (ajout du nombre d'insectes posés dans Jeu::ajouterInsecte)"<<BLACK<<"/n"; }
-
-
-// }

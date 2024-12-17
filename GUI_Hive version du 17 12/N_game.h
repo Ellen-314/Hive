@@ -63,17 +63,20 @@ public:
     void incCompteur(bool color);
     int getColorToPlay();
 
+    void exchangeSpot(HexBoard* hb, Hex* h1, Hex* h2);
+
 
     QGraphicsScene* scene;
     HexBoard* hexBoard;
     Hex* pawnToPlace;
+    Hex* pawnToMove;
     QPointF originalPos;
 
 public slots:
     void start();
     void displayGameSetupMenu();
-    void undoLastAction();  // New slot for undo
-    void saveGame();        // New slot for save
+    void undoLastAction();
+    void saveGame();
 
 private:
     void drawPanel(int x, int y, int width, int height, QColor color, double opacity);
@@ -119,22 +122,11 @@ private:
     QList<Hex*> player1RemainingPawns;
     QList<Hex*> player2RemainingPawns;
 
-    // Undo and save
-    int numRetours;  // Number of undo actions left
-    //QList<QGraphicsItem*> history;  // Track game state changes for undo
+
+    int numRetours;
+
 };
 
-/*class GameState {
-public:
-    QList<Hex*> player1Pawns;
-    QList<Hex*> player2Pawns;
-    QString currentTurn;
-    int undoCount;
-
-    // Constructor to save state
-    GameState(const QList<Hex*>& p1, const QList<Hex*>& p2, const QString& turn, int undos)
-        : player1Pawns(p1), player2Pawns(p2), currentTurn(turn), undoCount(undos) {}
-}; */
 
 
 #endif // N_GAME_H

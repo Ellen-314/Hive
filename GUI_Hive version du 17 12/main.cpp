@@ -16,10 +16,6 @@ int main(int argc, char *argv[])
     game->show();
     game->displayMainMenu();
 
-    ///Main du terminal
-    //SetConsoleOutputCP( 65001 );
-    //Controleur controleur;
-    //controleur.demarrage();
 
     return a.exec();
 

@@ -1,0 +1,17 @@
+debug/Board.o
+debug/Button.o
+debug/ant.o
+debug/beetle.o
+debug/grasshopper.o
+debug/ladybug.o
+debug/mosquito.o
+debug/queenbee.o
+debug/spider.o
+debug/ColorDictionnary.o
+debug/Hex.o
+debug/HexBoard.o
+debug/Insect.o
+debug/N_game.o
+debug/main.o
+debug/moc_Button.o
+debug/moc_N_game.o

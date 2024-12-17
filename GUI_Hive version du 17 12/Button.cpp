@@ -47,7 +47,7 @@ void Button::hoverLeaveEvent(QGraphicsSceneHoverEvent *event){
 }
 
 void Button::setFontSize(int size) {
-    QFont font = text->font(); // Get the current font
-    font.setPointSize(size);   // Set the new font size
-    text->setFont(font);       // Apply the updated font to the text item
+    QFont font = text->font();
+    font.setPointSize(size);
+    text->setFont(font);
 }

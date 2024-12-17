@@ -8,10 +8,10 @@
 class ColorDictionary
 {
 public:
-    // Returns the color map
+    // retourne la color map
     static QMap<QString, QColor> getColorMap();
 
-    // Gets a color by name, or a default color if not found
+    // getter avec le nom et retourne noir sinon
     static QColor getColor(const std::string colorName);
 };
 #endif // COLORDICTIONNARY_H

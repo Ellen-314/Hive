@@ -11,11 +11,9 @@ SOURCES += \
     ClassesInsects/queenbee.cpp \
     ClassesInsects/spider.cpp \
     ColorDictionnary.cpp \
-    Controleur.cpp \
     Hex.cpp \
     HexBoard.cpp \
     Insect.cpp \
-    Jeu.cpp \
     N_game.cpp \
     main.cpp
 
@@ -30,11 +28,9 @@ HEADERS += \
     ClassesInsects/queenbee.h \
     ClassesInsects/spider.h \
     ColorDictionnary.h \
-    Controleur.h \
     Hex.h \
     HexBoard.h \
     Insect.h \
-    Jeu.h \
     N_game.h
 
 RESOURCES += \

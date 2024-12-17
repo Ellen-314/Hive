@@ -39,7 +39,7 @@ public:
 };
 
 
-// Classe pour repr�senter une case sur le plateau
+// Classe pour représenter une case sur le plateau
 class BoardSpot {
 private:
     std::pair<int, int> coordinates; // Paire d'entiers pour les coordonn�es (x, y)
@@ -72,7 +72,7 @@ public:
     }
 };
 
-// Classe pour g�rer le plateau de jeu
+// Classe pour gérer le plateau de jeu
 class Board {
 private:
     BoardSpot** board_spots = nullptr;
@@ -86,10 +86,10 @@ public:
     // ajouter une case au plateau
     void addSpot(int x, int y);
 
-    // acc�der � une case sp�cifique par coordonn�es
+    // accéder à une case spécifique par coordonnées
     const BoardSpot* getSpot(int x, int y) const;
 
-    //  modifier une case sp�cifique par coordonn�es
+    //  modifier une case spécifique par coordonnées
     void modifySpot(int oldX, int oldY, int newX, int newY);
 
     void addInsectToSpot(int x, int y, Insect* insect);
@@ -105,11 +105,11 @@ public:
 
     // permet d'acceder au boardspot par son index
     const BoardSpot& getSpotIndex(size_t index) const ;
-    //trouve les voisins de la pi�ce demand�e et les renvoies dans un vecteur;
+    //trouve les voisins de la pièce demandée et les renvoies dans un vecteur;
     std::vector<const BoardSpot*> trouverVoisins(int x, int y) const;
-    // trouve les voisins sans insects de la pi�ce demand�e et les renvoies dans un vecteur;
+    // trouve les voisins sans insects de la pièce demandée et les renvoies dans un vecteur;
     std::vector<const BoardSpot*> voisinsNull(int x, int y) const;
-    // trouve les voisins avec insects de la pi�ce demand�e et les renvoies dans un vecteur;
+    // trouve les voisins avec insects de la pièce demandée et les renvoies dans un vecteur;
     std::vector<const BoardSpot*> trouverVoisinsInsects(int x, int y) const;
     std::vector<const BoardSpot*>possibleplacer(bool couleur)const;
 

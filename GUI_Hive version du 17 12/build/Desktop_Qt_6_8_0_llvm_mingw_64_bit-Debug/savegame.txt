@@ -1,0 +1,24 @@
+Player 1: Ellen (Humain)
+Player 2: Téo (Humain)
+Undo actions remaining: 0
+Whose turn: Ellen
+P1 Pawn Araignée at 13,70
+P1 Pawn Fourmi at 13,115
+P1 Pawn Fourmi at 13,160
+P1 Pawn Fourmi at 13,205
+P1 Pawn Reine at 13,250
+P1 Pawn Sauterelle at 13,295
+P1 Pawn Sauterelle at 13,340
+P1 Pawn Sauterelle at 13,385
+P1 Pawn Scarabé at 13,430
+P1 Pawn Scarabé at 13,475
+P2 Pawn Araignée at 887,25
+P2 Pawn Araignée at 887,70
+P2 Pawn Fourmi at 887,160
+P2 Pawn Fourmi at 887,205
+P2 Pawn Reine at 887,250
+P2 Pawn Sauterelle at 887,295
+P2 Pawn Sauterelle at 887,340
+P2 Pawn Sauterelle at 887,385
+P2 Pawn Scarabé at 887,430
+P2 Pawn Scarabé at 887,475

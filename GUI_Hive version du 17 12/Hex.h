@@ -11,12 +11,15 @@ public:
     Hex(QGraphicsItem* parent=NULL);
     // getters
     bool getIsPlaced();
-    bool getIsEmpty(){return isEmpty;};
+    bool getIsEmpty(){return isEmpty;}
     QString getOwner();
     QColor getColor() const;
     int getCouleur(){return couleur;}
     QPoint getCoord() {return coords;}
     void setCoord(int x,int y) {coords.setX(x); coords.setY(y);}
+    void majLabelCoord();
+    QString getInsectType() const { return insectType; }
+    QGraphicsTextItem* getLabel() const {return labelText;}
 
 
     // event
@@ -30,10 +33,9 @@ public:
     void setColor(const QColor& color);
     void setCouleur(int col){couleur = col;}
     void unSetColor();
-    QString getInsectType() const { return insectType; }
+    void setLabel(QGraphicsTextItem* label){labelText=label;}
 
 private:
-    //mettre id couple de coordonnées vector?
     QPoint coords;
     int couleur;
     bool isPlaced;
