@@ -79,14 +79,14 @@ BoardSpot* Board::getSpotModify(int x, int y) {
 
 // Affichage du plateau
 void Board::print(ostream& f) const {
-    //f << "Le plateau contient " << nb << " spots." << endl;
+    f << "Le plateau contient " << nb << " spots." << endl;
     for (size_t i = 0; i < nb; i++) {
         // Pour n'afficher que les spots où il y a des insectes
-        if(board_spots[i]->hasInsect()){
-            f << "\t";
+        /*if(board_spots[i]->hasInsect()){
+            f << "\t";*/
             board_spots[i]->print(f);
             f << "\n";
-        }
+        //}
     }
     f << endl;
 }
@@ -266,6 +266,7 @@ std::vector<const BoardSpot*> Board::trouverVoisinsGlisseur(int x, int y) const{
             }
         }
     }
+    afficherpossibilite(voisins);
     return voisins;
 }
 
@@ -359,6 +360,7 @@ void Board::addNullSpot(int x, int y){
              const BoardSpot* spot = getSpot(newX, newY);
             if (!spot) {
                 addSpot(newX, newY); //on ajoute les voisins existants au vecteur
+                //std::cout<< "debug_______addnullspot "<<newX<< newY<<"\n";
             }
 
 }}
@@ -447,9 +449,10 @@ void Board::deleteNullSpot(int oldX, int oldY){
         std::vector<const BoardSpot*> voisins= voisinsNull(oldX,oldY);
         for (auto& voisin:voisins){
             std::pair<int,int> coord = voisin-> getCoordinates();
-            if (trouverVoisinsInsects(coord.first, coord.second).size()<1)
+            if (trouverVoisinsInsects(coord.first, coord.second).size()<1){
+                //std::cout<<"DEBUG: supprimé"<<coord.first<< coord.second<<"\n";
                 deleteSpot(coord.first, coord.second);}
-        }
+        }}
 
 
 
