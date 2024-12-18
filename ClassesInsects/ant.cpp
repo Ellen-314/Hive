@@ -18,7 +18,7 @@ std::vector<const BoardSpot*> Ant::moov(int x, int y, const Board& board)const{
             Averifier.pop();//on retire l'élement qu'on est en train de verifier de la liste à verifier
 
             //on cree le vecteur voisins qui repertorie les voisins sans insects autour de la position à verifier
-            std::vector<const BoardSpot*> voisins = board.voisinsNull(
+            std::vector<const BoardSpot*> voisins = board.trouverVoisinsGlisseur(
                 currentSpot->getCoordinates().first,
                 currentSpot->getCoordinates().second
             );

@@ -230,9 +230,51 @@ std::vector<const BoardSpot*> Board::trouverVoisinsInsects(int x, int y) const {
 }
 
 // trouver les voisins sans insectes sans saut de la piece demandée et les renovies dans un vecteur; (pas fait)
-std::vector<const BoardSpot*> Board::trouverVoisinsGlisseur(int x, int y) const{
+//std::vector<const BoardSpot*> Board::trouverVoisinsGlisseur(int x, int y) const{
+//    std::vector<const BoardSpot*> voisins;
+//    //cr�ation de la liste de pair des coordon�es de tout les voisins
+//    std::pair<int, int> directions[] = {
+//        {1, 0},   // (x + 1, y)
+//        {1, 1},   // (x + 1, y + 1)
+//        {0, 1},   // (x, y + 1)
+//        {-1, 0},  // (x - 1, y)
+//        {-1, -1}, // (x - 1, y - 1)
+//        {0, -1}   // (x, y - 1)
+//    };
+//    // taille de directions
+//    size_t size = sizeof(directions) / sizeof(directions[0]);
+//    // boucle pour itérer sur les directions
+//    for (size_t i = 0; i < size; ++i)
+//    {
+//        std::pair<int, int> newDirection = directions[i];
+//        // accès à la direction précédente dans la liste
+//        size_t prevIndex = (i==0) ? size - 1 : i - 1; // si i=0, prevIndex devient le dernier élément
+//        std::pair<int, int> prevDirecion = directions[prevIndex];
+//        // accès à la direction suivant dans la liste
+//        size_t nextIndex = (i==size) ? 1 : i + 1; // si i=size, prevIndex devient le permier élément
+//        std::pair<int, int> nextDirecion = directions[nextIndex];
+//        const BoardSpot* spot = getSpot(newDirection.first, newDirection.second);
+//        if (spot){
+//            stc
+//            // vérifier que le spot est libre
+//            if (!spot->hasInsect()){
+//                // vérifier qu'on peut y aller sans sauter
+//                const BoardSpot* prevSpot = getSpot(prevDirecion.first, prevDirecion.second);
+//                const BoardSpot* nextSpot = getSpot(nextDirecion.first, nextDirecion.second);
+//                if (!prevSpot->hasInsect() || !nextSpot->hasInsect()){
+//                    voisins.push_back(spot); // on ajoute les voisins existants au vecteur
+//                }
+//            }
+//        }
+//    }
+//    afficherpossibilite(voisins);
+//    return voisins;
+//}
+
+std::vector<const BoardSpot*> Board::trouverVoisinsGlisseur(int x, int y) const {
     std::vector<const BoardSpot*> voisins;
-    //cr�ation de la liste de pair des coordon�es de tout les voisins
+
+    // Création de la liste de paires pour toutes les directions
     std::pair<int, int> directions[] = {
         {1, 0},   // (x + 1, y)
         {1, 1},   // (x + 1, y + 1)
@@ -241,32 +283,55 @@ std::vector<const BoardSpot*> Board::trouverVoisinsGlisseur(int x, int y) const{
         {-1, -1}, // (x - 1, y - 1)
         {0, -1}   // (x, y - 1)
     };
-    // taille de directions
+
+    // Taille des directions
     size_t size = sizeof(directions) / sizeof(directions[0]);
-    // boucle pour itérer sur les directions
-    for (size_t i = 0; i < size; ++i)
-    {
-        std::pair<int, int> newDirection = directions[i];
-        // accès à la direction précédente dans la liste
-        size_t prevIndex = (i==0) ? size - 1 : i - 1; // si i=0, prevIndex devient le dernier élément
-        std::pair<int, int> prevDirecion = directions[prevIndex];
-        // accès à la direction suivant dans la liste
-        size_t nextIndex = (i==size) ? 1 : i + 1; // si i=size, prevIndex devient le permier élément
-        std::pair<int, int> nextDirecion = directions[nextIndex];
-        const BoardSpot* spot = getSpot(newDirection.first, newDirection.second);
-        if (spot){
-            // vérifier que le spot est libre
-            if (!spot->hasInsect()){
-                // vérifier qu'on peut y aller sans sauter
-                const BoardSpot* prevSpot = getSpot(prevDirecion.first, prevDirecion.second);
-                const BoardSpot* nextSpot = getSpot(nextDirecion.first, nextDirecion.second);
-                if (!prevSpot->hasInsect() || !nextSpot->hasInsect()){
-                    voisins.push_back(spot); // on ajoute les voisins existants au vecteur
+
+    // Boucle pour itérer sur les directions
+    for (size_t i = 0; i < size; ++i) {
+        // Calcul des nouvelles coordonnées
+        int newX = x + directions[i].first;
+        int newY = y + directions[i].second;
+
+        // Accès aux voisins dans la liste circulaire
+        size_t prevIndex = (i == 0) ? size - 1 : i - 1; // Si i=0, dernier élément
+        size_t nextIndex = (i == size - 1) ? 0 : i + 1; // Si dernier élément, revenir au premier
+
+        // Coordonnées des voisins précédents et suivants
+        int prevX = x + directions[prevIndex].first;
+        int prevY = y + directions[prevIndex].second;
+
+        int nextX = x + directions[nextIndex].first;
+        int nextY = y + directions[nextIndex].second;
+
+        // Affichage des coordonnées
+        std::cout << "Coordonnées actuelles : (" << newX << ", " << newY << ")\n";
+        std::cout << "Coordonnées prev : (" << prevX << ", " << prevY << ")\n";
+        std::cout << "Coordonnées next : (" << nextX << ", " << nextY << ")\n";
+
+        // Récupérer le spot à la nouvelle position
+        const BoardSpot* spot = getSpot(newX, newY);
+        if (spot) {
+            // Vérifier que le spot est libre
+            if (!spot->hasInsect()) {
+                // Vérifier que le déplacement est autorisé sans saut
+                const BoardSpot* prevSpot = getSpot(prevX, prevY);
+                const BoardSpot* nextSpot = getSpot(nextX, nextY);
+
+
+                bool prevValid = (prevSpot && !prevSpot->hasInsect());
+                bool nextValid = (nextSpot && !nextSpot->hasInsect());
+
+                if (prevValid || nextValid) {
+                    voisins.push_back(spot); // Ajouter le voisin valide
                 }
             }
         }
     }
+
+    // Afficher les possibilités (si la fonction est définie)
     afficherpossibilite(voisins);
+
     return voisins;
 }
 
