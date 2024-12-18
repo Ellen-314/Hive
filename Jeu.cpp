@@ -56,7 +56,7 @@ void Jeu::afficherMenu() const {
     std::cout << "3. Afficher le plateau\n";
     std::cout << "4. Annuler le coup\n";
     std::cout << "5. Sauvegarder la partie\n";
-    std::cout << "6. Faire jouer l'IA\n";
+    if (getHasbot() == 1){ std::cout << "6. Faire jouer l'IA\n"; }
     std::cout << "0. Quitter\n";
     /*std::cout << "=== Menu de Debug ===\n"; // n'existera pas pendant une partie
     std::cout << "99. Ajouter une case\n";
@@ -132,17 +132,26 @@ void Jeu::demarrerPartie() {
             std::cout <<CYAN<< "a gagne !"<<BLACK<<"\n";
         }
         else{
-            afficherMenu();
-            choix = demanderChoix();
+//            afficherMenu();
+//            choix = demanderChoix();
+//
+//            //ici on force a taper 6 quand c'est à l'IA de jouer
+//            while (getHasbot() == 1 && choix != 6 && ((compteurDeToursBlanc + compteurDeToursNoir + 1) % 2 == 0)) {
+//                std::cout << RED<< "C'est au tour de l'IA de jouer, veuillez taper 6 \n "<< BLACK<< "\n";
+//                afficherMenu();
+//                choix = demanderChoix();
+//            }
+//            while (getHasbot() == 1 && choix == 6 && ((compteurDeToursBlanc + compteurDeToursNoir + 1) % 2 != 0)) {
+//                std::cout << RED << "C'est a toi de jouer pas à l'IA, t'as cru contourner le système ? \n " << BLACK << "\n";
+//                afficherMenu();
+//                choix = demanderChoix();
+//            }
 
-            //ici on force a taper 6 quand c'est à l'IA de jouer
-            while (getHasbot() == 1 && choix != 6 && ((compteurDeToursBlanc + compteurDeToursNoir + 1) % 2 == 0)) {
-                std::cout << RED<< "C'est au tour de l'IA de jouer, veuillez taper 6 \n "<< BLACK<< "\n";
-                afficherMenu();
-                choix = demanderChoix();
+            //ici on entre 6 automatiquement quand c'est à l'IA de jouer, s'il y en a une
+            if (getHasbot() == 1 && ((compteurDeToursBlanc + compteurDeToursNoir + 1) % 2 == 0)) {
+                choix = 6;
             }
-            while (getHasbot() == 1 && choix == 6 && ((compteurDeToursBlanc + compteurDeToursNoir + 1) % 2 != 0)) {
-                std::cout << RED << "C'est a toi de jouer pas à l'IA, t'as cru contourner le système ? \n " << BLACK << "\n";
+            else {
                 afficherMenu();
                 choix = demanderChoix();
             }
@@ -170,7 +179,8 @@ void Jeu::demarrerPartie() {
                     saveGame(historyStack);
                     break;
                 case 6:
-                    botIsPlayingToWin();
+                    if (getHasbot()==1){ botIsPlayingToWin(); }
+                    else { std::cout << RED <<"Le choix n'est pas valide."<<BLACK<<"\n"; }
                     break;
                 case 99:
                     ajouterCase();
@@ -179,7 +189,7 @@ void Jeu::demarrerPartie() {
                     supprimerCase();
                     break;
                 default:
-                    std::cout << RED <<"Le choix n'est pas valide."<<BLACK<<"\n";;
+                    std::cout << RED <<"Le choix n'est pas valide."<<BLACK<<"\n";
             }
         }
     }
@@ -424,6 +434,27 @@ void Jeu::deplacerInsecte() {
             //appel de moov pour retourner les cases possibles (et potentiellement v�rifier s'il y a bien un insecte sur cette case)
             std::vector <const BoardSpot*> possibilite = spot->getInsect()->moov(x, y, board);
 
+            int newX, newY;
+            std::vector <const BoardSpot*> testpossibilite = possibilite;
+
+            // Vérifier la connexité pour chaque possiblite
+            for (size_t i = 0; i < possibilite.size(); i++){
+                std::cout << "i = " << i << "\n";
+                const BoardSpot* spot = possibilite[possibilite.size()-1-i];
+                newX = spot->getCoordinates().first;
+                newY = spot->getCoordinates().second;
+                board.moovInsect(x, y, newX, newY);
+
+                if (!board.isConnexe()) {
+                    // std::cout << RED << "Déplacement annulé : cela romprait la connexité du graphe." << BLACK << "\n";
+                    testpossibilite.erase (testpossibilite.begin()+possibilite.size()-1-i);
+                }
+
+                board.moovInsect(newX, newY, x, y); // Annuler le déplacement temporaire
+            }
+
+            possibilite = testpossibilite;
+
             // On v�fifie qu'il y a bien des possibilit�s avant de proposer un d�placement
             if(!possibilite.empty()){
                 std::cout << "Voici les possibilités de déplacement de votre pièce\n";
@@ -442,7 +473,6 @@ void Jeu::deplacerInsecte() {
 
                 if(choix == 1 && !possibilite.empty()){
                     std::cout << "Entrez les coordonn�es de la case de destination.\n";
-                    int newX, newY;
                     const BoardSpot* spot2 = nullptr;
                     do {
                         std::pair<int, int> coordonnees = demanderCoordonnees();
@@ -456,13 +486,6 @@ void Jeu::deplacerInsecte() {
                     }while( !board.est_dans_possibilite(spot2, possibilite) );
 
                     board.moovInsect(x, y, newX, newY);
-
-                    // Vérifier la connexité
-                    if (!board.isConnexe()) {
-                        std::cout << RED << "Déplacement annulé : cela romprait la connexité du graphe." << BLACK << "\n";
-                        board.moovInsect(newX, newY, x, y); // Annuler le déplacement temporaire
-                        return;
-                    }
 
                     //TODO gerer les probl�mes avec le scarab�
                     board.addNullSpot(newX,newY);
@@ -860,7 +883,7 @@ void Jeu::afficherPartie(std::vector<const BoardSpot*>* ptpossibilite){
         possibilite = *ptpossibilite;
         std::sort(possibilite.begin(),possibilite.end(), compBSco);
         std::reverse(possibilite.begin(),possibilite.end());
-        //std::cout<< "\npossibilites de placement : ";
+        //std::cout << RED << "\npossibilites de placement : ";
         for (const BoardSpot* bs : possibilite){
             //bs->print(std::cout);
             x=bs->getCoordinates().first;
@@ -879,9 +902,9 @@ void Jeu::afficherPartie(std::vector<const BoardSpot*>* ptpossibilite){
         }
     }
 
-    //std::cout<<"\npiecesPosees sur le plateau : ";
+    //std::cout<< "\n=========\nDEBUG : <<"\npiecesPosees sur le plateau : ";
     for (const BoardSpot* bs : piecesPosees){
-        //bs->print(std::cout);
+        // bs->print(std::cout);
         x=bs->getCoordinates().first;
         y=bs->getCoordinates().second;
         priority = 2*y-x;
@@ -896,8 +919,9 @@ void Jeu::afficherPartie(std::vector<const BoardSpot*>* ptpossibilite){
         priority_min = std::min(priority, priority_min);
         priority_max = std::max(priority, priority_max);
     }
+//    std::cout << "\n=========\n";
 
-    //std::cout << "\nmin_x = " << min_x << "\nmax_x = " << max_x << "\nmin_y = " << min_y << "\nmax_y = " << max_y << "\npriority_min = " << priority_min << "\npriority_max = " << priority_max << "\npriority_of_min_x = " << priority_of_min_x << "\n";
+    //std::cout << "\n=========\nDEBUG : << "\nmin_x = " << min_x << "\nmax_x = " << max_x << "\nmin_y = " << min_y << "\nmax_y = " << max_y << "\npriority_min = " << priority_min << "\npriority_max = " << priority_max << "\npriority_of_min_x = " << priority_of_min_x << "\n" << "\n=========\n";
 
     bool spot_vide = true;
 
@@ -915,7 +939,18 @@ void Jeu::afficherPartie(std::vector<const BoardSpot*>* ptpossibilite){
                     && possibilite.front()->getCoordinates().first == x){
                     y = possibilite.front()->getCoordinates().second;
                     spot_vide=false;
-                    std::cout << CYAN << "_";
+
+                    // Dans le cas d'un affichage de possibilité de déplacement au-dessus d'une pièce
+                    if (!piecesPosees.empty()
+                        && piecesPosees.front()->getCoordinates().first == possibilite.front()->getCoordinates().first
+                        && piecesPosees.front()->getCoordinates().second == possibilite.front()->getCoordinates().second){
+                        if(piecesPosees.front()->getInsect()->getColor()) std::cout << WHITE;
+                        else std::cout << BLACK;
+                        std::cout << piecesPosees.front()->getInsect()->getType().front() << CYAN;
+                        piecesPosees.erase(piecesPosees.begin());
+                    }
+                    else { std::cout << CYAN << "_"; }
+
                     possibilite.erase(possibilite.begin());
                 }
                 else if (!piecesPosees.empty()
@@ -1044,6 +1079,9 @@ void Jeu::botIsPlayingToWin() {
 
     ++compteurDeToursNoir;
     enregistrerBoard();
+
+    afficherPartie();
+
 }
 
 void Jeu::botMoveInsect() {
