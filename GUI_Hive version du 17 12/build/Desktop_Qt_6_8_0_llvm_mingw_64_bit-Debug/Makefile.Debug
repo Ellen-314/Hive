@@ -528,6 +528,7 @@ debug/moc_N_game.cpp: ../../N_game.h \
 		../../ClassesInsects/grasshopper.h \
 		../../ClassesInsects/beetle.h \
 		../../ClassesInsects/ladybug.h \
+		../../ClassesInsects/mosquito.h \
 		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtGui/QMouseEvent \
 		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/QLineEdit \
 		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qlineedit.h \
@@ -555,6 +556,12 @@ debug/moc_N_game.cpp: ../../N_game.h \
 		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qabstractbutton.h \
 		../../Button.h \
 		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/QGraphicsRectItem \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/QGraphicsProxyWidget \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qgraphicsproxywidget.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qgraphicswidget.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qgraphicslayoutitem.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/QStyleFactory \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qstylefactory.h \
 		debug/moc_predefs.h \
 		C:/ProgramFiles/6.8.0/llvm-mingw_64/bin/moc.exe
 	C:\ProgramFiles\6.8.0\llvm-mingw_64\bin\moc.exe $(DEFINES) --include "C:/Users/ellen/Documents/UTC/GI01/LO21/Projet Hive/Version/GUI_Hive version du 22 11/build/Desktop_Qt_6_8_0_llvm_mingw_64_bit-Debug/debug/moc_predefs.h" -IC:/ProgramFiles/6.8.0/llvm-mingw_64/mkspecs/win32-clang-g++ -I"C:/Users/ellen/Documents/UTC/GI01/LO21/Projet Hive/Version/GUI_Hive version du 22 11" -IC:/ProgramFiles/6.8.0/llvm-mingw_64/include -IC:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets -IC:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtGui -IC:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtCore -I. -IC:/ProgramFiles/Tools/llvm-mingw1706_64/include/c++/v1 -IC:/ProgramFiles/Tools/llvm-mingw1706_64/lib/clang/17/include -IC:/ProgramFiles/Tools/llvm-mingw1706_64/include ..\..\N_game.h -o debug\moc_N_game.cpp
@@ -585,6 +592,7 @@ debug/Board.o: ../../Board.cpp ../../Board.h \
 		../../ClassesInsects/grasshopper.h \
 		../../ClassesInsects/beetle.h \
 		../../ClassesInsects/ladybug.h \
+		../../ClassesInsects/mosquito.h \
 		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtCore/qdebug.h \
 		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtCore/qcontainerfwd.h \
 		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtCore/qtconfigmacros.h \
@@ -853,7 +861,8 @@ debug/ant.o: ../../ClassesInsects/ant.cpp ../../ClassesInsects/ant.h \
 		../../ClassesInsects/spider.h \
 		../../ClassesInsects/grasshopper.h \
 		../../ClassesInsects/beetle.h \
-		../../ClassesInsects/ladybug.h
+		../../ClassesInsects/ladybug.h \
+		../../ClassesInsects/mosquito.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\ant.o ..\..\ClassesInsects\ant.cpp
 
 debug/beetle.o: ../../ClassesInsects/beetle.cpp ../../ClassesInsects/beetle.h \
@@ -863,7 +872,8 @@ debug/beetle.o: ../../ClassesInsects/beetle.cpp ../../ClassesInsects/beetle.h \
 		../../ClassesInsects/queenbee.h \
 		../../ClassesInsects/spider.h \
 		../../ClassesInsects/grasshopper.h \
-		../../ClassesInsects/ladybug.h
+		../../ClassesInsects/ladybug.h \
+		../../ClassesInsects/mosquito.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\beetle.o ..\..\ClassesInsects\beetle.cpp
 
 debug/grasshopper.o: ../../ClassesInsects/grasshopper.cpp ../../ClassesInsects/grasshopper.h \
@@ -873,7 +883,8 @@ debug/grasshopper.o: ../../ClassesInsects/grasshopper.cpp ../../ClassesInsects/g
 		../../ClassesInsects/queenbee.h \
 		../../ClassesInsects/spider.h \
 		../../ClassesInsects/beetle.h \
-		../../ClassesInsects/ladybug.h
+		../../ClassesInsects/ladybug.h \
+		../../ClassesInsects/mosquito.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\grasshopper.o ..\..\ClassesInsects\grasshopper.cpp
 
 debug/ladybug.o: ../../ClassesInsects/ladybug.cpp ../../ClassesInsects/ladybug.h \
@@ -883,11 +894,19 @@ debug/ladybug.o: ../../ClassesInsects/ladybug.cpp ../../ClassesInsects/ladybug.h
 		../../ClassesInsects/queenbee.h \
 		../../ClassesInsects/spider.h \
 		../../ClassesInsects/grasshopper.h \
-		../../ClassesInsects/beetle.h
+		../../ClassesInsects/beetle.h \
+		../../ClassesInsects/mosquito.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\ladybug.o ..\..\ClassesInsects\ladybug.cpp
 
 debug/mosquito.o: ../../ClassesInsects/mosquito.cpp ../../ClassesInsects/mosquito.h \
-		../../Insect.h
+		../../Insect.h \
+		../../Board.h \
+		../../ClassesInsects/ant.h \
+		../../ClassesInsects/queenbee.h \
+		../../ClassesInsects/spider.h \
+		../../ClassesInsects/grasshopper.h \
+		../../ClassesInsects/beetle.h \
+		../../ClassesInsects/ladybug.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\mosquito.o ..\..\ClassesInsects\mosquito.cpp
 
 debug/queenbee.o: ../../ClassesInsects/queenbee.cpp ../../ClassesInsects/QueenBee.h \
@@ -898,7 +917,8 @@ debug/queenbee.o: ../../ClassesInsects/queenbee.cpp ../../ClassesInsects/QueenBe
 		../../ClassesInsects/spider.h \
 		../../ClassesInsects/grasshopper.h \
 		../../ClassesInsects/beetle.h \
-		../../ClassesInsects/ladybug.h
+		../../ClassesInsects/ladybug.h \
+		../../ClassesInsects/mosquito.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\queenbee.o ..\..\ClassesInsects\queenbee.cpp
 
 debug/spider.o: ../../ClassesInsects/spider.cpp ../../ClassesInsects/spider.h \
@@ -908,7 +928,8 @@ debug/spider.o: ../../ClassesInsects/spider.cpp ../../ClassesInsects/spider.h \
 		../../ClassesInsects/queenbee.h \
 		../../ClassesInsects/grasshopper.h \
 		../../ClassesInsects/beetle.h \
-		../../ClassesInsects/ladybug.h
+		../../ClassesInsects/ladybug.h \
+		../../ClassesInsects/mosquito.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\spider.o ..\..\ClassesInsects\spider.cpp
 
 debug/ColorDictionnary.o: ../../ColorDictionnary.cpp ../../ColorDictionnary.h \
@@ -1229,6 +1250,7 @@ debug/Hex.o: ../../Hex.cpp ../../Hex.h \
 		../../ClassesInsects/grasshopper.h \
 		../../ClassesInsects/beetle.h \
 		../../ClassesInsects/ladybug.h \
+		../../ClassesInsects/mosquito.h \
 		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtGui/QMouseEvent \
 		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/QLineEdit \
 		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qlineedit.h \
@@ -1256,6 +1278,12 @@ debug/Hex.o: ../../Hex.cpp ../../Hex.h \
 		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qabstractbutton.h \
 		../../Button.h \
 		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/QGraphicsRectItem \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/QGraphicsProxyWidget \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qgraphicsproxywidget.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qgraphicswidget.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qgraphicslayoutitem.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/QStyleFactory \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qstylefactory.h \
 		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtGui/QPixmap
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\Hex.o ..\..\Hex.cpp
 
@@ -1415,6 +1443,102 @@ debug/HexBoard.o: ../../HexBoard.cpp ../../HexBoard.h \
 		../../ClassesInsects/grasshopper.h \
 		../../ClassesInsects/beetle.h \
 		../../ClassesInsects/ladybug.h \
+		../../ClassesInsects/mosquito.h \
+		../../N_game.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtCore/QStack \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtCore/qstack.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/QGraphicsView \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qgraphicsview.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtGui/qpainter.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtGui/qtextoption.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtGui/qpen.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtGui/qbrush.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtGui/qfontinfo.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtGui/qfont.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtCore/qendian.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtGui/qfontmetrics.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qscrollarea.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qabstractscrollarea.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qframe.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qwidget.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtGui/qaction.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtGui/qkeysequence.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtGui/qicon.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtGui/qpalette.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qsizepolicy.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtGui/qcursor.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtGui/qbitmap.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtGui/qevent.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtCore/qiodevice.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtCore/qurl.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtGui/qeventpoint.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtGui/qvector2d.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtGui/qvectornd.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtGui/qpointingdevice.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtGui/qinputdevice.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtGui/qscreen.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtCore/QObject \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtCore/QRect \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtCore/QSize \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtCore/QSizeF \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtGui/QTransform \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtCore/qnativeinterface.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtGui/qscreen_platform.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtGui/qguiapplication.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtCore/qcoreapplication.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtCore/qdeadlinetimer.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtCore/qelapsedtimer.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtCore/qeventloop.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtCore/qcoreapplication_platform.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtCore/qfuture.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtCore/qfutureinterface.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtCore/qmutex.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtCore/qtsan_impl.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtCore/qresultstore.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtCore/qfuture_impl.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtCore/qthreadpool.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtCore/qthread.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtCore/qrunnable.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtCore/qexception.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtCore/qpromise.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtGui/qinputmethod.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtCore/qlocale.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtGui/qguiapplication_platform.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qgraphicsscene.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/QGraphicsScene \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtGui/QMouseEvent \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/QLineEdit \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qlineedit.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtGui/qtextcursor.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtGui/qtextdocument.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtGui/qtextformat.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/QComboBox \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qcombobox.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qabstractitemdelegate.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qstyleoption.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qabstractspinbox.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtGui/qvalidator.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtCore/qregularexpression.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qslider.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qabstractslider.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qstyle.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qtabbar.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qtabwidget.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qrubberband.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtCore/qabstractitemmodel.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/QSpinBox \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qspinbox.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/QCheckBox \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qcheckbox.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qabstractbutton.h \
+		../../Button.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/QGraphicsRectItem \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/QGraphicsProxyWidget \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qgraphicsproxywidget.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qgraphicswidget.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qgraphicslayoutitem.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/QStyleFactory \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qstylefactory.h \
 		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtCore/QDebug \
 		../../ColorDictionnary.h \
 		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtCore/QMap \
@@ -1643,6 +1767,7 @@ debug/N_game.o: ../../N_game.cpp ../../N_game.h \
 		../../ClassesInsects/grasshopper.h \
 		../../ClassesInsects/beetle.h \
 		../../ClassesInsects/ladybug.h \
+		../../ClassesInsects/mosquito.h \
 		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtGui/QMouseEvent \
 		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/QLineEdit \
 		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qlineedit.h \
@@ -1670,6 +1795,12 @@ debug/N_game.o: ../../N_game.cpp ../../N_game.h \
 		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qabstractbutton.h \
 		../../Button.h \
 		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/QGraphicsRectItem \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/QGraphicsProxyWidget \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qgraphicsproxywidget.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qgraphicswidget.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qgraphicslayoutitem.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/QStyleFactory \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qstylefactory.h \
 		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/QGraphicsTextItem \
 		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtGui/QBrush \
 		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/QMessageBox \
@@ -1902,6 +2033,7 @@ debug/main.o: ../../main.cpp C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidge
 		../../ClassesInsects/grasshopper.h \
 		../../ClassesInsects/beetle.h \
 		../../ClassesInsects/ladybug.h \
+		../../ClassesInsects/mosquito.h \
 		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtGui/QMouseEvent \
 		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/QLineEdit \
 		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qlineedit.h \
@@ -1928,7 +2060,13 @@ debug/main.o: ../../main.cpp C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidge
 		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qcheckbox.h \
 		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qabstractbutton.h \
 		../../Button.h \
-		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/QGraphicsRectItem
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/QGraphicsRectItem \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/QGraphicsProxyWidget \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qgraphicsproxywidget.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qgraphicswidget.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qgraphicslayoutitem.h \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/QStyleFactory \
+		C:/ProgramFiles/6.8.0/llvm-mingw_64/include/QtWidgets/qstylefactory.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\main.o ..\..\main.cpp
 
 debug/moc_Button.o: debug/moc_Button.cpp 

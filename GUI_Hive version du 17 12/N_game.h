@@ -10,6 +10,8 @@
 #include <QSpinBox>
 #include <QCheckBox>
 #include "Button.h"
+#include <QGraphicsProxyWidget>
+#include <QStyleFactory>
 
 #include "Board.h"
 #include "Insect.h"
@@ -105,6 +107,8 @@ private:
     QString player1Type;
     QString player2Type;
 
+    QGraphicsProxyWidget* player1TypeComboBoxProxy;
+    QGraphicsProxyWidget* player2TypeComboBoxProxy;
     QLineEdit* player1NameInput;
     QLineEdit* player2NameInput;
     QComboBox* player1TypeComboBox;

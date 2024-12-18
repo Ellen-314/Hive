@@ -26,6 +26,7 @@ Game::Game(QWidget *parent): QGraphicsView(parent), numRetours(0), pawnToPlace(n
     // mettre la scène
     scene = new QGraphicsScene();
     scene->setSceneRect(0,0,newWidth,newHeight);
+    //scene->setBackgroundBrush(QBrush(Qt::white));
     setScene(scene);
 
     // initialisation de la place du pion
@@ -480,7 +481,8 @@ void Game::displayGameSetupMenu() {
     player1NameInput = new QLineEdit();
     player1NameInput->setText("Joueur1");
     player1NameInput->setGeometry(400, 150, 200, 30);
-    scene->addWidget(player1NameInput);
+    QGraphicsProxyWidget* player1NameInputProxy = scene->addWidget(player1NameInput);
+    player1NameInputProxy->setPos(400, 150);
 
     QGraphicsTextItem* player2Label = new QGraphicsTextItem("Nom Joueur 2 :");
     player2Label->setPos(200, 200);
@@ -489,20 +491,38 @@ void Game::displayGameSetupMenu() {
     player2NameInput = new QLineEdit();
     player2NameInput->setText("Joueur2");
     player2NameInput->setGeometry(400, 200, 200, 30);
-    scene->addWidget(player2NameInput);
+    QGraphicsProxyWidget* player2NameInputProxy = scene->addWidget(player2NameInput);
+    player2NameInputProxy->setPos(400, 200);
 
     // Type des joueurs (Humain/IA)
+
+    // Player 1 ComboBox
     player1TypeComboBox = new QComboBox();
     player1TypeComboBox->addItem("Humain");
     player1TypeComboBox->addItem("IA");
-    player1TypeComboBox->setGeometry(620, 150, 100, 30);
-    scene->addWidget(player1TypeComboBox);
 
+    // Ensure proper size and geometry
+    player1TypeComboBox->setFixedSize(100, 30);
+    player1TypeComboBox->setGeometry(0, 0, 100, 30); // Geometry is relative to the widget
+
+    // Add to the scene via a proxy widget
+    QGraphicsProxyWidget* player1TypeComboBoxProxy = scene->addWidget(player1TypeComboBox);
+    player1TypeComboBoxProxy->setPos(620, 150); // Position in scene coordinates
+    player1TypeComboBoxProxy->setZValue(1);     // Bring to front
+
+    // Player 2 ComboBox
     player2TypeComboBox = new QComboBox();
     player2TypeComboBox->addItem("Humain");
     player2TypeComboBox->addItem("IA");
-    player2TypeComboBox->setGeometry(620, 200, 100, 30);
-    scene->addWidget(player2TypeComboBox);
+
+    // Ensure proper size and geometry
+    player2TypeComboBox->setFixedSize(100, 30);
+    player2TypeComboBox->setGeometry(0, 0, 100, 30); // Geometry is relative to the widget
+
+    // Add to the scene via a proxy widget
+    QGraphicsProxyWidget* player2TypeComboBoxProxy = scene->addWidget(player2TypeComboBox);
+    player2TypeComboBoxProxy->setPos(620, 200); // Position in scene coordinates
+    player2TypeComboBoxProxy->setZValue(1);     // Bring to front
 
     // Nombre de retours arrière
     QGraphicsTextItem* undoLabel = new QGraphicsTextItem("Nombre de retours arrière :");
@@ -513,7 +533,8 @@ void Game::displayGameSetupMenu() {
     undoSpinBox->setRange(0, 10);
     undoSpinBox->setValue(0);  // Par défaut 0
     undoSpinBox->setGeometry(500, 300, 100, 30);
-    scene->addWidget(undoSpinBox);
+    QGraphicsProxyWidget* undoSpinBoxProxy = scene->addWidget(undoSpinBox);
+    undoSpinBoxProxy->setPos(500, 300);
 
     // Extensions
     QGraphicsTextItem* extensionLabel = new QGraphicsTextItem("Extensions disponibles :");
@@ -522,11 +543,13 @@ void Game::displayGameSetupMenu() {
 
     extension1CheckBox = new QCheckBox("Ladybug");
     extension1CheckBox->setGeometry(400, 400, 150, 30);
-    scene->addWidget(extension1CheckBox);
+    QGraphicsProxyWidget* extension1CheckBoxProxy = scene->addWidget(extension1CheckBox);
+    extension1CheckBoxProxy->setPos(400, 400);
 
     extension2CheckBox = new QCheckBox("Mosquito");
     extension2CheckBox->setGeometry(400, 450, 150, 30);
-    scene->addWidget(extension2CheckBox);
+    QGraphicsProxyWidget* extension2CheckBoxProxy = scene->addWidget(extension2CheckBox);
+    extension2CheckBoxProxy->setPos(400, 450);
 
     // Bouton pour lancer la partie
     Button* startButton = new Button(QString("Lancer la partie"));
@@ -541,9 +564,8 @@ void Game::displayGameSetupMenu() {
     backButton->setPos(bxPos, byPos + 100);
     connect(backButton, &Button::clicked, this, &Game::displayMainMenu);
     scene->addItem(backButton);
-
-
 }
+
 void Game::startGameWithSettings() {
 
     // Récupérer les paramètres de l'interface utilisateur
@@ -556,6 +578,14 @@ void Game::startGameWithSettings() {
     int undoCount = undoSpinBox->value();
     bool extension1Enabled = extension1CheckBox->isChecked();
     bool extension2Enabled = extension2CheckBox->isChecked();
+
+    if (extension1Enabled){
+        qDebug()<<"Ladybug"<<"\n";
+        addType([](){return new Ladybug;}, Ladybug::getMax());
+    }
+    if (extension2Enabled){
+        addType([](){return new Mosquito;}, Mosquito::getMax());
+    }
 
     // Afficher les paramètres dans le debug
     qDebug() << "Player 1: " << player1Name << "Type:" << player1Type;
