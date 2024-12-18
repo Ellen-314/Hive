@@ -6,7 +6,7 @@ using namespace std;
 Insect::Insect()
     : neighborTop(nullptr), neighborBottom(nullptr), neighborTopRight(nullptr),
     neighborBottomRight(nullptr), neighborTopLeft(nullptr), neighborBottomLeft(nullptr),
-    covered(false), color(false) {}
+    covered(false), color(false), couvert(nullptr) {}
 
 // Setter and Getter pour neighborTop
 void Insect::setNeighborTop(Insect* insect) {

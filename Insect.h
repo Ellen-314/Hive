@@ -24,6 +24,9 @@ private:
     bool covered; // couvert ou non par un scarab�e
     bool color; // True pour blanc et False pour noir
 
+    // Pointeur vers l'insecte couvert
+    Insect* couvert;
+
 public:
     // Constructeur
     Insect();
@@ -49,9 +52,10 @@ public:
     void setNeighborBottomLeft(Insect* insect);
     Insect* getNeighborBottomLeft() const;
 
-
-
-
+    // Getter and Setter pour le pointeur vers l'insecte couvert
+    const Insect* getcouvert()const{return couvert;}
+    Insect* getcouvertModify(){return couvert;}
+    void setInsectUnder( Insect* ins){couvert= ins;}
 
     // Getter and Setter pour cover() et color()
     bool isCovered() const;

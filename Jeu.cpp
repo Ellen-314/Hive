@@ -56,7 +56,7 @@ void Jeu::afficherMenu() const {
     std::cout << "3. Afficher le plateau\n";
     std::cout << "4. Annuler le coup\n";
     std::cout << "5. Sauvegarder la partie\n";
-    if (getHasbot() == 1){ std::cout << "6. Faire jouer l'IA\n"; }
+    //if (getHasbot() == 1){ std::cout << "6. Faire jouer l'IA\n"; } // On la fait jouer automatiquement
     std::cout << "0. Quitter\n";
     /*std::cout << "=== Menu de Debug ===\n"; // n'existera pas pendant une partie
     std::cout << "99. Ajouter une case\n";
@@ -179,7 +179,8 @@ void Jeu::demarrerPartie() {
                     saveGame(historyStack);
                     break;
                 case 6:
-                    if (getHasbot()==1){ botIsPlayingToWin(); }
+                    // On fait jouer l'IA automatiquement 
+                    if (getHasbot()==1 && ((compteurDeToursBlanc + compteurDeToursNoir + 1) % 2 == 0) ){ botIsPlayingToWin(); afficherPartie(); }
                     else { std::cout << RED <<"Le choix n'est pas valide."<<BLACK<<"\n"; }
                     break;
                 case 99:
@@ -566,16 +567,24 @@ void Jeu::saveGame(std::stack<Board> boardStack) {
             Board board = boardStack.top();
             boardStack.pop();
 
-            outFile << board.getNb() << "\n"; // Ecriture du nombre de  spots
+            outFile << board.getNb() << "\n"; // Ecriture du nombre de spots
             for (size_t i = 0; i < board.getNb(); ++i) {
                 BoardSpot spot = board.getSpotIndex(i);
 
-                auto coordinates = spot.getCoordinates();
+                std::pair<int, int> coordinates = spot.getCoordinates();
                 outFile << coordinates.first << " " << coordinates.second << " "; //Ecriture des coordonnées
 
                 if (spot.hasInsect()) {
                     Insect* insect = spot.getInsect();
                     outFile << insect->getType() << " " << insect->getColor() << "\n"; //Ecriture du type d'insects
+
+                    // Ajout de l'insecte couvert par le précédent tant qu'il y en a (par exemple : cas d'un scarabé sur un scarabé sur un scarabé sur une fourmi)
+                    while (insect->getcouvert() != nullptr){
+                        insect = insect->getcouvertModify();
+                        outFile << coordinates.first << " " << coordinates.second << " "; //Ecriture des coordonnées
+                        outFile << insect->getType() << " " << insect->getColor() << "\n"; //Ecriture du type d'insects
+                    }
+
                 } else {
                     outFile << "none\n"; // Si pas d'insects
                 }
@@ -621,15 +630,15 @@ std::stack<Board> Jeu::reloadGame() {
 
             Board board;
 
+            // Mise en place de oldx et oldy pour vérifier si les coordonnées de l'insecte précédent ne sont pas les mêmes que l'actuel
+            // C'est-à-dire pour vérifier le cas où un insecte était sur un autre (type scarabé)
+            int x, y;
+            int oldx, oldy;
             for (size_t i = 0; i < nb; ++i) {
-                int x, y;
                 inFile >> x >> y; //Lecture des coordonnées
                 if (inFile.fail()) {
                     throw std::runtime_error("Failed to read spot coordinates.");
                 }
-
-                BoardSpot spot(x, y);  // Création des coordonnées
-                board.addSpot(x, y);   // Ajout du spot au board
 
                 std::string insectType;
                 inFile >> insectType; //Lecture du type d'insect
@@ -637,7 +646,8 @@ std::stack<Board> Jeu::reloadGame() {
                     throw std::runtime_error("Failed to read insect type.");
                 }
 
-
+                // Création d'un pointeur sur un potentiel insecte (utile pour la suite)
+                Insect* insect = nullptr;
                 if (insectType != "none") {
                     int color;
                     inFile >> color; //Lecture de l'appartenance à quel joueur c'est
@@ -645,7 +655,7 @@ std::stack<Board> Jeu::reloadGame() {
                         throw std::runtime_error("Failed to read insect color.");
                     }
 
-                    Insect* insect = nullptr;
+
                     if (insectType == "ant") {
                         insect = new Ant();
                     } else if (insectType == "queenbee") {
@@ -662,13 +672,42 @@ std::stack<Board> Jeu::reloadGame() {
                     } else if (insectType == "mosquito") {
                         insect = new Mosquito();
                     }
+                    insect->setColor(color);
+                }
 
-                    if (insect) {
-                        insect->setColor(color);
+                // Gestion du cas où l'insecte actuel était couvert par un autre insecte 
+                // (impossible pour le premier insecte du tableau, d'où le i!=0)
+                if (insect!=nullptr && i!=0 && x==oldx && y==oldy){
+                    Insect* insectcovering = board.getSpot(x,y)->getInsect();
+
+                    // Gestion du cas où plusieurs insectes sont couverts les uns sur les autres
+                    // (par exemple : cas d'un scarabé sur un scarabé sur un scarabé sur une fourmi)
+                    while (insectcovering->getcouvert()!=nullptr){
+                        insectcovering = insectcovering->getcouvertModify();
+                    }
+
+                    insectcovering->setInsectUnder(insect);
+
+                    // On décrémente car l'insecte couvert n'est pas sur une nouvelle case du plateau mais bien une qui a déjà été créee
+                    i--;
+                }
+                // S'il n'y a pas d'insecte sur la case
+                // ou bien que l'insecte n'est pas couvert par un autre
+                else{ 
+                    BoardSpot spot(x, y);  // Création des coordonnées
+                    board.addSpot(x, y);   // Ajout du spot au board
+
+                    // Dans le cas où il y a un insecte, on l'ajoute au spot
+                    if (insect!=nullptr) {
                         spot.setInsect(insect);
                         board.addInsectToSpot(x, y, insect);  // Place l'insect dans le spot
                     }
                 }
+
+                // On récupère les coordonnées du spot actuel pour évaluer
+                // dans la prochaine itération le cas où un insecte est couvert par le précédent
+                oldx=x;
+                oldy=y;
             }
 
             boardStack.push(board);
@@ -772,49 +811,57 @@ void Jeu::majListeInsect(Board& board_i) {
         if (spot.hasInsect()) {
             Insect* insectOnBoard = spot.getInsect();
 
-            if (insectOnBoard->getColor() == 1) {
-                // On retire l'insecte de `insectsBlanc` si on le trouve
-                auto it = std::find_if(insectsBlanc.begin(), insectsBlanc.end(),
-                                       [&insectOnBoard](const Insect* insect) {
-                                           return insect->getType() == insectOnBoard->getType();
-                                       });
+            // Boucle pour référencer l'insecte actuel et aussi tous les insectes qu'il couvre 
+            // (Récupération de tous les insectes couverts)
+            while (insectOnBoard!=nullptr){
+                if (insectOnBoard->getColor() == 1) {
+                    // On retire l'insecte de `insectsBlanc` si on le trouve
+                    auto it = std::find_if(insectsBlanc.begin(), insectsBlanc.end(),
+                                           [&insectOnBoard](const Insect* insect) {
+                                               return insect->getType() == insectOnBoard->getType();
+                                           });
 
-                if (it != insectsBlanc.end()) {
-                    insectsBlanc.erase(it);
+                    if (it != insectsBlanc.end()) {
+                        insectsBlanc.erase(it);
 
-                    // On incremente le compte pour le type d'insect des blancs
-                    if (insectOnBoard->getType() == "queenbee") { QueenBee::ajouterBlanc(); }
-                    else if (insectOnBoard->getType() == "ant") { Ant::ajouterBlanc(); }
-                    else if (insectOnBoard->getType() == "beetle") { Beetle::ajouterBlanc(); }
-                    else if (insectOnBoard->getType() == "ladybug") { Ladybug::ajouterBlanc(); }
-                    else if (insectOnBoard->getType() == "spider") { Spider::ajouterBlanc(); }
-                    else if (insectOnBoard->getType() == "mosquito") { Mosquito::ajouterBlanc(); }
-                } else {
-                    std::cout << RED << "Probl�me pour l'insect blanc: " << insectOnBoard->getType() << "\n";
+                        // On incremente le compte pour le type d'insect des blancs
+                        if (insectOnBoard->getType() == "queenbee") { QueenBee::ajouterBlanc(); }
+                        else if (insectOnBoard->getType() == "ant") { Ant::ajouterBlanc(); }
+                        else if (insectOnBoard->getType() == "beetle") { Beetle::ajouterBlanc(); }
+                        else if (insectOnBoard->getType() == "ladybug") { Ladybug::ajouterBlanc(); }
+                        else if (insectOnBoard->getType() == "spider") { Spider::ajouterBlanc(); }
+                        else if (insectOnBoard->getType() == "mosquito") { Mosquito::ajouterBlanc(); }
+                    } else {
+                        std::cout << RED << "Probl�me pour l'insect blanc: " << insectOnBoard->getType() << "\n";
+                    }
+
+                }
+                else {
+                    // On retire l'insecte de `insectsNoir` si on le trouve
+                    auto it = std::find_if(insectsNoir.begin(), insectsNoir.end(),
+                                           [&insectOnBoard](const Insect* insect) {
+                                               return insect->getType() == insectOnBoard->getType();
+                                           });
+
+                    if (it != insectsNoir.end()) {
+
+                        insectsNoir.erase(it);
+
+                        // On incremente le compte pour le type d'insect des noirs
+                        if (insectOnBoard->getType() == "queenbee") { QueenBee::ajouterNoir(); }
+                        else if (insectOnBoard->getType() == "ant") { Ant::ajouterNoir(); }
+                        else if (insectOnBoard->getType() == "beetle") { Beetle::ajouterNoir(); }
+                        else if (insectOnBoard->getType() == "spider") { Spider::ajouterNoir(); }
+                        else if (insectOnBoard->getType() == "grasshopper") { Spider::ajouterNoir(); }
+                        else if (insectOnBoard->getType() == "ladybug") { Ladybug::ajouterNoir(); }
+                        else if (insectOnBoard->getType() == "mosquito") { Mosquito::ajouterNoir(); }
+                    } else {
+                        std::cout << RED << "Problème pour l'insect noir: " << insectOnBoard->getType() << "\n";
+                    }
                 }
 
-            } else {
-                // On retire l'insecte de `insectsNoir` si on le trouve
-                auto it = std::find_if(insectsNoir.begin(), insectsNoir.end(),
-                                       [&insectOnBoard](const Insect* insect) {
-                                           return insect->getType() == insectOnBoard->getType();
-                                       });
-
-                if (it != insectsNoir.end()) {
-
-                    insectsNoir.erase(it);
-
-                    // On incremente le compte pour le type d'insect des noirs
-                    if (insectOnBoard->getType() == "queenbee") { QueenBee::ajouterNoir(); }
-                    else if (insectOnBoard->getType() == "ant") { Ant::ajouterNoir(); }
-                    else if (insectOnBoard->getType() == "beetle") { Beetle::ajouterNoir(); }
-                    else if (insectOnBoard->getType() == "spider") { Spider::ajouterNoir(); }
-                    else if (insectOnBoard->getType() == "grasshopper") { Spider::ajouterNoir(); }
-                    else if (insectOnBoard->getType() == "ladybug") { Ladybug::ajouterNoir(); }
-                    else if (insectOnBoard->getType() == "mosquito") { Mosquito::ajouterNoir(); }
-                } else {
-                    std::cout << RED << "Problème pour l'insect noir: " << insectOnBoard->getType() << "\n";
-                }
+                // On passe à l'insecte couvert (s'il n'y en a pas, alors la boucle s'arrêtera)
+                insectOnBoard = insectOnBoard->getcouvertModify();
             }
         }
     }
@@ -1080,7 +1127,6 @@ void Jeu::botIsPlayingToWin() {
     ++compteurDeToursNoir;
     enregistrerBoard();
 
-    afficherPartie();
 
 }
 
