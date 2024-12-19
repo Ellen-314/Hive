@@ -9,6 +9,7 @@
 #include <QDebug>
 #include <string>
 #include <Insect.h>
+#include <QMessageBox>
 
 unsigned int Game::compteurDeToursBlanc=0;
 unsigned int Game::compteurDeToursNoir=0;
@@ -267,7 +268,45 @@ void Game::setWhosTurn(QString player){
 
     // mise à jour QGraphicsTextItem
     whosTurnText->setPlainText(QString("Tour de : ") + player);
+
+    // Vérification de la victoire
+    if(isQueenSurrounded(1)){
+        qDebug() << "Le joueur";
+
+        int winningPlayer;
+        // Calcul du joueur gagnant
+        if((compteurDeToursBlanc + compteurDeToursNoir) % 2 == 1){
+            winningPlayer = 1;
+        } else {
+            winningPlayer = 2;
+        }
+
+        qDebug() << winningPlayer << "a gagné !" << "\n";
+
+        // Affichage d'une fenêtre pop-up pour annoncer la victoire
+        QString winnerName = (winningPlayer == 1) ? player1Name : player2Name;
+        QMessageBox::information(nullptr, "Victoire", QString("Le joueur %1 a gagné !").arg(winnerName));
+    }
+    // Vérification si le joueur s'est fait perdre tout seul
+    else if(isQueenSurrounded(0)){
+        qDebug() << "Le joueur";
+
+        int winningPlayer;
+        // Calcul du joueur gagnant
+        if((compteurDeToursBlanc + compteurDeToursNoir) % 2 == 0){
+            winningPlayer = 1;
+        } else {
+            winningPlayer = 2;
+        }
+
+        qDebug() << winningPlayer << "a gagné !" << "\n";
+
+        // Affichage d'une fenêtre pop-up pour annoncer la victoire
+        QString winnerName = (winningPlayer == 1) ? player1Name : player2Name;
+        QMessageBox::information(nullptr, "Victoire", QString("Le joueur %1 a gagné !").arg(winnerName));
+    }
 }
+
 
 
 void Game::pickUppawn(Hex *pawn){
@@ -299,7 +338,6 @@ void Game::placepawn(Hex *hexToReplace) {
     removeFromDeck(pawnToPlace, getWhosTurn());
     pawnToPlace = nullptr;
 
-
     // Essayer de remplacer le pion posé par un autre du même type
     if (createReplacementPawn(hexToReplace->getInsectType(), getWhosTurn())) {
         drawpawns();  // Mettre à jour l'affichage
@@ -307,6 +345,7 @@ void Game::placepawn(Hex *hexToReplace) {
     hexBoard->eraseHighlighted();
     // Passer au tour du joueur suivant
     nextPlayersTurn();
+
 }
 
 void Game::poserInsect(Hex *source, Hex *destination){
@@ -365,16 +404,19 @@ void Game::poserInsect(Hex *source, Hex *destination){
         {"ant", [](int color) { color == 1 ? Ant::ajouterBlanc() : Ant::ajouterNoir(); }},
         {"spider", [](int color) { color == 1 ? Spider::ajouterBlanc() : Spider::ajouterNoir(); }},
         {"grasshopper", [](int color) { color == 1 ? Grasshopper::ajouterBlanc() : Grasshopper::ajouterNoir(); }},
-        {"beetle", [](int color) { color == 1 ? Beetle::ajouterBlanc() : Beetle::ajouterNoir(); }}
+        {"beetle", [](int color) { color == 1 ? Beetle::ajouterBlanc() : Beetle::ajouterNoir(); }},
+        {"ladybug", [](int color) { color == 1 ? Ladybug::ajouterBlanc() : Ladybug::ajouterNoir(); }},
+        {"mosquito", [](int color) { color == 1 ? Mosquito::ajouterBlanc() : Mosquito::ajouterNoir(); }}
     };
 
     // En fonction du type de l'insect
     auto it = insectCountUpdate.find(insect->getType());
     if (it != insectCountUpdate.end()) {
-        it->second(color);  // Executer le lambda correspondant
+        it->second(color);
     } else {
         qDebug() << "Unknown insect type: " << QString::fromStdString(insect->getType());
     }
+
 
 }
 
@@ -751,3 +793,15 @@ void Game::exchangeSpot(HexBoard* hb, Hex* h1, Hex* h2) {
     qDebug() << "Finished exchangeSpot function.";
 }
 
+//methode qui renvoit true si la reine de la couleur color est entouree
+bool Game::isQueenSurrounded(bool color) const{
+    if (QueenBee::estPasAuMax(color)){ return false; }
+    std::vector<const BoardSpot*> piecesPosees = board.piecejoueur(color);
+    for (size_t i = 0; i<piecesPosees.size(); i++){
+        if (piecesPosees[i]->getInsect()->getType()=="queenbee"){
+            std::pair<int, int> coords = piecesPosees[i]->getCoordinates();
+            if(board.trouverVoisinsInsects(coords.first,coords.second).size()>=6){ return true; }
+        }
+    }
+    return false;
+}
