@@ -363,36 +363,14 @@ void Jeu::ajouterInsecte() {
         incCompteur(color);
         Jeu::enregistrerBoard();
 
-        if(insect->getType()== "queenbee"){
-            if(color==1){QueenBee::ajouterBlanc();}
-            else{QueenBee::ajouterNoir();}
+        // On incremente le compte pour le type d'insect en fonction de la couleur
+        // En fonction du type de l'insect
+        auto it = insectCountUpdate.find(insect->getType());
+        if (it != insectCountUpdate.end()) {
+            it->second(color);
+        } else {
+            throw JeuException("Unknown insect type");
         }
-        else if(insect->getType()== "ant"){
-            if(color==1){Ant::ajouterBlanc();}
-            else{Ant::ajouterNoir();}
-        }
-        else if(insect->getType()== "spider"){
-            if(color==1){Spider::ajouterBlanc();}
-            else{Spider::ajouterNoir();}
-        }
-        else if(insect->getType()== "grasshopper"){
-            if(color==1){Grasshopper::ajouterBlanc();}
-            else{Grasshopper::ajouterNoir();}
-        }
-        else if(insect->getType()== "beetle"){
-            if(color==1){Beetle::ajouterBlanc();}
-            else{Beetle::ajouterNoir();}
-        }
-        else if(insect->getType()== "ladybug"){
-            if(color==1){Ladybug::ajouterBlanc();}
-            else{Ladybug::ajouterNoir();}
-        }
-        else if(insect->getType()== "mosquito"){
-            if(color==1){Mosquito::ajouterBlanc();}
-            else{Mosquito::ajouterNoir();}
-        }
-        // TO DO : incr�menter les compteurs des autres insectes
-        else{ std::cout << RED <<"Le choix n'est pas valide, mais ca ne devrait pas arriver ici... (ajout du nombre d'insectes poses dans Jeu::ajouterInsecte)"<<BLACK<<" /n"; }
 
     }
     catch (const SetException& e){
@@ -838,7 +816,8 @@ void Jeu::majListeInsect(Board& board_i) {
             // Boucle pour référencer l'insecte actuel et aussi tous les insectes qu'il couvre
             // (Récupération de tous les insectes couverts)
             while (insectOnBoard!=nullptr){
-                if (insectOnBoard->getColor() == 1) {
+                bool color = insectOnBoard->getColor();
+                if (color) { // Blanc
                     // On retire l'insecte de `insectsBlanc` si on le trouve
                     auto it = std::find_if(insectsBlanc.begin(), insectsBlanc.end(),
                                            [&insectOnBoard](const Insect* insect) {
@@ -849,18 +828,20 @@ void Jeu::majListeInsect(Board& board_i) {
                         insectsBlanc.erase(it);
 
                         // On incremente le compte pour le type d'insect des blancs
-                        if (insectOnBoard->getType() == "queenbee") { QueenBee::ajouterBlanc(); }
-                        else if (insectOnBoard->getType() == "ant") { Ant::ajouterBlanc(); }
-                        else if (insectOnBoard->getType() == "beetle") { Beetle::ajouterBlanc(); }
-                        else if (insectOnBoard->getType() == "ladybug") { Ladybug::ajouterBlanc(); }
-                        else if (insectOnBoard->getType() == "spider") { Spider::ajouterBlanc(); }
-                        else if (insectOnBoard->getType() == "mosquito") { Mosquito::ajouterBlanc(); }
+                        // En fonction du type de l'insect
+                        auto it = insectCountUpdate.find(insectOnBoard->getType());
+                        if (it != insectCountUpdate.end()) {
+                            it->second(color);
+                        } else {
+                            throw JeuException("Unknown insect type");
+                        }
+
                     } else {
                         std::cout << RED << "Probl�me pour l'insect blanc: " << insectOnBoard->getType() << "\n";
                     }
 
                 }
-                else {
+                else { // Noir
                     // On retire l'insecte de `insectsNoir` si on le trouve
                     auto it = std::find_if(insectsNoir.begin(), insectsNoir.end(),
                                            [&insectOnBoard](const Insect* insect) {
@@ -872,13 +853,14 @@ void Jeu::majListeInsect(Board& board_i) {
                         insectsNoir.erase(it);
 
                         // On incremente le compte pour le type d'insect des noirs
-                        if (insectOnBoard->getType() == "queenbee") { QueenBee::ajouterNoir(); }
-                        else if (insectOnBoard->getType() == "ant") { Ant::ajouterNoir(); }
-                        else if (insectOnBoard->getType() == "beetle") { Beetle::ajouterNoir(); }
-                        else if (insectOnBoard->getType() == "spider") { Spider::ajouterNoir(); }
-                        else if (insectOnBoard->getType() == "grasshopper") { Spider::ajouterNoir(); }
-                        else if (insectOnBoard->getType() == "ladybug") { Ladybug::ajouterNoir(); }
-                        else if (insectOnBoard->getType() == "mosquito") { Mosquito::ajouterNoir(); }
+                        // En fonction du type de l'insect
+                        auto it = insectCountUpdate.find(insectOnBoard->getType());
+                        if (it != insectCountUpdate.end()) {
+                            it->second(color);
+                        } else {
+                            throw JeuException("Unknown insect type");
+                        }
+
                     } else {
                         std::cout << RED << "Problème pour l'insect noir: " << insectOnBoard->getType() << "\n";
                     }

@@ -8,6 +8,7 @@
 #include <string>
 #include <iostream>
 #include <functional>
+#include <unordered_map>
 
 #include "Board.h"
 #include "Insect.h"
@@ -158,6 +159,16 @@ public:
     void botMoveInsect();
     //======================================================================//
 
+    // Pour pouvoir incrémenter le compteur d'insecte en fonction de son type et de sa couleur
+    std::unordered_map<std::string, std::function<void(int)>> insectCountUpdate = {
+        {"queenbee", [](int color) { color == 1 ? QueenBee::ajouterBlanc() : QueenBee::ajouterNoir(); }},
+        {"ant", [](int color) { color == 1 ? Ant::ajouterBlanc() : Ant::ajouterNoir(); }},
+        {"spider", [](int color) { color == 1 ? Spider::ajouterBlanc() : Spider::ajouterNoir(); }},
+        {"grasshopper", [](int color) { color == 1 ? Grasshopper::ajouterBlanc() : Grasshopper::ajouterNoir(); }},
+        {"beetle", [](int color) { color == 1 ? Beetle::ajouterBlanc() : Beetle::ajouterNoir(); }},
+        {"ladybug", [](int color) { color == 1 ? Ladybug::ajouterBlanc() : Ladybug::ajouterNoir(); }},
+        {"mosquito", [](int color) { color == 1 ? Mosquito::ajouterBlanc() : Mosquito::ajouterNoir(); }}
+    };
 
     // Destructeur
     ~Jeu()=default;
