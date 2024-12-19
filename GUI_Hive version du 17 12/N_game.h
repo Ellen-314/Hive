@@ -35,6 +35,7 @@ public:
     void addPawnToPlayer(QString player, QString insectType, int quantity, QList<Hex*>& pawnList);
     bool createReplacementPawn(QString insectType, QString player);
     Hex* cloneHex(Hex* original);
+    bool isQueenSurrounded(bool color) const;
 
     // Events
     void mouseMoveEvent(QMouseEvent* event);

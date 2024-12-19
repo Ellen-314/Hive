@@ -8,6 +8,7 @@
 #include <string>
 #include <iostream>
 #include <functional>
+#include <unordered_map>
 
 #include "Board.h"
 #include "Insect.h"
@@ -33,6 +34,9 @@ private:
     // Vecteurs des insectes restant a poser
     std::vector<Insect*> insectsBlanc;
     std::vector<Insect*> insectsNoir;
+
+    std::string joueurblanc;
+    std::string joueurnoir;
 
     //liste contenant tout les types d'insects et leur nombre max
     std::vector<std::pair< std::function<Insect*()>, unsigned int>> insectTypes;
@@ -84,6 +88,14 @@ public:
     //Méthode pour créer les listes avec tous les insects
     std::vector<Insect*> createInsectsB();
     std::vector<Insect*> createInsectsN();
+
+    // Accesseurs et setters pour les noms de joueurs
+    std::string& getJoueurBlanc(){ return joueurblanc; }
+    const std::string& getJoueurBlanc() const { return joueurblanc; }
+    void setJoueurBlanc(const std::string& nom){ joueurblanc = nom; }
+    std::string& getJoueurNoir(){ return joueurnoir; }
+    const std::string& getJoueurNoir() const { return joueurnoir; }
+    void setJoueurNoir(const std::string& nom){ joueurnoir = nom; }
 
     const std::vector<Insect*> getInsectBlanc()const{return insectsBlanc;}
     std::vector<Insect*> getInsectBlancMod(){return insectsBlanc;}
@@ -147,6 +159,16 @@ public:
     void botMoveInsect();
     //======================================================================//
 
+    // Pour pouvoir incrémenter le compteur d'insecte en fonction de son type et de sa couleur
+    std::unordered_map<std::string, std::function<void(int)>> insectCountUpdate = {
+        {"queenbee", [](int color) { color == 1 ? QueenBee::ajouterBlanc() : QueenBee::ajouterNoir(); }},
+        {"ant", [](int color) { color == 1 ? Ant::ajouterBlanc() : Ant::ajouterNoir(); }},
+        {"spider", [](int color) { color == 1 ? Spider::ajouterBlanc() : Spider::ajouterNoir(); }},
+        {"grasshopper", [](int color) { color == 1 ? Grasshopper::ajouterBlanc() : Grasshopper::ajouterNoir(); }},
+        {"beetle", [](int color) { color == 1 ? Beetle::ajouterBlanc() : Beetle::ajouterNoir(); }},
+        {"ladybug", [](int color) { color == 1 ? Ladybug::ajouterBlanc() : Ladybug::ajouterNoir(); }},
+        {"mosquito", [](int color) { color == 1 ? Mosquito::ajouterBlanc() : Mosquito::ajouterNoir(); }}
+    };
 
     // Destructeur
     ~Jeu()=default;

@@ -28,8 +28,8 @@ public:
     Insect(){};
     //destructeur
     virtual ~Insect() {
-    delete couvert;
-}
+        delete couvert;
+    }
 
 
     // Getter and Setter pour le pointeur vers l'insecte couvert
@@ -37,14 +37,12 @@ public:
     Insect* getcouvertModify(){return couvert;}
     void setInsectUnder( Insect* ins){couvert= ins;}
 
-    // Getter and Setter pour couvert() et color()
-    bool isCovered() const;
-    void setCovered(bool covered);
+    // Getter and Setter pour color()
 
     bool getColor() const;
     void setColor(bool color);
 
-     // Methode moov() virtuelle pure car surchargée pour chaque insect. Elle renvoie le type de chaque insect
+    // Methode getType() virtuelle pure car surchargée pour chaque insect. Elle renvoie le type de chaque insect
     virtual std::string getType() const = 0;
     // Methode moov() virtuelle pure car surchargée pour chaque insect. Elle renvoie les possibilités de mouvements
     virtual std::vector<const BoardSpot*> moov(int x, int y, const Board& board)const = 0;
