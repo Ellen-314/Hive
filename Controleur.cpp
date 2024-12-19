@@ -26,7 +26,15 @@ void Controleur::demarrage(){
             jeu.majListeInsect(jeu.historyStack.top());
     }
     else {
-
+        // On demande le nom du joueur blanc
+        // Ici et pas directement dans la méthode Jeu::demarrerPartie car si jamais on a récupéré une partie,
+        // alors on n'a pas besoin de redonner un nom au joueur blanc, on le récupère directement
+        std::string nomBlanc;
+        std::cout << "Entrez le nom du joueur blanc : ";
+        std::cin >> nomBlanc;
+        std::cin.clear();
+        std::cin.ignore(1000, '\n');
+        jeu.setJoueurBlanc(nomBlanc);
 
         int nbRetoursEnArriere;
         int ext;
@@ -44,7 +52,7 @@ void Controleur::demarrage(){
 
 
         if (ext==1)
-        {   
+        {
             std::cout << "souhaitez vous ajouter la coccinelle ? OUI:1 , NON:0 \n";
             ext = demanderChoix();
 
@@ -52,7 +60,7 @@ void Controleur::demarrage(){
                 std::cout << RED <<"Le choix n'est pas valide."<<BLACK<<"\n";
                 ext = demanderChoix();
                 }
-                
+
 
             if(ext == 1)
             {

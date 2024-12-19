@@ -34,6 +34,9 @@ private:
     std::vector<Insect*> insectsBlanc;
     std::vector<Insect*> insectsNoir;
 
+    std::string joueurblanc;
+    std::string joueurnoir;
+
     //liste contenant tout les types d'insects et leur nombre max
     std::vector<std::pair< std::function<Insect*()>, unsigned int>> insectTypes;
     std::stack<Board> historyStack;
@@ -84,6 +87,14 @@ public:
     //Méthode pour créer les listes avec tous les insects
     std::vector<Insect*> createInsectsB();
     std::vector<Insect*> createInsectsN();
+
+    // Accesseurs et setters pour les noms de joueurs
+    std::string& getJoueurBlanc(){ return joueurblanc; }
+    const std::string& getJoueurBlanc() const { return joueurblanc; }
+    void setJoueurBlanc(const std::string& nom){ joueurblanc = nom; }
+    std::string& getJoueurNoir(){ return joueurnoir; }
+    const std::string& getJoueurNoir() const { return joueurnoir; }
+    void setJoueurNoir(const std::string& nom){ joueurnoir = nom; }
 
     const std::vector<Insect*> getInsectBlanc()const{return insectsBlanc;}
     std::vector<Insect*> getInsectBlancMod(){return insectsBlanc;}

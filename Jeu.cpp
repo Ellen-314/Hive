@@ -62,9 +62,9 @@ void Jeu::afficherMenu() const {
     std::cout << "99. Ajouter une case\n";
     std::cout << "98. Supprimer une case\n";*/
     std::cout << "===================\n";
-    std::cout << "Tour du joueur "; //Le blanc commence
-    if((compteurDeToursBlanc+compteurDeToursNoir+1)%2==0){ std::cout << "noir.\n"; }
-    else{ std::cout << WHITE << "blanc"<<BLACK<<".\n"; }
+    std::cout << "Tour de "; // Le joueur blanc commence
+    if((compteurDeToursBlanc+compteurDeToursNoir+1)%2==0){ std::cout << getJoueurNoir() <<".\n"; }
+    else{ std::cout << WHITE << getJoueurBlanc() << BLACK<<".\n"; }
     std::cout << "Entrez votre choix : ";
 }
 
@@ -102,8 +102,19 @@ void Jeu::demarrerPartie() {
         num = demanderChoix();
     }
     //On crée le Bot + on initialise à 1 si on joue contre un bot
-    if (num == 1) {setHasbot(1);}
-
+    if (num == 1) { setHasbot(1);  setJoueurNoir("IA"); }
+    else {
+        std::string nomNoir;
+        if(getJoueurNoir()=="IA" || getJoueurNoir()==""){
+            // Dans le cas où on a récupéré une partie précédemment et où le joueur noir était une IA
+            // Ou bien dans le cas où on vient de commencer une nouvelle partie
+            std::cout << "Entrez le nom du joueur noir : ";
+            std::cin >> nomNoir;
+            std::cin.clear();
+            std::cin.ignore(1000, '\n');
+            setJoueurNoir(nomNoir);
+        }
+    }
 
 
     int choix;
@@ -115,21 +126,19 @@ void Jeu::demarrerPartie() {
         //std::cout << "\n=========\nDEBUG : isQueenSurrounded((compteurDeToursBlanc+compteurDeToursNoir+1)%2==1) = " << isQueenSurrounded((compteurDeToursBlanc+compteurDeToursNoir+1)%2==1) << "\n=========\n";
         //std::cout << "\n=========\nDEBUG : isQueenSurrounded((compteurDeToursBlanc+compteurDeToursNoir)%2==1) = " << isQueenSurrounded((compteurDeToursBlanc+compteurDeToursNoir)%2==1) << "\n=========\n";
         if(isQueenSurrounded((compteurDeToursBlanc+compteurDeToursNoir+1)%2==1)){
-            std::cout <<CYAN<< "Le joueur ";
 
             // Ici on annonce la victoire du joueur qui vient de jouer (c'est pour cela qu'on n'a pas de +1 dans le calcul du modulo
-            if((compteurDeToursBlanc+compteurDeToursNoir)%2==1){ std::cout << WHITE << "blanc" << BLACK; }
-            else{ std::cout << "noir"; }
-            std::cout <<CYAN<< "a gagne !"<<BLACK<<"\n";
+            if((compteurDeToursBlanc+compteurDeToursNoir)%2==1){ std::cout << WHITE << getJoueurBlanc() << BLACK; } // Victoire du joueur blanc
+            else{ std::cout << getJoueurNoir(); } // Victoire du joueur noir
+            std::cout <<CYAN<< " a gagne !"<<BLACK<<"\n";
         }
         // On vérifie maintenant sur la reine du joueur qui vient de jouer, dans le cas où il s'est fait perdre tout seul
         else if(isQueenSurrounded((compteurDeToursBlanc+compteurDeToursNoir)%2==1)){
-            std::cout <<CYAN<< "Le joueur ";
 
             // Ici on annonce la victoire du joueur qui était sur le point de jouer (c'est pour cela qu'on a un +1 dans le calcul du modulo
-            if((compteurDeToursBlanc+compteurDeToursNoir+1)%2==1){ std::cout << WHITE << "blanc" << BLACK;}
-            else{ std::cout << "noir";}
-            std::cout <<CYAN<< "a gagne !"<<BLACK<<"\n";
+            if((compteurDeToursBlanc+compteurDeToursNoir+1)%2==1){ std::cout << WHITE << getJoueurBlanc() << BLACK;} // Victoire du joueur blanc
+            else{ std::cout << getJoueurNoir(); } // Victoire du joueur noir
+            std::cout <<CYAN<< " a gagne !"<<BLACK<<"\n";
         }
         else{
 //            afficherMenu();
@@ -179,7 +188,7 @@ void Jeu::demarrerPartie() {
                     saveGame(historyStack);
                     break;
                 case 6:
-                    // On fait jouer l'IA automatiquement 
+                    // On fait jouer l'IA automatiquement
                     if (getHasbot()==1 && ((compteurDeToursBlanc + compteurDeToursNoir + 1) % 2 == 0) ){ botIsPlayingToWin(); afficherPartie(); }
                     else { std::cout << RED <<"Le choix n'est pas valide."<<BLACK<<"\n"; }
                     break;
@@ -218,8 +227,8 @@ void Jeu::ajouterInsecte() {
         std::cin >> color;*/
 
         if(color!=1 && color!=0){ throw JeuException("Couleur choisie incorrecte."); }
-        if(color==1){ std::cout << WHITE << "Blanc\n" << BLACK; }
-        else{ std::cout << "Noir\n"; }
+        if(color==1){ std::cout << WHITE << getJoueurBlanc() << "\n" << BLACK; }
+        else{ std::cout << getJoueurNoir() << "\n"; }
         // Affichage et retour au menu si jamais le joueur n'a plus d'insecte à poser
         if((color==0 && insectsNoir.empty()) || (color==1 && insectsBlanc.empty())) {
             std::cout << RED << "Vous n'avez plus d'insecte � poser !!" << BLACK << "\n";
@@ -562,6 +571,8 @@ void Jeu::saveGame(std::stack<Board> boardStack) {
         }
 
         outFile << getnbRetoursEnArriere() << "\n"; // Ecriture du nombre de retours en arrière
+        outFile << getJoueurBlanc() << "\n"; // Ecriture du nom du joueur blanc
+        outFile << getJoueurNoir() << "\n"; // Ecriture du nom du joueur noir
 
         while (!boardStack.empty()) {
             Board board = boardStack.top();
@@ -614,6 +625,19 @@ std::stack<Board> Jeu::reloadGame() {
             throw std::runtime_error("Failed to read number of retours.");
         }
         setnbRetoursEnArriere(nb_retours);
+
+        std::string nomBlanc; std::string nomNoir;
+        inFile >> nomBlanc; // Lecture du nom du joueur Blanc
+        if (inFile.fail()) {
+            throw std::runtime_error("Failed to read name of white player.");
+        }
+        setJoueurBlanc(nomBlanc);
+
+        inFile >> nomNoir; // Lecture du nom du joueur Noir
+        if (inFile.fail()) {
+            throw std::runtime_error("Failed to read name of black player.");
+        }
+        setJoueurNoir(nomNoir);
 
         std::stack<Board> boardStack;
 
@@ -675,7 +699,7 @@ std::stack<Board> Jeu::reloadGame() {
                     insect->setColor(color);
                 }
 
-                // Gestion du cas où l'insecte actuel était couvert par un autre insecte 
+                // Gestion du cas où l'insecte actuel était couvert par un autre insecte
                 // (impossible pour le premier insecte du tableau, d'où le i!=0)
                 if (insect!=nullptr && i!=0 && x==oldx && y==oldy){
                     Insect* insectcovering = board.getSpot(x,y)->getInsect();
@@ -693,7 +717,7 @@ std::stack<Board> Jeu::reloadGame() {
                 }
                 // S'il n'y a pas d'insecte sur la case
                 // ou bien que l'insecte n'est pas couvert par un autre
-                else{ 
+                else{
                     BoardSpot spot(x, y);  // Création des coordonnées
                     board.addSpot(x, y);   // Ajout du spot au board
 
@@ -811,7 +835,7 @@ void Jeu::majListeInsect(Board& board_i) {
         if (spot.hasInsect()) {
             Insect* insectOnBoard = spot.getInsect();
 
-            // Boucle pour référencer l'insecte actuel et aussi tous les insectes qu'il couvre 
+            // Boucle pour référencer l'insecte actuel et aussi tous les insectes qu'il couvre
             // (Récupération de tous les insectes couverts)
             while (insectOnBoard!=nullptr){
                 if (insectOnBoard->getColor() == 1) {
