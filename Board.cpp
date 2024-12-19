@@ -266,7 +266,7 @@ std::vector<const BoardSpot*> Board::trouverVoisinsGlisseur(int x, int y) const{
 
 
          }
-        }
+        }else{voisinsPossibles.push_back(voisin);}
 
 }}return voisinsPossibles;}
 
@@ -331,7 +331,7 @@ void Board::afficherpossibilite (std::vector <const BoardSpot*> possibilite)cons
     }}
 
 bool Board::est_dans_possibilite (const BoardSpot* spot, std::vector <const BoardSpot* > possibilite)const{
-
+    if (spot == nullptr){ return false; }
     for (size_t i = 0; i< possibilite.size(); i++)
         {
            if (spot->getCoordinates() == possibilite[i]->getCoordinates())
