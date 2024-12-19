@@ -70,6 +70,12 @@ void Hex::mousePressEvent(QGraphicsSceneMouseEvent *event){
     Board& board = game->getPlateau();
     if(getIsPlaced() && getOwner() == game->getWhosTurn()){
         if(!getIsEmpty() && getOwner() == game->getWhosTurn()){
+            if(game->getColorToPlay()==1 && QueenBee::estPasAuMax(1)){
+                return;
+            }
+            if(game->getColorToPlay()==0 && QueenBee::estPasAuMax(0)){
+                return;
+            }
             HexBoard* hexboard = game->hexBoard;
             hexboard->eraseHighlighted();
             qDebug() << getCoord();
@@ -119,7 +125,14 @@ void Hex::mousePressEvent(QGraphicsSceneMouseEvent *event){
     }
 
     // si hex est pas placé (=pion) alors le prendre
-    if (getIsPlaced() == false && getOwner() == game->getWhosTurn()){
+    if (getIsPlaced() == false && getOwner() == game->getWhosTurn() ){
+        int compteur;
+        bool place;
+        if(game->getColorToPlay()==1){compteur = game->getCompteurDeToursBlanc(); place =  QueenBee::estPasAuMax(1);} else {compteur = game->getCompteurDeToursNoir();place =  QueenBee::estPasAuMax(0);}
+
+        if(compteur == 3 && this->getInsectType() != QString::fromStdString("queenbee") && place){
+            return;
+        }
         game->pawnToMove = NULL;
         HexBoard* hexboard = game->hexBoard;
         hexboard->eraseHighlighted();
@@ -155,7 +168,6 @@ void Hex::mousePressEvent(QGraphicsSceneMouseEvent *event){
         }
     }
 }
-
 
 
 void Hex::setOwner(QString player){

@@ -10,6 +10,21 @@
 #include <string>
 #include <Insect.h>
 #include <QMessageBox>
+#include <QComboBox>
+#include <QListView>
+
+
+
+#include <QApplication>
+#include <QGraphicsView>
+#include <QGraphicsScene>
+#include <QPushButton>
+#include <QMenu>
+#include <QRadioButton>
+#include <QButtonGroup>
+#include <QGraphicsProxyWidget>
+
+
 
 unsigned int Game::compteurDeToursBlanc=0;
 unsigned int Game::compteurDeToursNoir=0;
@@ -224,6 +239,9 @@ void Game::displayMainMenu(){
     int tyPos = 100;
     titleText->setPos(txPos,tyPos);
     scene->addItem(titleText);
+
+
+
 
     // création du bouton de paramétrage d'une nouvelle partie
     Button* newPlayButton = new Button(QString("Parametrer une nouvelle partie"));
@@ -456,9 +474,11 @@ bool Game::createReplacementPawn(QString insectType, QString player) { // Plus b
 
 void Game::nextPlayersTurn(){
     if (getWhosTurn() == QString(player1Name)){
+        ajouterCompteurDeToursBlanc();
         setWhosTurn(QString(player2Name));
     }
     else {
+        ajouterCompteurDeToursNoir();
         setWhosTurn(QString(player1Name));
     }
 }
@@ -532,39 +552,51 @@ void Game::displayGameSetupMenu() {
 
     player2NameInput = new QLineEdit();
     player2NameInput->setText("Joueur2");
-    player2NameInput->setGeometry(400, 200, 200, 30);
+    player2NameInput->setGeometry(400, 150, 200, 30);
     QGraphicsProxyWidget* player2NameInputProxy = scene->addWidget(player2NameInput);
     player2NameInputProxy->setPos(400, 200);
 
-    // Type des joueurs (Humain/IA)
 
-    // Player 1 ComboBox
-    player1TypeComboBox = new QComboBox();
-    player1TypeComboBox->addItem("Humain");
-    player1TypeComboBox->addItem("IA");
+    // Player 1 Menu Button
+    QPushButton *player1MenuButton = new QPushButton("Humain");
+    QMenu *player1Menu = new QMenu();
+    QAction *player1HumainAction = player1Menu->addAction("Humain");
+    QAction *player1IAAction = player1Menu->addAction("IA");
+    player1MenuButton->setMenu(player1Menu);
 
-    // Ensure proper size and geometry
-    player1TypeComboBox->setFixedSize(100, 30);
-    player1TypeComboBox->setGeometry(0, 0, 100, 30); // Geometry is relative to the widget
+    // Connect actions to update Player 1 button text
+    QObject::connect(player1HumainAction, &QAction::triggered, [player1MenuButton]() {
+        player1MenuButton->setText("Humain");
+    });
+    QObject::connect(player1IAAction, &QAction::triggered, [player1MenuButton]() {
+        player1MenuButton->setText("IA");
+    });
 
-    // Add to the scene via a proxy widget
-    QGraphicsProxyWidget* player1TypeComboBoxProxy = scene->addWidget(player1TypeComboBox);
-    player1TypeComboBoxProxy->setPos(620, 150); // Position in scene coordinates
-    player1TypeComboBoxProxy->setZValue(1);     // Bring to front
+    // Add Player 1 menu button to the scene
+    QGraphicsProxyWidget *player1MenuButtonProxy = scene->addWidget(player1MenuButton);
+    player1MenuButtonProxy->setPos(620, 150); // Position in scene coordinates
+    player1MenuButtonProxy->setZValue(100);   // Bring to front
 
-    // Player 2 ComboBox
-    player2TypeComboBox = new QComboBox();
-    player2TypeComboBox->addItem("Humain");
-    player2TypeComboBox->addItem("IA");
+    // Player 2 Menu Button
+    QPushButton *player2MenuButton = new QPushButton("Humain");
+    QMenu *player2Menu = new QMenu();
+    QAction *player2HumainAction = player2Menu->addAction("Humain");
+    QAction *player2IAAction = player2Menu->addAction("IA");
+    player2MenuButton->setMenu(player2Menu);
 
-    // Ensure proper size and geometry
-    player2TypeComboBox->setFixedSize(100, 30);
-    player2TypeComboBox->setGeometry(0, 0, 100, 30); // Geometry is relative to the widget
+    // Connect actions to update Player 2 button text
+    QObject::connect(player2HumainAction, &QAction::triggered, [player2MenuButton]() {
+        player2MenuButton->setText("Humain");
+    });
+    QObject::connect(player2IAAction, &QAction::triggered, [player2MenuButton]() {
+        player2MenuButton->setText("IA");
+    });
 
-    // Add to the scene via a proxy widget
-    QGraphicsProxyWidget* player2TypeComboBoxProxy = scene->addWidget(player2TypeComboBox);
-    player2TypeComboBoxProxy->setPos(620, 200); // Position in scene coordinates
-    player2TypeComboBoxProxy->setZValue(1);     // Bring to front
+    // Add Player 2 menu button to the scene
+    QGraphicsProxyWidget *player2MenuButtonProxy = scene->addWidget(player2MenuButton);
+    player2MenuButtonProxy->setPos(620, 200); // Position in scene coordinates
+    player2MenuButtonProxy->setZValue(100);   // Bring to front
+
 
     // Nombre de retours arrière
     QGraphicsTextItem* undoLabel = new QGraphicsTextItem("Nombre de retours arrière :");
@@ -613,8 +645,6 @@ void Game::startGameWithSettings() {
     // Récupérer les paramètres de l'interface utilisateur
     player1Name = player1NameInput->text();
     player2Name = player2NameInput->text();
-    player1Type = player1TypeComboBox->currentText();
-    player2Type = player2TypeComboBox->currentText();
 
     // Autres paramètres
     int undoCount = undoSpinBox->value();
