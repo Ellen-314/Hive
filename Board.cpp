@@ -231,44 +231,44 @@ std::vector<const BoardSpot*> Board::trouverVoisinsInsects(int x, int y) const {
 
 // trouver les voisins sans insectes sans saut de la piece demandée et les renovies dans un vecteur; (pas fait)
 std::vector<const BoardSpot*> Board::trouverVoisinsGlisseur(int x, int y) const{
-    std::vector<const BoardSpot*> voisins;
-    //cr�ation de la liste de pair des coordon�es de tout les voisins
-    std::pair<int, int> directions[] = {
-        {1, 0},   // (x + 1, y)
-        {1, 1},   // (x + 1, y + 1)
-        {0, 1},   // (x, y + 1)
-        {-1, 0},  // (x - 1, y)
-        {-1, -1}, // (x - 1, y - 1)
-        {0, -1}   // (x, y - 1)
-    };
-    // taille de directions
-    size_t size = sizeof(directions) / sizeof(directions[0]);
-    // boucle pour itérer sur les directions
-    for (size_t i = 0; i < size; ++i)
-    {
-        std::pair<int, int> newDirection = directions[i];
-        // accès à la direction précédente dans la liste
-        size_t prevIndex = (i==0) ? size - 1 : i - 1; // si i=0, prevIndex devient le dernier élément
-        std::pair<int, int> prevDirecion = directions[prevIndex];
-        // accès à la direction suivant dans la liste
-        size_t nextIndex = (i==size) ? 1 : i + 1; // si i=size, prevIndex devient le permier élément
-        std::pair<int, int> nextDirecion = directions[nextIndex];
-        const BoardSpot* spot = getSpot(newDirection.first, newDirection.second);
-        if (spot){
-            // vérifier que le spot est libre
-            if (!spot->hasInsect()){
-                // vérifier qu'on peut y aller sans sauter
-                const BoardSpot* prevSpot = getSpot(prevDirecion.first, prevDirecion.second);
-                const BoardSpot* nextSpot = getSpot(nextDirecion.first, nextDirecion.second);
-                if (!prevSpot->hasInsect() || !nextSpot->hasInsect()){
-                    voisins.push_back(spot); // on ajoute les voisins existants au vecteur
-                }
-            }
+
+    std::vector<const BoardSpot*> tousVoisins = trouverVoisins(x, y);
+
+     afficherpossibilite(tousVoisins);
+    std::vector<const BoardSpot*> voisinsPossibles;
+    for(auto voisin : trouverVoisins(x,y))
+        {if(!(voisin->hasInsect())){
+
+        std::pair<int, int> coords = voisin->getCoordinates();
+
+
+        std::vector <const BoardSpot*> voisinVoisin = trouverVoisins(coords.first, coords.second);
+
+        afficherpossibilite(voisinVoisin);
+
+
+        std::vector <const BoardSpot*> voisinCommun;
+         for(auto voisin2 : voisinVoisin){
+         if (std::find(tousVoisins.begin(), tousVoisins.end(), voisin2) != tousVoisins.end()){
+            voisinCommun.push_back(voisin2);}}
+
+
+           afficherpossibilite(voisinCommun);
+
+
+         if(voisinCommun.size()>= 2){
+
+         if(!(voisinCommun[0]->hasInsect() && voisinCommun[1]->hasInsect()))
+         {
+             voisinsPossibles.push_back(voisin);
+
+              afficherpossibilite(voisinsPossibles);
+
+
+         }
         }
-    }
-    afficherpossibilite(voisins);
-    return voisins;
-}
+
+}}return voisinsPossibles;}
 
 std::vector<const BoardSpot*> Board::possibleplacer(bool couleur)const{
 

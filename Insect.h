@@ -12,58 +12,39 @@ class Board;
 class BoardSpot;
 class Insect{
 private:
-    // Pointeurs vers les insectes voisins
-    Insect* neighborTop;
-    Insect* neighborBottom;
-    Insect* neighborTopRight;
-    Insect* neighborBottomRight;
-    Insect* neighborTopLeft;
-    Insect* neighborBottomLeft;
 
-    // Autres attributs
-    bool covered; // couvert ou non par un scarab�e
+
+
     bool color; // True pour blanc et False pour noir
+    // Pointeur vers l'insecte couvert (si il y en a un)
+    Insect* couvert= nullptr;
 
-    // Pointeur vers l'insecte couvert
-    Insect* couvert;
+    //on retire la possiblité de recopie pour ne pas avoir de probleme avec couvert
+    Insect(const Insect&) = delete;
+    Insect& operator=(const Insect&) = delete;
 
 public:
     // Constructeur
-    Insect();
+    Insect(){};
     //destructeur
-    virtual ~Insect();
+    virtual ~Insect() {
+    delete couvert;
+}
 
-    // Getter and Setter pour les voisins
-    void setNeighborTop(Insect* insect);
-    Insect* getNeighborTop() const;
-
-    void setNeighborBottom(Insect* insect);
-    Insect* getNeighborBottom() const;
-
-    void setNeighborTopRight(Insect* insect);
-    Insect* getNeighborTopRight() const;
-
-    void setNeighborBottomRight(Insect* insect);
-    Insect* getNeighborBottomRight() const;
-
-    void setNeighborTopLeft(Insect* insect);
-    Insect* getNeighborTopLeft() const;
-
-    void setNeighborBottomLeft(Insect* insect);
-    Insect* getNeighborBottomLeft() const;
 
     // Getter and Setter pour le pointeur vers l'insecte couvert
     const Insect* getcouvert()const{return couvert;}
     Insect* getcouvertModify(){return couvert;}
     void setInsectUnder( Insect* ins){couvert= ins;}
 
-    // Getter and Setter pour cover() et color()
+    // Getter and Setter pour couvert() et color()
     bool isCovered() const;
     void setCovered(bool covered);
 
     bool getColor() const;
     void setColor(bool color);
 
+     // Methode moov() virtuelle pure car surchargée pour chaque insect. Elle renvoie le type de chaque insect
     virtual std::string getType() const = 0;
     // Methode moov() virtuelle pure car surchargée pour chaque insect. Elle renvoie les possibilités de mouvements
     virtual std::vector<const BoardSpot*> moov(int x, int y, const Board& board)const = 0;
