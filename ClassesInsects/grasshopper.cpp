@@ -8,8 +8,7 @@ unsigned int Grasshopper::poseNoir = 0;
 
 std::vector<const BoardSpot*> Grasshopper::moov(int x, int y, const Board& board)const
 {
-    std::vector<const BoardSpot*> possibleMoves;
-    const BoardSpot* currentSpot = board.getSpot(x, y);
+    std::vector<const BoardSpot*> possibilite;
 
     std::pair<int, int> directions[] = {
         {1, 0},   // (x + 1, y)
@@ -20,30 +19,19 @@ std::vector<const BoardSpot*> Grasshopper::moov(int x, int y, const Board& board
         {0, -1}   // (x, y - 1)
     };
 
-    // Parcours des directions
+    //On parcourt chaque direction
     for (const auto& dir : directions) {
         int newX = x + dir.first;
         int newY = y + dir.second;
-        const BoardSpot* nextSpot = currentSpot;
-
-
-        // Avancer dans la direction tant que la case suivante contient un insecte
-        while (nextSpot) {
-            nextSpot = board.getSpot(nextSpot->getCoordinates().first + newX,
-                                    nextSpot->getCoordinates().second + newY);
-
-            // Arr�te si la case est vide ou invalide (en dehors des limites)
-            if (!nextSpot || !nextSpot->hasInsect()) {
-                break;
-            }
-        }
-
-        // Si une case vide est trouv�e, elle est ajout�e aux mouvements possibles
-        if (nextSpot && !nextSpot->hasInsect()) {
-            possibleMoves.push_back(nextSpot);
-        }
-    }
-    return possibleMoves;
+        const BoardSpot* nextSpot = board.getSpot(newX, newY);
+        //si dans cette direction il y a un insecte on va au plus loin jusqu'à ue case sans insecte
+        if(nextSpot->hasInsect()){
+            do {newX = nextSpot->getCoordinates().first + dir.first;
+            newY =nextSpot->getCoordinates().second + dir.second;
+            nextSpot = board.getSpot(newX, newY);}while(nextSpot->hasInsect());
+            possibilite.push_back(nextSpot);
+            }}
+    return possibilite;
 
 }
 
