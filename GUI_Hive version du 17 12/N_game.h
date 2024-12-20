@@ -80,8 +80,6 @@ public:
 public slots:
     void start();
     void displayGameSetupMenu();
-    //void undoLastAction();
-    //void saveGame();
 
 private:
     void drawPanel(int x, int y, int width, int height, QColor color, double opacity);
@@ -102,9 +100,6 @@ private:
 
     static unsigned int compteurDeToursBlanc;
     static unsigned int compteurDeToursNoir;
-
-
-    void storeCurrentState();
 
     QString player1Name;
     QString player2Name;

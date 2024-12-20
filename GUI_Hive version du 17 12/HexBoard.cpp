@@ -51,13 +51,24 @@ void HexBoard::createHexColumn(int x, int y, int numOfRows,int numOfcols){
 
 
 
-void HexBoard::hexHighlight(QPoint coordonnes){
+void HexBoard::hexHighlight(QPoint coordonnes, QColor color){
     //chercher dans hexes là où hexes[i]->coords == coordonnes
     //si on trouve hex on met setColor(red)
 
     for (int i=0; i<hexes.size(); i++){
         if (hexes[i]->getCoord()==coordonnes){
-            hexes[i]->setColor(Qt::green);
+            hexes[i]->setColor(color);
+        }
+    }
+}
+
+void HexBoard::eraseHighlight(QPoint coordonnes){
+    //chercher dans hexes là où hexes[i]->coords == coordonnes
+    //si on trouve hex on met setColor(red)
+
+    for (int i=0; i<hexes.size(); i++){
+        if (hexes[i]->getCoord()==coordonnes){
+            hexes[i]->unSetColor();
         }
     }
 }
@@ -65,26 +76,13 @@ void HexBoard::hexHighlight(QPoint coordonnes){
 
 
 void HexBoard::afficherBoardQt(){
-    //Board board;
-
-    board.addSpot(0,0);
-    board.addSpot(0,1);
-    BoardSpot temp(0,0);
-    Ant a;
-    board.addInsectToSpot(0,1,&a);
-    for (int i = 0; i<board.getNb();i++){
-        temp = board.getSpotIndex(i);
-        if (temp.hasInsect()){
-            int x=temp.getCoordinates().first;
-            int y=temp.getCoordinates().second;
-            qDebug() << "Spot" << i << ": (" << x << "," << y << ")";
-            QPoint p;
-            p.setX(x);
-            p.setY(y);
-            hexHighlight(p);
+    for (int i=0; i<hexes.size(); i++){
+        for (int j=0; j<hexes.size(); j++){
+            if (i!=j && hexes[i]==hexes[j]) qDebug() << hexes[i]->getCoord() <<"\n";
         }
 
     }
+
 }
 Hex& HexBoard::getHex(QPoint coordonnes){
     for (int i=0; i<hexes.size(); i++){
@@ -97,14 +95,14 @@ Hex& HexBoard::getHex(QPoint coordonnes){
 void HexBoard::eraseHighlighted(){
 
     for(const auto& hex : hexesHighligted) {
-        hex->unSetColor();
+        eraseHighlight(hex->getCoord());
     }
     hexesHighligted.clear();
 }
 
 void HexBoard::addHighlightedHex(Hex* hex, std::string couleur){
     QColor color = ColorDictionary::getColor(couleur);
-    hex->setColor(color);
+    hexHighlight(hex->getCoord(), color);
     hexesHighligted.append(hex);
 
 }
@@ -119,3 +117,9 @@ bool HexBoard::inHighlighted(Hex* hexToFind){
 
 }
 
+void HexBoard::eraseColor(){
+    for (int i=0; i<hexes.size(); i++){
+        hexes[i]->unSetColor();
+    }
+    qDebug()<<"unset color";
+}

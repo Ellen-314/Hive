@@ -12,6 +12,7 @@ class Beetle : public Insect {
 
 public:
 
+    Beetle(){};
     static unsigned int getMax(){return Max;}
     static unsigned int getPoseBlanc(){return poseBlanc;}
     static unsigned int getPoseNoir(){return poseNoir;}
@@ -20,7 +21,7 @@ public:
     static void ajouterBlanc(){poseBlanc++;}
     static void ajouterNoir(){poseNoir++;}
     static bool estPasAuMax(bool couleur);
-    std::string getType() const { return "beetle"; }
+    std::string getType() const override { return "beetle"; }
     std::vector<const BoardSpot*> moov(int x, int y, const Board& board)const override;//override est utillis� pour indiquer que la fonction prends le pas sur celle de insect.
 
     ~Beetle() override{};

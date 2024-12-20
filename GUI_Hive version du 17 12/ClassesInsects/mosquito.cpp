@@ -15,11 +15,8 @@ std::vector<const BoardSpot*> Mosquito::moov(int x, int y, const Board& board)co
     for (const BoardSpot* voisin : voisins)
     {
 
-        int voisinX = voisin->getCoordinates().first;  // R�cup�rer la premi�re valeur
-        int voisinY = voisin->getCoordinates().second; // R�cup�rer la deuxi�me valeur
-
         Insect* insect = voisin->getInsect();
-        possibiliteInsect = insect->moov(voisinX, voisinY, board);
+        possibiliteInsect = insect->moov(x, y, board); // on utilise la m�thode moov de ses insectes voisins.
 
         possibilite.insert(possibilite.end(), possibiliteInsect.begin(), possibiliteInsect.end());
 

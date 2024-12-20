@@ -25,4 +25,3 @@ public:
 };
 
 #endif // GRASSHOPPER_H
-

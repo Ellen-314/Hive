@@ -13,12 +13,15 @@ public:
     QList<Hex*> getHexes();
 
     void placeHexes(int x, int y, int cols, int rows);
-    void hexHighlight(QPoint coordonnes);
+    void hexHighlight(QPoint coordonnes, QColor color);
     void eraseHighlighted();
     void addHighlightedHex(Hex* hex, std::string couleur);
     bool inHighlighted(Hex* hexToFind);
     Hex& getHex(QPoint coordonnes);
     void afficherBoardQt();
+    QList<Hex*> gethexHighlighted() {return hexesHighligted;}
+    void eraseHighlight(QPoint coordonnes);
+    void eraseColor();
 
 private:
     void createHexColumn(int x, int y, int numOfRows,int numOfcols);

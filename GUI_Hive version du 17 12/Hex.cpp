@@ -6,6 +6,7 @@
 #include "N_game.h"
 #include <QPixmap>
 #include "Insect.h"
+#include <QMessageBox>
 
 extern Game* game;
 
@@ -71,9 +72,11 @@ void Hex::mousePressEvent(QGraphicsSceneMouseEvent *event){
     if(getIsPlaced() && getOwner() == game->getWhosTurn()){
         if(!getIsEmpty() && getOwner() == game->getWhosTurn()){
             if(game->getColorToPlay()==1 && QueenBee::estPasAuMax(1)){
+                QMessageBox::information(nullptr, "Warning", QString("Impossible de déplacer un pion, la queenbee n'est pas placée !"));
                 return;
             }
             if(game->getColorToPlay()==0 && QueenBee::estPasAuMax(0)){
+                QMessageBox::information(nullptr, "Warning", QString("Impossible de déplacer un pion, la queenbee n'est pas placée !"));
                 return;
             }
             HexBoard* hexboard = game->hexBoard;
@@ -86,6 +89,7 @@ void Hex::mousePressEvent(QGraphicsSceneMouseEvent *event){
             qDebug() << spot->getInsect();
 
             std::vector<const BoardSpot*> possibilite = spot->getInsect()->moov(getCoord().x(), getCoord().y(), board);
+            hexboard->eraseHighlighted();
             for(const auto& spot : possibilite){
                 auto [x, y] = spot->getCoordinates();
 
@@ -98,8 +102,11 @@ void Hex::mousePressEvent(QGraphicsSceneMouseEvent *event){
                     Hex& hex = hexboard->getHex(QPoint(x, y));
                     qDebug() << "x:" << x << " y:" << y;
                     hexboard->addHighlightedHex(&hex, "magenta");
+
                 }
+
             }
+
             game->pawnToMove = this;
             return;
         }
@@ -131,6 +138,7 @@ void Hex::mousePressEvent(QGraphicsSceneMouseEvent *event){
         if(game->getColorToPlay()==1){compteur = game->getCompteurDeToursBlanc(); place =  QueenBee::estPasAuMax(1);} else {compteur = game->getCompteurDeToursNoir();place =  QueenBee::estPasAuMax(0);}
 
         if(compteur == 3 && this->getInsectType() != QString::fromStdString("queenbee") && place){
+            QMessageBox::information(nullptr, "Warning", QString("Vous devez placer la queenbee pour continuer !"));
             return;
         }
         game->pawnToMove = NULL;
@@ -158,6 +166,9 @@ void Hex::mousePressEvent(QGraphicsSceneMouseEvent *event){
             auto [x, y] = spot->getCoordinates();
             Hex& hex = hexboard->getHex(QPoint(x, y));
             hexboard->addHighlightedHex(&hex, "cyan");
+        }
+        for (auto& hex : hexboard->gethexHighlighted()){
+            qDebug()<<"hexcord:"<<hex->getCoord()<<"color"<<hex->getColor();
         }
         game->pickUppawn(this);
     }

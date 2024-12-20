@@ -12,9 +12,6 @@
 #include <QMessageBox>
 #include <QComboBox>
 #include <QListView>
-
-
-
 #include <QApplication>
 #include <QGraphicsView>
 #include <QGraphicsScene>
@@ -288,40 +285,42 @@ void Game::setWhosTurn(QString player){
     whosTurnText->setPlainText(QString("Tour de : ") + player);
 
     // Vérification de la victoire
-    if(isQueenSurrounded(1)){
+    if(isQueenSurrounded((compteurDeToursBlanc+compteurDeToursNoir+1)%2==1)){
         qDebug() << "Le joueur";
 
         int winningPlayer;
         // Calcul du joueur gagnant
         if((compteurDeToursBlanc + compteurDeToursNoir) % 2 == 1){
-            winningPlayer = 1;
+            winningPlayer = 0;
         } else {
-            winningPlayer = 2;
+            winningPlayer = 1;
         }
 
         qDebug() << winningPlayer << "a gagné !" << "\n";
 
         // Affichage d'une fenêtre pop-up pour annoncer la victoire
-        QString winnerName = (winningPlayer == 1) ? player1Name : player2Name;
+        QString winnerName = (winningPlayer == 0) ? player1Name : player2Name;
         QMessageBox::information(nullptr, "Victoire", QString("Le joueur %1 a gagné !").arg(winnerName));
+        qApp->exit();
     }
     // Vérification si le joueur s'est fait perdre tout seul
-    else if(isQueenSurrounded(0)){
+    else if(isQueenSurrounded((compteurDeToursBlanc+compteurDeToursNoir)%2==1)){
         qDebug() << "Le joueur";
 
         int winningPlayer;
         // Calcul du joueur gagnant
-        if((compteurDeToursBlanc + compteurDeToursNoir) % 2 == 0){
-            winningPlayer = 1;
+        if((compteurDeToursBlanc + compteurDeToursNoir+1) % 2 == 1){
+            winningPlayer = 0;
         } else {
-            winningPlayer = 2;
+            winningPlayer = 1;
         }
 
         qDebug() << winningPlayer << "a gagné !" << "\n";
 
         // Affichage d'une fenêtre pop-up pour annoncer la victoire
-        QString winnerName = (winningPlayer == 1) ? player1Name : player2Name;
+        QString winnerName = (winningPlayer == 0) ? player1Name : player2Name;
         QMessageBox::information(nullptr, "Victoire", QString("Le joueur %1 a gagné !").arg(winnerName));
+        qApp->exit();
     }
 }
 
@@ -354,7 +353,9 @@ void Game::placepawn(Hex *hexToReplace) {
     pawnToPlace->setCoord(x, y);
     poserInsect(pawnToPlace, hexToReplace);
     removeFromDeck(pawnToPlace, getWhosTurn());
+    hexBoard->getHexes().append(pawnToPlace);
     pawnToPlace = nullptr;
+
 
     // Essayer de remplacer le pion posé par un autre du même type
     if (createReplacementPawn(hexToReplace->getInsectType(), getWhosTurn())) {
@@ -473,6 +474,8 @@ bool Game::createReplacementPawn(QString insectType, QString player) { // Plus b
 
 
 void Game::nextPlayersTurn(){
+    hexBoard->eraseHighlighted();
+    hexBoard->eraseColor();
     if (getWhosTurn() == QString(player1Name)){
         ajouterCompteurDeToursBlanc();
         setWhosTurn(QString(player2Name));
@@ -669,103 +672,6 @@ void Game::startGameWithSettings() {
     start();
 }
 
-/*void Game::undoLastAction() {
-    if (history.isEmpty()) {
-        QMessageBox::warning(this, "Retour","Pas d'action de retour en arrière !");
-        return;
-    }
-    restoreState();
-
-    // Redraw the board based on restored state
-    scene->clear();
-    hexBoard->placeHexes(200, 30, 15, 15);
-    drawGUI();
-    drawpawns();
-} */
-
-
-
-/*void Game::saveGame() {
-    qDebug() << "Saving game state...";
-    qDebug() << "Player 1 Pawns:";
-    for (Hex* pawn : player1pawns) {
-        qDebug() << "P1 Pawn " << pawn->getInsectType() << " at ("
-                 << pawn->pos().x() << ", " << pawn->pos().y() << ")";
-    }
-
-    qDebug() << "Player 2 Pawns:";
-    for (Hex* pawn : player2pawns) {
-        qDebug() << "P2 Pawn " << pawn->getInsectType() << " at ("
-                 << pawn->pos().x() << ", " << pawn->pos().y() << ")";
-    }
-
-    QFile file("savegame.txt");
-    if (file.open(QIODevice::WriteOnly)) {
-        QTextStream out(&file);
-        out << "Player 1: " << player1Name << " (" << player1Type << ")\n";
-        out << "Player 2: " << player2Name << " (" << player2Type << ")\n";
-        out << "Undo actions remaining: " << numRetours << "\n";
-        out << "Whose turn: " << getWhosTurn() << "\n";
-
-        // Save the pawns and their positions
-        for (Hex* pawn : player1pawns) {
-            out << "P1 Pawn " << pawn->getInsectType() << " at "
-                << pawn->pos().x() << "," << pawn->pos().y() << "\n";
-        }
-        for (Hex* pawn : player2pawns) {
-            out << "P2 Pawn " << pawn->getInsectType() << " at "
-                << pawn->pos().x() << "," << pawn->pos().y() << "\n";
-        }
-
-        file.close();
-        QMessageBox::information(this, "Enregistrement", "Le jeu a bien été sauvegardé.");
-    } else {
-        QMessageBox::warning(this, "Enregistrement", "Erreur, le jeu n'a pas été sauvegardé.");
-    }
-} */
-
-Hex* Game::cloneHex(Hex* original) {
-    Hex* copy = new Hex();
-    copy->setInsectType(original->getInsectType());
-    copy->setOwner(original->getOwner());
-    copy->setColor(original->getColor());
-    copy->setIsPlaced(original->getIsPlaced());
-    copy->setPos(original->pos()); // Use setPos() to set the position
-    return copy;
-}
-
-// Save the current game state into the history stack
-/*void Game::saveState() {
-    QList<Hex*> p1Copy;
-    QList<Hex*> p2Copy;
-
-    for (Hex* pawn : player1pawns) {
-        p1Copy.append(cloneHex(pawn));
-    }
-    for (Hex* pawn : player2pawns) {
-        p2Copy.append(cloneHex(pawn));
-    }
-
-    history.push(new Memento(whosTurn_, p1Copy, p2Copy));
-    qDebug() << "State saved. Current turn: " << whosTurn_;
-} */
-
-
-// Restaurer le dernier état
-/*void Game::restoreState() {
-    if (!history.isEmpty()) {
-        Memento* memento = history.pop();
-        whosTurn_ = memento->getWhosTurn();
-        player1pawns = memento->getPlayer1Pawns();
-        player2pawns = memento->getPlayer2Pawns();
-
-        drawpawns();
-        setWhosTurn(whosTurn_);
-        delete memento;
-    } else {
-        QMessageBox::warning(this, "Retour","Pas d'action de retour en arrière !");
-    }
-} */
 
 
 void Game::createInsects(){
