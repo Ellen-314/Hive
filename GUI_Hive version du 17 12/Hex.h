@@ -22,6 +22,7 @@ public:
     QGraphicsTextItem* getLabel() const {return labelText;}
 
 
+
     // event
     void mousePressEvent(QGraphicsSceneMouseEvent* event);
 

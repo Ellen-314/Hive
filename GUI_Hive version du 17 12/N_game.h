@@ -12,6 +12,7 @@
 #include "Button.h"
 #include <QGraphicsProxyWidget>
 #include <QStyleFactory>
+#include <QPushButton>
 
 #include "Board.h"
 #include "Insect.h"
@@ -37,6 +38,8 @@ public:
     Hex* cloneHex(Hex* original);
     bool isQueenSurrounded(bool color) const;
 
+
+
     // Events
     void mouseMoveEvent(QMouseEvent* event);
     void mousePressEvent(QMouseEvent* event);
@@ -49,7 +52,7 @@ public:
     void addType( std::function<Insect*()> cree, int maximum){insectTypes.push_back(std::make_pair(cree, maximum));}
 
     // Méthode pour ajouter un insecte à une case
-    void ajouterInsecte(int x, int y);
+    //void ajouterInsecte(int x, int y);
 
     static unsigned int getCompteurDeToursBlanc(){return compteurDeToursBlanc;}
     static unsigned int getCompteurDeToursNoir(){return compteurDeToursNoir;}
@@ -108,12 +111,11 @@ private:
     QString player1Type;
     QString player2Type;
 
-    QGraphicsProxyWidget* player1TypeComboBoxProxy;
-    QGraphicsProxyWidget* player2TypeComboBoxProxy;
+
     QLineEdit* player1NameInput;
     QLineEdit* player2NameInput;
-    QComboBox* player1TypeComboBox;
-    QComboBox* player2TypeComboBox;
+    QPushButton *player1MenuButton;
+    QPushButton *player2MenuButton;
     QSpinBox* undoSpinBox;
     QCheckBox* extension1CheckBox;
     QCheckBox* extension2CheckBox;
