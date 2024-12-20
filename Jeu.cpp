@@ -229,12 +229,10 @@ void Jeu::ajouterInsecte() {
                 possibilite.push_back(spot);
             }
             if (color == 0){
-                if (board.getSpot(0, 1) == nullptr) {
-                    board.addSpot(0, 1);
+                possibilite = board.trouverVoisins(0,0);
                 }
-                const BoardSpot* spot = board.getSpot(0, 1);
-                possibilite.push_back(spot);
-            }
+
+
         }
 
         if (((color == 1)&& (Jeu::getCompteurDeToursBlanc() != 0))||((color==0)&&(Jeu::getCompteurDeToursNoir() != 0))){
