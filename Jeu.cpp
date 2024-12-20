@@ -419,8 +419,17 @@ void Jeu::deplacerInsecte() {
             //std::cout << "\n=========\nDEBUG : j'arrive dans la partie d'apr�s.\n=========\n\n";
 
             //std::cout<< "debug : je viens de sortir du while";
+
             //appel de moov pour retourner les cases possibles (et potentiellement v�rifier s'il y a bien un insecte sur cette case)
             std::vector <const BoardSpot*> possibilite = spot->getInsect()->moov(x, y, board);
+
+            // Vérifier la connexité si on déplace la pièce, c'est-à-dire si on la retire du plateau un instant
+            Insect* insectOnSpot = spot->getInsect();
+            if (insectOnSpot->getcouvert() == nullptr){
+                board.deleteInsectFromSpot(x,y); // On retire temporairement l'insecte (on simule un début de déplacement)
+                if (!board.isConnexe()) { possibilite.clear(); } // Si déplacer la pièce casse la ruche alors on empêche toute possibilité de déplacement
+                board.addInsectToSpot(x,y,insectOnSpot);  // On replace l'insecte à sa place
+            }
 
             int newX, newY;
             std::vector <const BoardSpot*> testpossibilite = possibilite;
@@ -993,7 +1002,7 @@ void Jeu::afficherPartie(std::vector<const BoardSpot*>* ptpossibilite){
                     y = possibilite.front()->getCoordinates().second;
                     spot_vide=false;
 
-                    // Dans le cas d'un affichage de possibilité de déplacement au-dessus d'une pièce
+                    // Dans le cas d'un affichage de possibilité de déplacement recouvrant une pièce
                     if (!piecesPosees.empty()
                         && piecesPosees.front()->getCoordinates().first == possibilite.front()->getCoordinates().first
                         && piecesPosees.front()->getCoordinates().second == possibilite.front()->getCoordinates().second){
@@ -1004,7 +1013,10 @@ void Jeu::afficherPartie(std::vector<const BoardSpot*>* ptpossibilite){
                     }
                     else { std::cout << CYAN << "_"; }
 
-                    possibilite.erase(possibilite.begin());
+                    //Pour patch les cas où une même possibilité apparaît 2 fois dans la liste des possibilités (déjà arrivé avec le déplacement du moustique)
+                    while (!possibilite.empty() && possibilite.front()->getCoordinates().first == x && possibilite.front()->getCoordinates().second == y){
+                        possibilite.erase(possibilite.begin());
+                    }
                 }
                 else if (!piecesPosees.empty()
                          && 2 * piecesPosees.front()->getCoordinates().second - piecesPosees.front()->getCoordinates().first == p

@@ -432,6 +432,13 @@ void Board::moovInsect(int oldX, int oldY, int newX, int newY) {
         beetle->setInsectUnder(getSpot(newX, newY)->getInsect());
         getSpotModify(newX, newY)->setInsect(beetle);
 
+    } else if (getSpotModify(oldX, oldY)->getInsectModify()->getType() == "mosquito") {
+        Mosquito* mosquito = dynamic_cast<Mosquito*>(getSpot(oldX, oldY)->getInsect());
+        getSpotModify(oldX, oldY)->setInsect(mosquito->getcouvertModify());
+
+        mosquito->setInsectUnder(getSpot(newX, newY)->getInsect());
+        getSpotModify(newX, newY)->setInsect(mosquito);
+
     } else {
         getSpotModify(newX, newY)->setInsect(getSpot(oldX, oldY)->getInsect());
         deleteInsectFromSpot(oldX, oldY);
