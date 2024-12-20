@@ -23,21 +23,18 @@ std::vector<const BoardSpot*> Ant:: moov(int x, int y, const Board& board)const{
                 currentSpot->getCoordinates().second
             );
                 for (auto voisin : voisins ){
-                if (!(voisin->hasInsect())){
+                    if (!(voisin->hasInsect())){
 
-                if (verifie.find(voisin) == verifie.end()) {
+                    if (verifie.find(voisin) == verifie.end()) {
 
-                                possibilite.push_back(voisin);
+                                    possibilite.push_back(voisin);
 
-                                Averifier.push(voisin);
+                                    Averifier.push(voisin);
 
-                                verifie.insert(voisin);
-
-
-
-
-                }}}}
-    board.afficherpossibilite(possibilite);
+                                    verifie.insert(voisin);}
+                    }
+                }
+    }
     return possibilite;
 }
 

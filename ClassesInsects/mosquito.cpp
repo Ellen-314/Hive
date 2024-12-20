@@ -16,7 +16,7 @@ std::vector<const BoardSpot*> Mosquito::moov(int x, int y, const Board& board)co
     {
 
         Insect* insect = voisin->getInsect();
-        possibiliteInsect = insect->moov(x, y, board);
+        possibiliteInsect = insect->moov(x, y, board); // on utilise la méthode moov de ses insectes voisins.
 
         possibilite.insert(possibilite.end(), possibiliteInsect.begin(), possibiliteInsect.end());
 

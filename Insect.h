@@ -31,7 +31,6 @@ public:
         delete couvert;
     }
 
-
     // Getter and Setter pour le pointeur vers l'insecte couvert
     const Insect* getcouvert()const{return couvert;}
     Insect* getcouvertModify(){return couvert;}

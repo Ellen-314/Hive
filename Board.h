@@ -63,10 +63,8 @@ public:
     bool hasInsect() const { return insect_pose != nullptr; }
 
     void print(std::ostream& f) const {
-        //f << "Coordonn�es: ";
         f << "(" << coordinates.first << ", " << coordinates.second << ") ";
         if (insect_pose) {
-            //f << " avec un insecte : ";
             f << insect_pose->getType()<<" ";
             if (insect_pose->getColor()==0){ f << "noir."; }
             if (insect_pose->getColor()==1){ f << WHITE << "blanc" << BLACK <<"."; }
@@ -74,8 +72,10 @@ public:
         else { f << " sans insecte."; }
     }
 };
-//ça les mecs il faut dire ce que ça fait parce que le nom parle pas de lui même
+
+// trier les cases dans l'ordre d'affichage sur le terminal
 bool compBSco(const BoardSpot* a, const BoardSpot* b);
+
 bool operator<(const BoardSpot& a, const BoardSpot& b);
 
 // Classe pour g�rer le plateau de jeu

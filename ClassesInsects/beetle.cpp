@@ -7,7 +7,7 @@ unsigned int Beetle::poseNoir = 0;
 
 std::vector<const BoardSpot*> Beetle::moov(int x, int y, const Board& board)const
 {
-    std::vector<const BoardSpot*> possibilite = board.trouverVoisins(x, y);
+    std::vector<const BoardSpot*> possibilite = board.trouverVoisins(x, y); // prends toutes les cases voisines avec ou sans intecte(s)
     return possibilite;
 }
 

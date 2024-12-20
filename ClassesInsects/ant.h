@@ -29,9 +29,9 @@ public:
    std::string getType() const {return "ant";}
 
 
-   //la fonction moov retourne un vecteur des possibilités des mouvements de la fourmie aux positions données.
-   std::vector<const BoardSpot*> moov(int x, int y, const Board& board)const override ;//override est utillis� pour indiquer que la fonction prends le pas sur celle de insect.
-   //dit si le joueur pet encore poser un pion de ce type; si il peut: true sinon: false
+    //la fonction moov retourne un vecteur des possibilités des mouvements de la fourmie aux positions données.
+    std::vector<const BoardSpot*> moov(int x, int y, const Board& board)const override ;//override est utillis� pour indiquer que la fonction prends le pas sur celle de insect.
+    //dit si le joueur pet encore poser un pion de ce type; si il peut: true sinon: false
     //blanc: True black=False
     static bool estPasAuMax(bool couleur);
 

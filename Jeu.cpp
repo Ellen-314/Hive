@@ -56,11 +56,7 @@ void Jeu::afficherMenu() const {
     std::cout << "3. Afficher le plateau\n";
     std::cout << "4. Annuler le coup\n";
     std::cout << "5. Sauvegarder la partie\n";
-    //if (getHasbot() == 1){ std::cout << "6. Faire jouer l'IA\n"; } // On la fait jouer automatiquement
     std::cout << "0. Quitter\n";
-    /*std::cout << "=== Menu de Debug ===\n"; // n'existera pas pendant une partie
-    std::cout << "99. Ajouter une case\n";
-    std::cout << "98. Supprimer une case\n";*/
     std::cout << "===================\n";
     std::cout << "Tour de "; // Le joueur blanc commence
     if((compteurDeToursBlanc+compteurDeToursNoir+1)%2==0){ std::cout << getJoueurNoir() <<".\n"; }
@@ -123,8 +119,6 @@ void Jeu::demarrerPartie() {
     while (!quitter) {
 
         //Test de victoire du joueur qui vient de jouer (on v�rifie d'abord sur la reine adverse, c'est � dire la reine du joueur qui est sur le point de jouer)
-        //std::cout << "\n=========\nDEBUG : isQueenSurrounded((compteurDeToursBlanc+compteurDeToursNoir+1)%2==1) = " << isQueenSurrounded((compteurDeToursBlanc+compteurDeToursNoir+1)%2==1) << "\n=========\n";
-        //std::cout << "\n=========\nDEBUG : isQueenSurrounded((compteurDeToursBlanc+compteurDeToursNoir)%2==1) = " << isQueenSurrounded((compteurDeToursBlanc+compteurDeToursNoir)%2==1) << "\n=========\n";
         if(isQueenSurrounded((compteurDeToursBlanc+compteurDeToursNoir+1)%2==1)){
 
             // Ici on annonce la victoire du joueur qui vient de jouer (c'est pour cela qu'on n'a pas de +1 dans le calcul du modulo
@@ -141,20 +135,6 @@ void Jeu::demarrerPartie() {
             std::cout <<CYAN<< " a gagne !"<<BLACK<<"\n";
         }
         else{
-//            afficherMenu();
-//            choix = demanderChoix();
-//
-//            //ici on force a taper 6 quand c'est à l'IA de jouer
-//            while (getHasbot() == 1 && choix != 6 && ((compteurDeToursBlanc + compteurDeToursNoir + 1) % 2 == 0)) {
-//                std::cout << RED<< "C'est au tour de l'IA de jouer, veuillez taper 6 \n "<< BLACK<< "\n";
-//                afficherMenu();
-//                choix = demanderChoix();
-//            }
-//            while (getHasbot() == 1 && choix == 6 && ((compteurDeToursBlanc + compteurDeToursNoir + 1) % 2 != 0)) {
-//                std::cout << RED << "C'est a toi de jouer pas à l'IA, t'as cru contourner le système ? \n " << BLACK << "\n";
-//                afficherMenu();
-//                choix = demanderChoix();
-//            }
 
             //ici on entre 6 automatiquement quand c'est à l'IA de jouer, s'il y en a une
             if (getHasbot() == 1 && ((compteurDeToursBlanc + compteurDeToursNoir + 1) % 2 == 0)) {
@@ -223,8 +203,6 @@ void Jeu::ajouterInsecte() {
         unsigned int color=(compteurDeToursBlanc+compteurDeToursNoir+1)%2;
 
         // Se fera automatiquement en fonction du tour du joueur
-        /*std::cout << "Choisissez la couleur de l'insecte (1 pour blanc, 0 pour noir) : ";
-        std::cin >> color;*/
 
         if(color!=1 && color!=0){ throw JeuException("Couleur choisie incorrecte."); }
         if(color==1){ std::cout << WHITE << getJoueurBlanc() << "\n" << BLACK; }
@@ -243,11 +221,9 @@ void Jeu::ajouterInsecte() {
         std::vector<const BoardSpot* > possibilite;
         //si c'est le premier pour chaque tour on cree le premier spot pour insecte
         if (((color == 0)&& (Jeu::getCompteurDeToursNoir() == 0))||((color==1)&&(Jeu::getCompteurDeToursBlanc() == 0))){
-            //std::cout << "\n=========\nDEBUG : Rentre dans la boucle des conditions\n=========\n\n";
             if (color == 1){
                 if (board.getSpot(0, 0)==nullptr){
                     board.addSpot(0, 0);
-                    //std::cout << "\n=========\nDEBUG : Ajout du spot pour la couleur blanche � la position (0, 0)\n=========\n\n";
                 }
                 const BoardSpot* spot = board.getSpot(0, 0);
                 possibilite.push_back(spot);
@@ -255,7 +231,6 @@ void Jeu::ajouterInsecte() {
             if (color == 0){
                 if (board.getSpot(0, 1) == nullptr) {
                     board.addSpot(0, 1);
-                    //std::cout << "\n=========\nDEBUG : Ajout du spot pour la couleur noire � la position (0, 1)\n=========\n\n";
                 }
                 const BoardSpot* spot = board.getSpot(0, 1);
                 possibilite.push_back(spot);
@@ -279,14 +254,12 @@ void Jeu::ajouterInsecte() {
                 do{
                     if(color==1){
                         if("queenbee" == insectsBlanc[i]->getType()){
-                            //std::cout << "\n=========\nDEBUG : "<< i << " : " << insectsBlanc[i]->getType() << insectsBlanc[i]->getColor() << "\n=========\n\n";
                             insect=insectsBlanc[i];
                             insectsBlanc.erase(insectsBlanc.begin()+i);
                         }
                     }
                     else{
                         if("queenbee" == insectsNoir[i]->getType()){
-                            //std::cout << "\n=========\nDEBUG : "<< i << " : " << insectsNoir[i]->getType() << insectsNoir[i]->getColor() << "\n=========\n\n";
                             insect=insectsNoir[i];
                             insectsNoir.erase(insectsNoir.begin()+i);
                         }
@@ -301,9 +274,6 @@ void Jeu::ajouterInsecte() {
                 std::cout << "Entrez votre choix : ";
 
                 choix_insect= demanderChoix();
-
-
-
 
                 if (choix_insect == 20){
                         std::cout << "retour au menu\n";
@@ -359,7 +329,6 @@ void Jeu::ajouterInsecte() {
             return;
         }
 
-        //std::cout << "\n=========\nDEBUG : Insecte ajout� � la case (" << x << ", " << y << ").\n=========\n\n";
         incCompteur(color);
         Jeu::enregistrerBoard();
 
@@ -414,11 +383,7 @@ void Jeu::deplacerInsecte() {
                 spot = board.getSpot(newx, newy);
                 x = newx;
                 y = newy;
-                // std::cout<< "debug : je viens de demander les coordonnees";
             }while( !board.est_dans_possibilite(spot, piece));
-            //std::cout << "\n=========\nDEBUG : j'arrive dans la partie d'apr�s.\n=========\n\n";
-
-            //std::cout<< "debug : je viens de sortir du while";
 
             //appel de moov pour retourner les cases possibles (et potentiellement v�rifier s'il y a bien un insecte sur cette case)
             std::vector <const BoardSpot*> possibilite = spot->getInsect()->moov(x, y, board);
@@ -443,7 +408,6 @@ void Jeu::deplacerInsecte() {
                 board.moovInsect(x, y, newX, newY);
 
                 if (!board.isConnexe()) {
-                    // std::cout << RED << "Déplacement annulé : cela romprait la connexité du graphe." << BLACK << "\n";
                     testpossibilite.erase (testpossibilite.begin()+possibilite.size()-1-i);
                 }
 
@@ -455,7 +419,6 @@ void Jeu::deplacerInsecte() {
             // On v�fifie qu'il y a bien des possibilit�s avant de proposer un d�placement
             if(!possibilite.empty()){
                 std::cout << "Voici les possibilités de déplacement de votre pièce\n";
-                //board.afficherpossibilite(possibilite);
                 afficherPartie(&possibilite);
 
                 std::cout <<"Entrez 1 pour placer la pi�ce � l'un des emplacements donn�s.\n";}
@@ -484,15 +447,12 @@ void Jeu::deplacerInsecte() {
 
                     board.moovInsect(x, y, newX, newY);
 
-                    //TODO gerer les probl�mes avec le scarab�
                     board.addNullSpot(newX,newY);
                     board.deleteNullSpot(x,y);
 
-                    //std::cout << "\n=========\nDEBUG : Insecte d�plac� de (" << oldX << ", " << oldY << ") � (" << newX << ", " << newY << ").\n=========\n\n";
                     incCompteur(color);
-                    choix = 3;//TO DO: ameliorer pour que �a passe au tour de l'autre direct
+                    choix = 3;
                 }
-
 
     }while(choix!=3);
         Jeu::enregistrerBoard();
@@ -509,7 +469,6 @@ void Jeu::supprimerCase() {
         int x = coordonnees.first;
         int y = coordonnees.second;
         board.deleteSpot(x, y);
-        //std::cout << "Case supprim�e aux coordonn�es (" << x << ", " << y << ").\n";
     }
     catch (const SetException& e){
         std::cout << e.getMessage() <<"\n";
@@ -632,7 +591,6 @@ std::stack<Board> Jeu::reloadGame() {
             size_t nb;
             inFile >> nb; //Lecture du nombre de spots
             if (inFile.eof()) {
-                //std::cout << "End of file reached. No more boards to read.\n";
                 break;
             }
             if (inFile.fail()) {
@@ -747,10 +705,6 @@ std::stack<Board> Jeu::reloadGame() {
         std::cerr << "Erreur au chargement des boards: " << e.what() << std::endl;
     }
 }
-
-
-
-
 
 //methode qui renvoit true si la reine de la couleur color est entouree
 bool Jeu::isQueenSurrounded(bool color) const{
@@ -945,9 +899,7 @@ void Jeu::afficherPartie(std::vector<const BoardSpot*>* ptpossibilite){
         possibilite = *ptpossibilite;
         std::sort(possibilite.begin(),possibilite.end(), compBSco);
         std::reverse(possibilite.begin(),possibilite.end());
-        //std::cout << RED << "\npossibilites de placement : ";
         for (const BoardSpot* bs : possibilite){
-            //bs->print(std::cout);
             x=bs->getCoordinates().first;
             y=bs->getCoordinates().second;
             priority = 2*y-x;
@@ -964,9 +916,7 @@ void Jeu::afficherPartie(std::vector<const BoardSpot*>* ptpossibilite){
         }
     }
 
-    //std::cout<< "\n=========\nDEBUG : <<"\npiecesPosees sur le plateau : ";
     for (const BoardSpot* bs : piecesPosees){
-        // bs->print(std::cout);
         x=bs->getCoordinates().first;
         y=bs->getCoordinates().second;
         priority = 2*y-x;
@@ -981,16 +931,12 @@ void Jeu::afficherPartie(std::vector<const BoardSpot*>* ptpossibilite){
         priority_min = std::min(priority, priority_min);
         priority_max = std::max(priority, priority_max);
     }
-//    std::cout << "\n=========\n";
-
-    //std::cout << "\n=========\nDEBUG : << "\nmin_x = " << min_x << "\nmax_x = " << max_x << "\nmin_y = " << min_y << "\nmax_y = " << max_y << "\npriority_min = " << priority_min << "\npriority_max = " << priority_max << "\npriority_of_min_x = " << priority_of_min_x << "\n" << "\n=========\n";
 
     bool spot_vide = true;
 
     std::cout << "\n\n\n";
 
     for(int p = priority_max; p>=priority_min; p--){
-        //std::cout << RED << "priority : " << p << "\t";
         if(std::abs(p%2) == std::abs(priority_of_min_x%2)) std::cout << "        ";
         for (int x=min_x; x<=max_x; x++){
             if ((std::abs(x%2)==std::abs(min_x%2) && std::abs(p%2) == std::abs(priority_of_min_x%2))

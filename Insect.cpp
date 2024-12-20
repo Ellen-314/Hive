@@ -2,8 +2,6 @@
 
 using namespace std;
 
-
-
 // Setter and Getter pour color
 bool Insect::getColor() const {
     return color;
