@@ -218,7 +218,7 @@ std::vector<const BoardSpot*> Board::trouverVoisinsGlisseur(int x, int y) const{
 
     std::vector<const BoardSpot*> tousVoisins = trouverVoisins(x, y);
 
-     afficherpossibilite(tousVoisins);
+    // afficherpossibilite(tousVoisins);
     std::vector<const BoardSpot*> voisinsPossibles;
     for(auto voisin : trouverVoisins(x,y))
     {
@@ -337,6 +337,7 @@ void Board::addNullSpot(int x, int y){
         }
 }
 
+// Méthode qui retourne toutes les pièces posées par un joueur
 std::vector<const BoardSpot*> Board::piecejoueur(bool couleur) const{
     std::vector<const BoardSpot*> piece;
 

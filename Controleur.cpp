@@ -53,7 +53,7 @@ void Controleur::demarrage(){
 
         if (ext==1)
         {
-            std::cout << "souhaitez vous ajouter la coccinelle ? OUI:1 , NON:0 \n";
+            std::cout << "Souhaitez-vous ajouter la coccinelle ? OUI:1 , NON:0 \n";
             ext = demanderChoix();
 
             while(ext != 1 && ext != 0){
@@ -62,12 +62,9 @@ void Controleur::demarrage(){
                 }
 
 
-            if(ext == 1)
-            {
-                jeu.addType([](){return new Ladybug;},Ladybug::getMax());
-            }
+            if(ext == 1) jeu.addType([](){return new Ladybug;},Ladybug::getMax());
 
-            std::cout<< "souhaitez vous ajouter le moustique ? OUI:1 , NON:0 \n";
+            std::cout<< "Souhaitez-vous ajouter le moustique ? OUI:1 , NON:0 \n";
             ext = demanderChoix();
 
             while(ext != 1 && ext != 0){
@@ -75,17 +72,14 @@ void Controleur::demarrage(){
                 ext = demanderChoix();
                 }
 
-            if(ext == 1)
-            {
-                jeu.addType([](){return new Mosquito;},Mosquito::getMax());
-            }
+            if(ext == 1) jeu.addType([](){return new Mosquito;},Mosquito::getMax()); 
         }
 
 
 
 
 
-    jeu.createInsects();
+        jeu.createInsects();
 
     }
 

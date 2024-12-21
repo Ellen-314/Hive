@@ -23,27 +23,29 @@ void Jeu::enregistrerBoard() {
 }
 
 void Jeu::createInsects(){
-       addType([](){return new QueenBee;}, QueenBee::getMax());
-       addType([](){return new Ant;}, Ant::getMax());
-       addType([](){return new Beetle;}, Beetle::getMax());
-       addType([](){return new Grasshopper;}, Grasshopper::getMax());
-       addType([](){return new Spider;}, Spider::getMax());
+    addType([](){return new QueenBee;}, QueenBee::getMax());
+    addType([](){return new Ant;}, Ant::getMax());
+    addType([](){return new Beetle;}, Beetle::getMax());
+    addType([](){return new Grasshopper;}, Grasshopper::getMax());
+    addType([](){return new Spider;}, Spider::getMax());
 
 
-               for (const auto& insectInfo : insectTypes) {
-            for (unsigned int i = 0; i < insectInfo.second; i++) {
-                // Blanc
-                Insect* blanc = insectInfo.first();
-                blanc->setColor(true);
-                insectsBlanc.push_back(blanc);
+    for (const auto& insectInfo : insectTypes) {
+        for (unsigned int i = 0; i < insectInfo.second; i++) {
+            // Blanc
+            Insect* blanc = insectInfo.first();
+            // std::cout << RED << "\n=========\nDEBUG : "<< "i = " << i << blanc->getType()<< "\n=========\n" << BLACK;
+            blanc->setColor(true);
+            insectsBlanc.push_back(blanc);
 
-                // Noir
-                Insect* noir = insectInfo.first();
-                noir->setColor(false);
-                insectsNoir.push_back(noir);
-            }
+            // Noir
+            Insect* noir = insectInfo.first();
+            // std::cout << RED << "\n=========\nDEBUG : "<< noir->getType() << "\n"<< "\n=========\n" << BLACK;
+            noir->setColor(false);
+            insectsNoir.push_back(noir);
         }
     }
+}
 
 
 
@@ -399,7 +401,7 @@ void Jeu::deplacerInsecte() {
 
             // Vérifier la connexité pour chaque possiblite
             for (size_t i = 0; i < possibilite.size(); i++){
-                std::cout << "i = " << i << "\n";
+                // std::cout << RED << "\n=========\nDEBUG : " << "i = " << i << "\n"<< "\n=========\n" << BLACK;
                 const BoardSpot* spot = possibilite[possibilite.size()-1-i];
                 newX = spot->getCoordinates().first;
                 newY = spot->getCoordinates().second;
@@ -515,6 +517,16 @@ void Jeu::saveGame(std::stack<Board> boardStack) {
         }
 
         outFile << getnbRetoursEnArriere() << "\n"; // Ecriture du nombre de retours en arrière
+
+        // Ecriture des extensions
+        for (auto& p : insectTypes){
+            Insect* insect = p.first();
+            if (insect->getType() == "mosquito") outFile << "mosquito\n";
+            if (insect->getType() == "ladybug") outFile << "ladybug\n";
+            delete insect;
+        }
+        outFile << "==eoe==\n"; // End of extensions
+
         outFile << getJoueurBlanc() << "\n"; // Ecriture du nom du joueur blanc
         outFile << getJoueurNoir() << "\n"; // Ecriture du nom du joueur noir
 
@@ -569,6 +581,21 @@ std::stack<Board> Jeu::reloadGame() {
             throw std::runtime_error("Failed to read number of retours.");
         }
         setnbRetoursEnArriere(nb_retours);
+
+        // Récupération des extensions
+        std::string extension;
+        inFile >> extension;
+        if (inFile.fail()) {
+            throw std::runtime_error("Failed to read extensions.");
+        }
+        while(extension != "==eoe=="){
+            if (extension == "mosquito") addType([](){return new Mosquito;}, Mosquito::getMax());
+            if (extension == "ladybug") addType([](){return new Ladybug;}, Ladybug::getMax());
+            inFile >> extension;
+            if (inFile.fail()) {
+                throw std::runtime_error("Failed to read extensions.");
+            }
+        }
 
         std::string nomBlanc; std::string nomNoir;
         inFile >> nomBlanc; // Lecture du nom du joueur Blanc
@@ -1028,18 +1055,13 @@ void Jeu::botIsPlayingToWin() {
 
     std::cout << "Le bot décide de poser une nouvelle pièce.\n";
 
-    int choix_insect = rand() % insectsNoir.size();
-    Insect* insect = insectsNoir[choix_insect];
-    insectsNoir.erase(insectsNoir.begin() + choix_insect);
-
-    std::vector<const BoardSpot*> possibilite = board.possibleplacer(color);
-
     // Forcer la pose de la reine au premier tour
     if (Jeu::getCompteurDeToursNoir() == 0) {
 
         // Rechercher la reine dans les insectes
         Insect* queenBee = nullptr;
         for (size_t i = 0; i < insectsNoir.size(); ++i) {
+            // std::cout<< RED << "\n=========\nDEBUG : "<<insectsNoir[i]->getType()<< "\n=========\n" << BLACK;
             if (insectsNoir[i]->getType() == "queenbee") {
                 queenBee = insectsNoir[i];
                 insectsNoir.erase(insectsNoir.begin() + i);
@@ -1073,6 +1095,14 @@ void Jeu::botIsPlayingToWin() {
             return;
         }
     }
+
+
+    int choix_insect = rand() % insectsNoir.size();
+    // std::cout << RED << "\n=========\nDEBUG : " << "choix_insect = " << choix_insect << "\n" << "\n=========\n" << BLACK;
+    Insect* insect = insectsNoir[choix_insect];
+    insectsNoir.erase(insectsNoir.begin() + choix_insect);
+
+    std::vector<const BoardSpot*> possibilite = board.possibleplacer(color);
 
 
     int choix_position = rand() % possibilite.size();
@@ -1132,7 +1162,8 @@ void Jeu::botMoveInsect() {
                 // Vérification de la connexité
                 if (board.isConnexe()) {
                     std::cout << "Le bot a déplacé une pièce de (" << x << ", " << y << ") à (" << destX << ", " << destY << ").\n";
-
+                    
+                    board.addNullSpot(destX, destY);
                     enregistrerBoard();
                     pieceMoved = true;
                 }

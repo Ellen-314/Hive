@@ -128,7 +128,7 @@ public:
     bool est_dans_possibilite (const BoardSpot* spot, std::vector <const BoardSpot* > possibilite)const;
     //ajouter les cases null autour d'une pièce
     void addNullSpot(int x, int y);
-    //renvoyer toutes les pièces possédées par un joueur
+    //renvoyer toutes les pièces posées par un joueur
     std::vector<const BoardSpot*> piecejoueur(bool couleur) const;
     //verifie si le tableau est toujours en un morceau;
     bool isConnexe() const;
